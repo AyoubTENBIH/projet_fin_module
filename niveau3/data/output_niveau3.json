@@ -1,0 +1,115 @@
+{
+  "planification_hebdomadaire": {
+    "lundi": [
+      {
+        "camion_id": 2,
+        "zone_id": 5,
+        "creneau": {
+          "debut": "14:00",
+          "fin": "16:00",
+          "jour": "lundi"
+        },
+        "creneau_id": 4,
+        "taches": [
+          {
+            "point_id": 10,
+            "ordre": 1,
+            "heure_estimee": "14:05"
+          }
+        ],
+        "duree_totale": 15,
+        "retard_estime": 0
+      },
+      {
+        "camion_id": 3,
+        "zone_id": 1,
+        "creneau": {
+          "debut": "14:00",
+          "fin": "16:00",
+          "jour": "lundi"
+        },
+        "creneau_id": 4,
+        "taches": [
+          {
+            "point_id": 1,
+            "ordre": 1,
+            "heure_estimee": "14:05"
+          },
+          {
+            "point_id": 2,
+            "ordre": 2,
+            "heure_estimee": "14:10"
+          },
+          {
+            "point_id": 3,
+            "ordre": 3,
+            "heure_estimee": "14:15"
+          }
+        ],
+        "duree_totale": 25,
+        "retard_estime": 0
+      }
+    ],
+    "mardi": [
+      {
+        "camion_id": 2,
+        "zone_id": 2,
+        "creneau": {
+          "debut": "14:00",
+          "fin": "16:00",
+          "jour": "mardi"
+        },
+        "creneau_id": 9,
+        "taches": [
+          {
+            "point_id": 4,
+            "ordre": 1,
+            "heure_estimee": "14:05"
+          },
+          {
+            "point_id": 5,
+            "ordre": 2,
+            "heure_estimee": "14:10"
+          }
+        ],
+        "duree_totale": 20,
+        "retard_estime": 0
+      },
+      {
+        "camion_id": 3,
+        "zone_id": 3,
+        "creneau": {
+          "debut": "14:00",
+          "fin": "16:00",
+          "jour": "mardi"
+        },
+        "creneau_id": 9,
+        "taches": [
+          {
+            "point_id": 6,
+            "ordre": 1,
+            "heure_estimee": "14:05"
+          },
+          {
+            "point_id": 7,
+            "ordre": 2,
+            "heure_estimee": "14:10"
+          }
+        ],
+        "duree_totale": 20,
+        "retard_estime": 0
+      }
+    ],
+    "mercredi": [],
+    "jeudi": [],
+    "vendredi": [],
+    "samedi": [],
+    "dimanche": []
+  },
+  "indicateurs": {
+    "taux_occupation": 6.7,
+    "respect_horaires": 100.0,
+    "congestion_moyenne": 1.1,
+    "retard_moyen": 0.0
+  }
+}

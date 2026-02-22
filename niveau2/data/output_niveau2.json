@@ -1,0 +1,147 @@
+{
+  "affectation": [
+    {
+      "camion_id": 2,
+      "zones_affectees": [
+        5,
+        2
+      ],
+      "charge_totale": 1700,
+      "cout_estime": 477.94,
+      "pourcentage_utilisation": 56.67
+    },
+    {
+      "camion_id": 3,
+      "zones_affectees": [
+        1,
+        3
+      ],
+      "charge_totale": 3200,
+      "cout_estime": 690.54,
+      "pourcentage_utilisation": 80.0
+    }
+  ],
+  "graphe_biparti": {
+    "noeuds_camions": [
+      {
+        "id": 1,
+        "capacite": 5000,
+        "cout_fixe": 200
+      },
+      {
+        "id": 2,
+        "capacite": 3000,
+        "cout_fixe": 150
+      },
+      {
+        "id": 3,
+        "capacite": 4000,
+        "cout_fixe": 180
+      }
+    ],
+    "noeuds_zones": [
+      {
+        "id": 1,
+        "volume": 1200,
+        "centre": [
+          3.5,
+          3.5
+        ]
+      },
+      {
+        "id": 2,
+        "volume": 800,
+        "centre": [
+          1.5,
+          5.5
+        ]
+      },
+      {
+        "id": 3,
+        "volume": 2000,
+        "centre": [
+          5.5,
+          1.0
+        ]
+      },
+      {
+        "id": 4,
+        "volume": 1500,
+        "centre": [
+          7.0,
+          5.5
+        ]
+      },
+      {
+        "id": 5,
+        "volume": 900,
+        "centre": [
+          1.0,
+          2.0
+        ]
+      }
+    ],
+    "aretes": [
+      {
+        "camion": 1,
+        "zone": 1,
+        "cout": 324.95
+      },
+      {
+        "camion": 1,
+        "zone": 2,
+        "cout": 285.7
+      },
+      {
+        "camion": 1,
+        "zone": 3,
+        "cout": 405.59
+      },
+      {
+        "camion": 2,
+        "zone": 2,
+        "cout": 235.7
+      },
+      {
+        "camion": 2,
+        "zone": 4,
+        "cout": 308.9
+      },
+      {
+        "camion": 2,
+        "zone": 5,
+        "cout": 242.24
+      },
+      {
+        "camion": 3,
+        "zone": 1,
+        "cout": 304.95
+      },
+      {
+        "camion": 3,
+        "zone": 3,
+        "cout": 385.59
+      },
+      {
+        "camion": 3,
+        "zone": 4,
+        "cout": 338.9
+      },
+      {
+        "camion": 3,
+        "zone": 5,
+        "cout": 272.24
+      }
+    ]
+  },
+  "statistiques": {
+    "nombre_camions_utilises": 2,
+    "charge_moyenne": 2450,
+    "ecart_type_charge": 1060.66,
+    "zones_non_affectees": [
+      4
+    ],
+    "cout_total_estime": 1168.48,
+    "taux_utilisation_moyen": 68.33
+  }
+}

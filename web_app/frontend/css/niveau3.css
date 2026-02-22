@@ -1,0 +1,333 @@
+/* Niveau 3 - Planification temporelle - VillePropre */
+
+/* Section configuration temporelle */
+.niveau3-config {
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.niveau3-config h2 {
+    color: #333;
+    margin-bottom: 16px;
+    font-size: 1.25em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Accordéon / onglets */
+.niveau3-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 16px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.niveau3-tab {
+    padding: 10px 20px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 0.95em;
+    color: #666;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+}
+
+.niveau3-tab:hover {
+    color: #667eea;
+}
+
+.niveau3-tab.active {
+    color: #667eea;
+    font-weight: 600;
+    border-bottom-color: #667eea;
+}
+
+/* Grille des créneaux hebdomadaires */
+.creneaux-grid {
+    display: grid;
+    grid-template-columns: 80px repeat(5, 1fr);
+    gap: 4px;
+    font-size: 0.85em;
+}
+
+.creneaux-grid-header {
+    font-weight: 600;
+    color: #555;
+    padding: 8px;
+    text-align: center;
+}
+
+.creneaux-slot {
+    min-height: 36px;
+    padding: 4px 6px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1px solid transparent;
+}
+
+.creneaux-slot:hover {
+    border-color: #667eea;
+    background: rgba(102, 126, 234, 0.1);
+}
+
+.creneaux-slot.heure-label {
+    font-size: 0.8em;
+    color: #666;
+    cursor: default;
+}
+
+.creneaux-slot.filled {
+    font-weight: 500;
+}
+
+.creneaux-slot.congestion-low {
+    background: #d4edda;
+    color: #155724;
+}
+
+.creneaux-slot.congestion-mid {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.creneaux-slot.congestion-high {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+/* Formulaire créneau */
+.creneau-form {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    margin-bottom: 16px;
+}
+
+.creneau-form label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+    color: #444;
+}
+
+.creneau-form input,
+.creneau-form select {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    margin-bottom: 12px;
+}
+
+.creneau-form .form-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.creneau-form .form-row > div {
+    flex: 1;
+    min-width: 120px;
+}
+
+/* Slider congestion */
+.congestion-slider {
+    margin: 12px 0;
+}
+
+.congestion-slider input[type="range"] {
+    width: 100%;
+    height: 8px;
+    border-radius: 4px;
+    accent-color: #667eea;
+}
+
+.congestion-label {
+    font-size: 0.9em;
+    color: #666;
+    margin-top: 4px;
+}
+
+/* Bouton Niveau 3 */
+.btn-niveau3 {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+    font-weight: 600;
+}
+
+.btn-niveau3:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4);
+}
+
+/* Modal Planning */
+.planning-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 10000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.planning-modal.active {
+    display: flex;
+}
+
+.planning-modal-content {
+    background: white;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 1400px;
+    max-height: 90vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+
+.planning-modal-header {
+    padding: 20px 24px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.planning-modal-header h2 {
+    margin: 0;
+    font-size: 1.5em;
+}
+
+.planning-modal-close {
+    background: rgba(255,255,255,0.2);
+    border: none;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.5em;
+    line-height: 1;
+    transition: background 0.2s;
+}
+
+.planning-modal-close:hover {
+    background: rgba(255,255,255,0.3);
+}
+
+.planning-views-tabs {
+    display: flex;
+    gap: 0;
+    padding: 0 24px;
+    background: #f8f9fa;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.planning-view-tab {
+    padding: 14px 24px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 1em;
+    color: #666;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    transition: all 0.2s;
+}
+
+.planning-view-tab:hover {
+    color: #667eea;
+}
+
+.planning-view-tab.active {
+    color: #667eea;
+    font-weight: 600;
+    background: white;
+    border-bottom-color: #667eea;
+    border-radius: 8px 8px 0 0;
+}
+
+.planning-view-panel {
+    display: none;
+    flex: 1;
+    overflow: auto;
+    padding: 24px;
+}
+
+.planning-view-panel.active {
+    display: block;
+}
+
+.niveau3-panel {
+    display: none;
+}
+
+.niveau3-panel.active {
+    display: block;
+}
+
+.contraintes-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 16px;
+}
+
+.contraintes-sub-tab {
+    padding: 8px 16px;
+    border: 1px solid #ddd;
+    background: #f5f5f5;
+    cursor: pointer;
+    border-radius: 6px;
+}
+
+.contraintes-sub-tab.active {
+    background: #667eea;
+    color: white;
+    border-color: #667eea;
+}
+
+.contraintes-sub-panel {
+    display: none;
+}
+
+.contraintes-sub-panel.active {
+    display: block;
+}
+
+.contrainte-zone-row,
+.pause-camion-row {
+    margin-bottom: 12px;
+}
+
+.contrainte-zone-row label,
+.pause-camion-row label {
+    display: block;
+    margin-bottom: 4px;
+}
+
+.fenetre-inputs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.checkbox-row {
+    display: block;
+    margin: 8px 0;
+    cursor: pointer;
+}
+
+.contraintes-info {
+    margin-bottom: 12px;
+    color: #666;
+}

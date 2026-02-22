@@ -1,0 +1,5 @@
+# Backend Web App - VillePropre
+# Dépendances pour l'API Flask
+
+Flask>=2.3.0
+Flask-CORS>=4.0.0

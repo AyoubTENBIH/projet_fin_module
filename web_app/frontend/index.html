@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VillePropre - Optimisation des Tournées de Collecte</title>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/niveau3.css">
+    <link rel="stylesheet" href="css/timeline.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <h1>🚛 VillePropre</h1>
+            <p class="subtitle">Optimisation des Tournées de Collecte de Déchets</p>
+        </header>
+
+        <!-- Panneau de contrôle -->
+        <div class="control-panel">
+            <div class="panel-section">
+                <h2>📍 Points de Collecte</h2>
+                <button id="btn-add-point" class="btn btn-primary">Ajouter un Point</button>
+                <button id="btn-clear-points" class="btn btn-secondary">Effacer Tout</button>
+                <div id="points-list" class="points-list"></div>
+            </div>
+
+            <div class="panel-section">
+                <h2>🚛 Camions</h2>
+                <button id="btn-add-camion" class="btn btn-primary">Ajouter un Camion</button>
+                <div id="camions-list" class="camions-list"></div>
+            </div>
+
+            <div class="panel-section">
+                <h2>🏭 Déchetteries</h2>
+                <button id="btn-add-dechetterie" class="btn btn-primary">Ajouter une Déchetterie</button>
+                <small style="display: block; margin-top: 5px; color: #666;">Centres de traitement où les camions déposent les déchets collectés</small>
+                <div id="dechetteries-list" class="dechetteries-list"></div>
+            </div>
+
+            <div class="panel-section">
+                <h2>🏭 Dépôt</h2>
+                <button id="btn-select-depot" class="btn btn-info">Choisir le Dépôt</button>
+                <small style="display: block; margin-top: 5px; color: #666;">Glisser le marqueur rouge ou cliquer sur "Choisir" puis sur la carte</small>
+            </div>
+
+            <div class="panel-section" id="niveau3-config-accordion">
+                <h2>⏰ Configuration Temporelle</h2>
+                <div class="niveau3-tabs">
+                    <button type="button" class="niveau3-tab active" id="niveau3-tab-creneaux">Créneaux Horaires</button>
+                    <button type="button" class="niveau3-tab" id="niveau3-tab-contraintes">Contraintes</button>
+                </div>
+                <div id="niveau3-panel-creneaux" class="niveau3-panel active">
+                    <button type="button" id="btn-add-creneau" class="btn btn-primary">+ Ajouter un Créneau</button>
+                    <button type="button" id="btn-dupliquer-semaine" class="btn btn-secondary">Dupliquer cette semaine</button>
+                    <div style="margin-top:8px;">
+                        <span>Charger template :</span>
+                        <button type="button" id="template-classique" class="btn btn-secondary" style="margin:0 4px;">Semaine classique</button>
+                        <button type="button" id="template-mediterranee" class="btn btn-secondary" style="margin:0 4px;">Méditerranée</button>
+                        <button type="button" id="template-ramadan" class="btn btn-secondary" style="margin:0 4px;">Ramadan</button>
+                    </div>
+                    <div id="creneaux-grid-container" style="margin-top:12px;"></div>
+                </div>
+                <div id="niveau3-panel-contraintes" class="niveau3-panel">
+                    <div class="contraintes-tabs">
+                        <button type="button" class="contraintes-sub-tab active" data-target="contraintes-fenetres">Fenêtres Zones</button>
+                        <button type="button" class="contraintes-sub-tab" data-target="contraintes-pauses">Pauses Camions</button>
+                        <button type="button" class="contraintes-sub-tab" data-target="contraintes-interdites">Interdictions</button>
+                    </div>
+                    <div id="contraintes-fenetres" class="contraintes-sub-panel active">
+                        <div id="contraintes-fenetres-container"></div>
+                    </div>
+                    <div id="contraintes-pauses" class="contraintes-sub-panel">
+                        <div id="contraintes-pauses-container"></div>
+                    </div>
+                    <div id="contraintes-interdites" class="contraintes-sub-panel">
+                        <div id="contraintes-interdites-container"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel-section">
+                <h2>⚙️ Optimisation</h2>
+                <button id="btn-niveau1" class="btn btn-success">Niveau 1 : Calculer Distances</button>
+                <button id="btn-niveau2" class="btn btn-success">Niveau 2 : Affecter Zones</button>
+                <div style="margin:10px 0;">
+                    <button id="btn-niveau3" class="btn btn-niveau3">🆕 Niveau 3 : Générer Planning</button>
+                    <small style="display:block;margin-top:5px;color:#666;">Planification hebdomadaire</small>
+                </div>
+                <label style="display: flex; align-items: center; gap: 8px; margin: 8px 0;">
+                    <input type="checkbox" id="niveau3-use-contraintes" checked>
+                    <span>Inclure contraintes temporelles</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 8px; margin: 8px 0;">
+                    <span>Horizon :</span>
+                    <input type="number" id="niveau3-horizon" value="7" min="1" max="7" style="width:60px;"> jours
+                </label>
+                <label style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; cursor: pointer;">
+                    <input type="checkbox" id="use-osrm-routes">
+                    <span>🗺️ Utiliser OSRM (distances routières réelles)</span>
+                </label>
+                <button id="btn-routes-optimisees" class="btn btn-success" style="background: linear-gradient(135deg, #9b59b6, #8e44ad);">🚀 Routes Optimisées avec Déchetteries</button>
+                <small style="display: block; margin-top: 5px; color: #666;">
+                    Calcule les routes intelligentes : Dépôt → Collecte → Déchetterie → Collecte → ... → Dépôt
+                </small>
+                <button id="btn-animate-routes" class="btn btn-info" style="display: none; background: linear-gradient(135deg, #00b894, #00cec9);">
+                    🎬 Animation des Routes
+                </button>
+                <button id="btn-simuler" class="btn btn-warning" disabled>▶️ Simuler</button>
+                <button id="btn-stop-sim" class="btn btn-danger" style="display: none;">⏹️ Arrêter</button>
+                <button id="btn-show-presentation" class="btn btn-info" style="display: none;">📊 Afficher Présentation</button>
+            </div>
+
+            <div class="panel-section">
+                <h2>💾 Templates</h2>
+                <button id="btn-export-template" class="btn btn-primary">📤 Exporter Template</button>
+                <button id="btn-import-template" class="btn btn-secondary">📥 Importer Template</button>
+                <small style="display: block; margin-top: 5px; color: #666;">
+                    Exporte/Importe tous les éléments et résultats (points, camions, déchetteries, routes OSRM)
+                </small>
+            </div>
+        </div>
+
+        <!-- Carte et Panneau de présentation -->
+        <div class="map-presentation-container">
+            <!-- Carte -->
+            <div class="map-container">
+                <div id="map">
+                    <div style="padding: 20px; text-align: center; color: #666;">
+                        Chargement de la carte...
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Panneau de présentation visuelle -->
+            <div id="presentation-panel" class="presentation-panel" style="display: none;">
+                <div class="presentation-header">
+                    <h3>📊 Présentation Visuelle</h3>
+                    <button id="btn-close-presentation" class="btn-close-presentation">&times;</button>
+                </div>
+                <div id="presentation-content" class="presentation-content">
+                    <!-- Le contenu sera généré dynamiquement -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard -->
+        <div class="dashboard" id="dashboard" style="display: none;">
+            <h2>📊 Statistiques</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Distance Totale</div>
+                    <div class="stat-value" id="stat-distance">-</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Coût Total</div>
+                    <div class="stat-value" id="stat-cout">-</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Camions Utilisés</div>
+                    <div class="stat-value" id="stat-camions">-</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Taux Utilisation</div>
+                    <div class="stat-value" id="stat-taux">-</div>
+                </div>
+            </div>
+            <div class="chart-container">
+                <canvas id="chart-charges"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Article Explicatif -->
+    <article class="explanatory-article">
+        <div class="article-container">
+            <h2>📖 Comment Fonctionne Notre Système d'Optimisation ?</h2>
+            
+            <section class="article-section">
+                <h3>🎯 Vue d'Ensemble</h3>
+                <p>
+                    <strong>VillePropre</strong> est un système intelligent qui aide à organiser la collecte des déchets 
+                    dans une ville. Imaginez que vous devez envoyer plusieurs camions pour ramasser les déchets à différents 
+                    endroits. Notre système calcule automatiquement les meilleurs chemins et décide quel camion doit aller où, 
+                    tout en respectant les contraintes importantes comme la capacité des camions.
+                </p>
+            </section>
+
+            <section class="article-section">
+                <h3>📍 Étape 1 : Ajouter les Points de Collecte</h3>
+                <p>
+                    La première étape consiste à placer sur la carte tous les endroits où il faut collecter les déchets. 
+                    Pour chaque point, vous indiquez :
+                </p>
+                <ul>
+                    <li><strong>Le nom</strong> : pour identifier facilement l'endroit (ex: "Quartier Nord", "Centre-ville")</li>
+                    <li><strong>Le volume estimé</strong> : combien de kilos de déchets il y a à collecter</li>
+                    <li><strong>La priorité</strong> : certains endroits sont plus urgents que d'autres</li>
+                </ul>
+                <p>
+                    Ces points apparaissent sur la carte avec des cercles bleus 🗑️. Vous pouvez en ajouter autant que nécessaire 
+                    en cliquant sur "Ajouter un Point" puis sur la carte.
+                </p>
+            </section>
+
+            <section class="article-section">
+                <h3>🏭 Étape 2 : Choisir le Dépôt</h3>
+                <p>
+                    Le dépôt est l'endroit où tous les camions commencent et finissent leur tournée. C'est comme le "garage" 
+                    des camions. Vous devez sélectionner un des points de collecte existants pour en faire le dépôt. 
+                    Ce point devient rouge 🏭 et sert de point de départ et d'arrivée pour tous les camions.
+                </p>
+                <p>
+                    <strong>Pourquoi c'est important ?</strong> Tous les chemins sont calculés depuis et vers ce dépôt, 
+                    ce qui garantit que chaque camion peut revenir décharger les déchets collectés.
+                </p>
+            </section>
+
+            <section class="article-section">
+                <h3>🚛 Étape 3 : Ajouter les Camions</h3>
+                <p>
+                    Ensuite, vous ajoutez les camions disponibles. Pour chaque camion, vous précisez :
+                </p>
+                <ul>
+                    <li><strong>La capacité</strong> : combien de kilos le camion peut transporter (ex: 5000 kg)</li>
+                    <li><strong>Le coût fixe</strong> : ce que coûte l’utilisation de ce camion (ex: 200 €). Ce n’est <em>pas</em> le coût total : le système calcule le coût total en ajoutant carburant (distance), manutention (volume) et ce coût fixe.</li>
+                    <li><strong>Les zones accessibles</strong> : <em>Optionnel</em> - quels points de collecte ce camion peut atteindre</li>
+                </ul>
+                <p>
+                    <strong>Zones accessibles :</strong> C'est un champ <em>optionnel</em> qui permet de limiter où chaque camion peut aller. 
+                    Par exemple :
+                </p>
+                <ul>
+                    <li>Un petit camion peut être limité aux zones résidentielles (ex: zones 1, 2, 3)</li>
+                    <li>Un gros camion peut accéder à toutes les zones (laissez le champ vide)</li>
+                    <li>Un camion spécialisé peut être limité à certaines zones industrielles</li>
+                </ul>
+                <p>
+                    <strong>Important :</strong> Si vous laissez le champ "Zones accessibles" vide, le camion pourra accéder à 
+                    <strong>toutes les zones</strong> (camion universel). C'est utile pour les camions polyvalents.
+                </p>
+            </section>
+
+            <section class="article-section">
+                <h3>🗺️ Étape 4 : Calculer les Chemins Optimaux (Niveau 1)</h3>
+                <p>
+                    Quand vous cliquez sur "Niveau 1 : Calculer Distances", le système utilise un algorithme appelé 
+                    <strong>Dijkstra</strong> pour trouver les chemins les plus courts entre <strong>tous les points</strong>.
+                </p>
+                <p>
+                    <strong>Comment ça marche ?</strong>
+                </p>
+                <ul>
+                    <li>Le système imagine que tous les points sont reliés par des routes</li>
+                    <li>Il calcule la distance la plus courte entre <strong>chaque paire de points</strong> (pas seulement depuis le dépôt)</li>
+                    <li>Cela permet aux camions d'aller directement d'un point de collecte à un autre sans forcément retourner au dépôt</li>
+                    <li>Ces chemins peuvent passer par plusieurs points intermédiaires pour être vraiment optimaux</li>
+                </ul>
+                <p>
+                    <strong>Exemple concret :</strong> Si un camion doit collecter le Point A puis le Point B, le système calcule 
+                    le chemin le plus court directement de A vers B. Le camion n'a pas besoin de retourner au dépôt entre chaque collecte, 
+                    ce qui économise du temps et du carburant !
+                </p>
+                <p>
+                    Sur la carte, vous verrez des lignes bleues qui montrent ces chemins calculés. Ces chemins sont 
+                    <strong>les plus courts possibles</strong>, ce qui signifie moins de temps de trajet et moins de carburant utilisé.
+                </p>
+            </section>
+
+            <section class="article-section">
+                <h3>⚖️ Étape 5 : Affecter les Zones aux Camions (Niveau 2)</h3>
+                <p>
+                    Le "Niveau 2" utilise un algorithme <strong>glouton</strong> pour décider quel camion doit collecter quels points. 
+                    C'est comme résoudre un puzzle : on essaie de remplir chaque camion de manière optimale.
+                </p>
+                <p>
+                    <strong>Le processus :</strong>
+                </p>
+                <ol>
+                    <li>Le système regarde tous les points de collecte qui ne sont pas encore assignés</li>
+                    <li>Pour chaque camion disponible, il calcule le "coût" d'ajouter chaque point</li>
+                    <li>Il choisit la combinaison camion-point qui donne le meilleur rapport qualité/prix</li>
+                    <li>Il répète ce processus jusqu'à ce que tous les points soient assignés</li>
+                </ol>
+                <p>
+                    <strong>Exemple concret :</strong> Si le Camion 1 peut prendre 3 points et le Camion 2 peut prendre 2 points, 
+                    le système essaie différentes combinaisons pour trouver celle qui minimise le coût total tout en utilisant 
+                    au mieux la capacité de chaque camion.
+                </p>
+            </section>
+
+            <section class="article-section">
+                <h3>🛡️ Gestion des Contraintes</h3>
+                <p>
+                    Le système respecte automatiquement plusieurs règles importantes. Si une contrainte n'est pas respectée, 
+                    vous recevrez un avertissement avec les détails du problème :
+                </p>
+                <div class="constraints-grid">
+                    <div class="constraint-card">
+                        <h4>📦 Contrainte de Capacité</h4>
+                        <p>
+                            Un camion ne peut jamais transporter plus que sa capacité maximale. Si un camion peut transporter 
+                            5000 kg, il ne collectera que des points dont le volume total ne dépasse pas 5000 kg.
+                            <br><strong>Vérification automatique :</strong> Le système vérifie cette contrainte après chaque affectation.
+                        </p>
+                    </div>
+                    <div class="constraint-card">
+                        <h4>🚧 Contrainte d'Accessibilité</h4>
+                        <p>
+                            Chaque camion ne peut aller que dans les zones qui lui sont accessibles. Si vous avez spécifié 
+                            que le Camion 1 peut accéder aux zones 1, 2 et 3, il ne pourra jamais être assigné à la zone 4.
+                            <br><strong>Note :</strong> Si vous laissez le champ vide, le camion peut accéder à toutes les zones.
+                        </p>
+                    </div>
+                    <div class="constraint-card">
+                        <h4>🏭 Contrainte du Dépôt Unique</h4>
+                        <p>
+                            Tous les camions doivent commencer et finir au même dépôt. Cela garantit une organisation 
+                            cohérente et facilite la gestion des véhicules. Le système vérifie automatiquement que tous 
+                            les trajets commencent et se terminent au dépôt sélectionné.
+                        </p>
+                    </div>
+                    <div class="constraint-card">
+                        <h4>⚖️ Équilibrage de Charge</h4>
+                        <p>
+                            Le système essaie de répartir équitablement le travail entre les camions. Il évite qu'un camion 
+                            soit surchargé pendant qu'un autre est presque vide. Cette optimisation améliore l'efficacité 
+                            globale du système.
+                        </p>
+                    </div>
+                </div>
+                <p style="margin-top: 20px; padding: 15px; background: #fff3cd; border-left: 4px solid #ffc107; border-radius: 5px;">
+                    <strong>💡 Astuce :</strong> Après le Niveau 2, si vous voyez des avertissements, vérifiez les zones accessibles 
+                    de vos camions et leurs capacités. Le système vous indiquera exactement quelles contraintes ne sont pas respectées.
+                </p>
+            </section>
+
+            <section class="article-section">
+                <h3>🎬 Étape 6 : Visualiser la Simulation</h3>
+                <p>
+                    Une fois l'affectation terminée, vous pouvez lancer la simulation pour voir comment les camions se déplacent 
+                    en temps réel. Sur la carte, vous verrez :
+                </p>
+                <ul>
+                    <li>Les camions 🚛 qui se déplacent le long des chemins calculés</li>
+                    <li>Les points qui changent de couleur : bleu (en attente) → jaune (en cours) → vert (collecté)</li>
+                    <li>La charge de chaque camion qui augmente au fur et à mesure de la collecte</li>
+                </ul>
+                <p>
+                    Dans le panneau de présentation à droite, vous avez une vue schématique avec :
+                </p>
+                <ul>
+                    <li>Des lignes horizontales représentant les chemins de chaque camion</li>
+                    <li>Le dépôt 🏭 à gauche et les points de collecte 🗑️ à droite</li>
+                    <li>Les camions qui se déplacent visuellement de gauche à droite</li>
+                    <li>Les résultats détaillés de l'algorithme (distance, coût, utilisation, etc.)</li>
+                </ul>
+            </section>
+
+            <section class="article-section">
+                <h3>📊 Comprendre les Résultats</h3>
+                <p>
+                    Après l'optimisation, le système vous montre plusieurs statistiques importantes :
+                </p>
+                <ul>
+                    <li><strong>Distance Totale</strong> : La somme de tous les trajets effectués par tous les camions</li>
+                    <li><strong>Coût total</strong> : calculé par le système pour toutes les tournées (distance × carburant + volume × manutention + coût fixe de chaque camion utilisé). Ce n’est pas uniquement la somme des coûts fixes.</li>
+                    <li><strong>Camions Utilisés</strong> : Combien de camions ont été nécessaires sur le total disponible</li>
+                    <li><strong>Taux d'Utilisation</strong> : À quel pourcentage chaque camion a été utilisé (idéalement proche de 100%)</li>
+                    <li><strong>Équilibrage de Charge</strong> : Une mesure de la répartition équitable du travail</li>
+                </ul>
+                <p>
+                    <strong>Objectif :</strong> Minimiser le coût total tout en utilisant efficacement les camions disponibles 
+                    et en respectant toutes les contraintes.
+                </p>
+            </section>
+
+            <section class="article-section">
+                <h3>💡 Pourquoi C'est Efficace ?</h3>
+                <p>
+                    Sans ce système, organiser manuellement les tournées serait très difficile et prendrait beaucoup de temps. 
+                    Il faudrait :
+                </p>
+                <ul>
+                    <li>Calculer toutes les distances possibles entre les points</li>
+                    <li>Essayer toutes les combinaisons possibles d'affectation</li>
+                    <li>Vérifier manuellement que toutes les contraintes sont respectées</li>
+                    <li>Comparer des centaines de solutions pour trouver la meilleure</li>
+                </ul>
+                <p>
+                    Notre système fait tout cela automatiquement en quelques secondes, en utilisant des algorithmes mathématiques 
+                    éprouvés qui garantissent une solution optimale ou très proche de l'optimum.
+                </p>
+            </section>
+
+            <section class="article-section highlight-box">
+                <h3>✨ En Résumé</h3>
+                <p>
+                    <strong>VillePropre</strong> transforme un problème complexe d'organisation en un processus simple et visuel :
+                </p>
+                <ol>
+                    <li>Vous placez les points de collecte sur la carte</li>
+                    <li>Vous choisissez le dépôt et ajoutez les camions</li>
+                    <li>Le système calcule automatiquement les meilleurs chemins</li>
+                    <li>Le système assigne intelligemment les points aux camions</li>
+                    <li>Vous visualisez le résultat avec une simulation animée</li>
+                </ol>
+                <p>
+                    Le tout en respectant les capacités des camions, leurs limitations d'accès, et en minimisant les coûts !
+                </p>
+            </section>
+        </div>
+    </article>
+
+    <!-- Loader Niveau 3 -->
+    <div id="niveau3-loader" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;flex-direction:column;">
+        <div style="background:white;padding:30px;border-radius:12px;text-align:center;">
+            <div style="font-size:48px;">🔄</div>
+            <div style="font-weight:bold;">Génération du planning hebdomadaire...</div>
+            <div style="color:#666;">Analyse des contraintes temporelles...</div>
+        </div>
+    </div>
+
+    <!-- Modal Créneau -->
+    <div id="modal-creneau" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="close" onclick="document.getElementById('modal-creneau').style.display='none'">&times;</span>
+            <h2 id="creneau-form-title">Ajouter un créneau</h2>
+            <form id="creneau-form">
+                <label>Jour</label>
+                <select id="creneau-jour">
+                    <option value="lundi">Lundi</option>
+                    <option value="mardi">Mardi</option>
+                    <option value="mercredi">Mercredi</option>
+                    <option value="jeudi">Jeudi</option>
+                    <option value="vendredi">Vendredi</option>
+                    <option value="samedi">Samedi</option>
+                    <option value="dimanche">Dimanche</option>
+                </select>
+                <label>Heure début</label>
+                <input type="time" id="creneau-debut" value="08:00">
+                <label>Heure fin</label>
+                <input type="time" id="creneau-fin" value="10:00">
+                <label>Congestion</label>
+                <div class="congestion-slider">
+                    <input type="range" id="creneau-congestion" min="1" max="2" step="0.1" value="1">
+                    <div id="creneau-congestion-label" class="congestion-label">Trafic : Normal</div>
+                </div>
+                <button type="submit" class="btn btn-primary">Sauvegarder</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Planning -->
+    <div id="planning-modal" class="planning-modal">
+        <div class="planning-modal-content">
+            <div class="planning-modal-header">
+                <h2>📅 Planning Hebdomadaire</h2>
+                <button type="button" id="planning-modal-close" class="planning-modal-close" aria-label="Fermer">&times;</button>
+            </div>
+            <div class="planning-views-tabs">
+                <button type="button" class="planning-view-tab active" id="planning-tab-timeline">📅 Timeline</button>
+                <button type="button" class="planning-view-tab" id="planning-tab-carte">🗺️ Carte Animée</button>
+                <button type="button" class="planning-view-tab" id="planning-tab-stats">📊 Statistiques</button>
+            </div>
+            <div id="planning-panel-timeline" class="planning-view-panel active">
+                <div id="timeline-content" class="timeline-container"></div>
+            </div>
+            <div id="planning-panel-carte" class="planning-view-panel">
+                <p style="padding:20px;color:#666;">Carte animée - Simulation des camions (à venir)</p>
+            </div>
+            <div id="planning-panel-stats" class="planning-view-panel">
+                <div id="stats-dashboard-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="modal-point" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Ajouter un Point de Collecte</h2>
+            <form id="form-point">
+                <label>Nom:</label>
+                <input type="text" id="point-nom" placeholder="Ex: Quartier Nord" required>
+                <label>Volume estimé (kg):</label>
+                <input type="number" id="point-volume" placeholder="1200" min="0" required>
+                <label>Priorité:</label>
+                <select id="point-priorite">
+                    <option value="normale">Normale</option>
+                    <option value="haute">Haute</option>
+                    <option value="basse">Basse</option>
+                </select>
+                <button type="submit" class="btn btn-primary">Ajouter</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="modal-camion" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Ajouter un Camion</h2>
+            <form id="form-camion">
+                <label>ID Camion:</label>
+                <input type="number" id="camion-id" placeholder="1" min="1" required>
+                <label>Capacité (kg):</label>
+                <input type="number" id="camion-capacite" placeholder="5000" min="0" required>
+                <label>Coût fixe (€):</label>
+                <input type="number" id="camion-cout" placeholder="200" min="0" step="0.01" required>
+                <small style="display: block; margin-top: 2px; margin-bottom: 10px; color: #666;">
+                    <strong>Ce n’est pas le coût total.</strong> C’est le coût d’utilisation de ce camion (ex: 200 € par tournée). 
+                    Le <em>coût total</em> est calculé par le système : il ajoute pour chaque zone (carburant, manutention) + ce coût fixe.
+                </small>
+                <label>Zones accessibles (IDs séparés par virgule) - <em>Optionnel</em>:</label>
+                <input type="text" id="camion-zones" placeholder="1,2,3 (ou laissez vide pour toutes)">
+                <small style="display: block; margin-top: 5px; color: #666;">
+                    <strong>Optionnel :</strong> Entrez les IDs des points de collecte que ce camion peut atteindre (ex: 1,2,3). 
+                    <br><strong>Laissez vide</strong> pour permettre l'accès à toutes les zones (camion universel).
+                    <br><em>Exemple : Un petit camion peut être limité aux zones 1,2,3, tandis qu'un gros camion peut accéder à toutes.</em>
+                </small>
+                <button type="submit" class="btn btn-primary">Ajouter</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="modal-dechetterie" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Ajouter une Déchetterie</h2>
+            <p style="margin-bottom: 15px; color: #666; font-size: 14px;">
+                <strong>Déchetterie :</strong> Centre de traitement où les camions déposent les déchets collectés depuis les points de collecte.
+                <br>Le système choisira automatiquement la déchetterie la plus proche pour chaque camion.
+            </p>
+            <form id="form-dechetterie">
+                <label>ID Déchetterie:</label>
+                <input type="number" id="dechetterie-id" placeholder="11" min="1" required>
+                <label>Nom:</label>
+                <input type="text" id="dechetterie-nom" placeholder="Ex: Déchetterie Nord" required>
+                <label>Capacité maximale (kg) - <em>Optionnel</em>:</label>
+                <input type="number" id="dechetterie-capacite" placeholder="10000 (0 = illimitée)" min="0" value="0">
+                <small style="display: block; margin-top: 2px; margin-bottom: 10px; color: #666;">
+                    Capacité maximale de stockage. Laissez 0 pour une capacité illimitée.
+                </small>
+                <label>Types de déchets acceptés - <em>Optionnel</em>:</label>
+                <input type="text" id="dechetterie-types" placeholder="verre, papier, plastique, métal">
+                <small style="display: block; margin-top: 2px; margin-bottom: 10px; color: #666;">
+                    Séparez les types par des virgules (ex: verre, papier, plastique)
+                </small>
+                <button type="submit" class="btn btn-primary">Ajouter</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <!-- Scripts -->
+    <script src="js/template.js"></script>
+    <script src="js/map.js"></script>
+    <script src="js/timeline-view.js"></script>
+    <script src="js/stats-dashboard.js"></script>
+    <script src="js/niveau3.js"></script>
+    <script src="js/simulation.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/presentation.js"></script>
+    <script src="js/route_animation.js"></script>
+</body>
+</html>

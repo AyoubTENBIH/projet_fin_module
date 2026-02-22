@@ -1,0 +1,104 @@
+{
+  "depot": {
+    "id": 0,
+    "x": 0,
+    "y": 0,
+    "nom": "Centre de traitement"
+  },
+  "points_collecte": [
+    {"id": 1, "x": 2.5, "y": 3.1, "nom": "Quartier Nord"},
+    {"id": 2, "x": 5.2, "y": 4.8, "nom": "Centre Ville"},
+    {"id": 3, "x": 7.8, "y": 1.2, "nom": "Zone Industrielle"},
+    {"id": 4, "x": 1.0, "y": 6.5, "nom": "Quartier Ouest"},
+    {"id": 5, "x": 9.0, "y": 5.5, "nom": "Zone Nord-Est"},
+    {"id": 6, "x": 4.0, "y": 0.5, "nom": "Zone Sud"},
+    {"id": 7, "x": 6.5, "y": 7.0, "nom": "Quartier Est"},
+    {"id": 8, "x": 3.0, "y": 5.0, "nom": "Centre Nord"},
+    {"id": 9, "x": 8.5, "y": 3.0, "nom": "Zone Est"},
+    {"id": 10, "x": 0.5, "y": 2.0, "nom": "Quartier Sud-Ouest"}
+  ],
+  "dechetteries": [
+    {
+      "id": 11,
+      "x": 3.5,
+      "y": 4.0,
+      "nom": "Déchetterie Nord",
+      "capacite_max": 10000,
+      "types_dechets": ["verre", "papier", "plastique", "métal", "déchets verts"],
+      "horaires": {
+        "lundi": "8h-18h",
+        "mardi": "8h-18h",
+        "mercredi": "8h-18h",
+        "jeudi": "8h-18h",
+        "vendredi": "8h-18h",
+        "samedi": "9h-17h",
+        "dimanche": "fermé"
+      }
+    },
+    {
+      "id": 12,
+      "x": 6.0,
+      "y": 2.5,
+      "nom": "Déchetterie Est",
+      "capacite_max": 8000,
+      "types_dechets": ["verre", "papier", "plastique", "métal"],
+      "horaires": {
+        "lundi": "9h-17h",
+        "mardi": "9h-17h",
+        "mercredi": "9h-17h",
+        "jeudi": "9h-17h",
+        "vendredi": "9h-17h",
+        "samedi": "9h-16h",
+        "dimanche": "fermé"
+      }
+    },
+    {
+      "id": 13,
+      "x": 1.5,
+      "y": 1.5,
+      "nom": "Déchetterie Sud-Ouest",
+      "capacite_max": 6000,
+      "types_dechets": ["verre", "papier", "plastique", "déchets verts"],
+      "horaires": {
+        "lundi": "8h-18h",
+        "mardi": "8h-18h",
+        "mercredi": "8h-18h",
+        "jeudi": "8h-18h",
+        "vendredi": "8h-18h",
+        "samedi": "9h-17h",
+        "dimanche": "10h-16h"
+      }
+    }
+  ],
+  "connexions": [
+    {"depart": 0, "arrivee": 1, "distance": null},
+    {"depart": 0, "arrivee": 6, "distance": null},
+    {"depart": 0, "arrivee": 10, "distance": null},
+    {"depart": 1, "arrivee": 2, "distance": 4.2},
+    {"depart": 1, "arrivee": 4, "distance": null},
+    {"depart": 1, "arrivee": 8, "distance": null},
+    {"depart": 2, "arrivee": 5, "distance": null},
+    {"depart": 2, "arrivee": 7, "distance": null},
+    {"depart": 2, "arrivee": 8, "distance": null},
+    {"depart": 3, "arrivee": 6, "distance": null},
+    {"depart": 3, "arrivee": 9, "distance": null},
+    {"depart": 4, "arrivee": 8, "distance": null},
+    {"depart": 5, "arrivee": 7, "distance": null},
+    {"depart": 5, "arrivee": 9, "distance": null},
+    {"depart": 6, "arrivee": 10, "distance": null},
+    {"depart": 7, "arrivee": 8, "distance": null},
+    {"depart": 9, "arrivee": 3, "distance": null},
+    {"depart": 10, "arrivee": 1, "distance": null},
+    {"depart": 0, "arrivee": 11, "distance": null},
+    {"depart": 0, "arrivee": 12, "distance": null},
+    {"depart": 0, "arrivee": 13, "distance": null},
+    {"depart": 1, "arrivee": 11, "distance": null},
+    {"depart": 2, "arrivee": 11, "distance": null},
+    {"depart": 8, "arrivee": 11, "distance": null},
+    {"depart": 3, "arrivee": 12, "distance": null},
+    {"depart": 5, "arrivee": 12, "distance": null},
+    {"depart": 9, "arrivee": 12, "distance": null},
+    {"depart": 6, "arrivee": 13, "distance": null},
+    {"depart": 10, "arrivee": 13, "distance": null}
+  ]
+}

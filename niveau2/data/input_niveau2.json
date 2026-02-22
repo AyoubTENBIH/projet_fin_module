@@ -1,0 +1,75 @@
+{
+  "camions": [
+    {
+      "id": 1,
+      "capacite": 5000,
+      "cout_fixe": 200,
+      "zones_accessibles": [1, 2, 3],
+      "position_initiale": {"x": 0, "y": 0}
+    },
+    {
+      "id": 2,
+      "capacite": 3000,
+      "cout_fixe": 150,
+      "zones_accessibles": [2, 4, 5],
+      "position_initiale": {"x": 0, "y": 0}
+    },
+    {
+      "id": 3,
+      "capacite": 4000,
+      "cout_fixe": 180,
+      "zones_accessibles": [1, 3, 4, 5],
+      "position_initiale": {"x": 0, "y": 0}
+    }
+  ],
+  "zones": [
+    {
+      "id": 1,
+      "points": [1, 2, 3],
+      "volume_moyen": 1200,
+      "centre": {"x": 3.5, "y": 3.5},
+      "frequence_collecte": "quotidien",
+      "priorite": "haute"
+    },
+    {
+      "id": 2,
+      "points": [4, 5],
+      "volume_moyen": 800,
+      "centre": {"x": 1.5, "y": 5.5},
+      "frequence_collecte": "quotidien",
+      "priorite": "normale"
+    },
+    {
+      "id": 3,
+      "points": [6, 7],
+      "volume_moyen": 2000,
+      "centre": {"x": 5.5, "y": 1.0},
+      "frequence_collecte": "quotidien",
+      "priorite": "normale"
+    },
+    {
+      "id": 4,
+      "points": [8, 9],
+      "volume_moyen": 1500,
+      "centre": {"x": 7.0, "y": 5.5},
+      "frequence_collecte": "hebdomadaire",
+      "priorite": "basse"
+    },
+    {
+      "id": 5,
+      "points": [10],
+      "volume_moyen": 900,
+      "centre": {"x": 1.0, "y": 2.0},
+      "frequence_collecte": "quotidien",
+      "priorite": "haute"
+    }
+  ],
+  "contraintes": {
+    "capacite_max_par_camion": 6000,
+    "zones_incompatibles": [[1, 2]],
+    "priorites": [
+      {"zone_id": 1, "priorite": "haute"},
+      {"zone_id": 5, "priorite": "haute"}
+    ]
+  }
+}

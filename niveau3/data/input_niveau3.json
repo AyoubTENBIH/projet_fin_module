@@ -1,0 +1,50 @@
+{
+  "creneaux": [
+    {"id": 1, "debut": "06:00", "fin": "08:00", "jour": "lundi", "niveau_congestion": 1.0},
+    {"id": 2, "debut": "08:00", "fin": "10:00", "jour": "lundi", "niveau_congestion": 1.3},
+    {"id": 3, "debut": "10:00", "fin": "12:00", "jour": "lundi", "niveau_congestion": 1.2},
+    {"id": 4, "debut": "14:00", "fin": "16:00", "jour": "lundi", "niveau_congestion": 1.1},
+    {"id": 5, "debut": "16:00", "fin": "18:00", "jour": "lundi", "niveau_congestion": 1.5},
+
+    {"id": 6, "debut": "06:00", "fin": "08:00", "jour": "mardi", "niveau_congestion": 1.0},
+    {"id": 7, "debut": "08:00", "fin": "10:00", "jour": "mardi", "niveau_congestion": 1.3},
+    {"id": 8, "debut": "10:00", "fin": "12:00", "jour": "mardi", "niveau_congestion": 1.2},
+    {"id": 9, "debut": "14:00", "fin": "16:00", "jour": "mardi", "niveau_congestion": 1.1},
+    {"id": 10, "debut": "16:00", "fin": "18:00", "jour": "mardi", "niveau_congestion": 1.5},
+
+    {"id": 11, "debut": "06:00", "fin": "08:00", "jour": "mercredi", "niveau_congestion": 1.0},
+    {"id": 12, "debut": "08:00", "fin": "10:00", "jour": "mercredi", "niveau_congestion": 1.3},
+    {"id": 13, "debut": "10:00", "fin": "12:00", "jour": "mercredi", "niveau_congestion": 1.2},
+    {"id": 14, "debut": "14:00", "fin": "16:00", "jour": "mercredi", "niveau_congestion": 1.1},
+
+    {"id": 15, "debut": "06:00", "fin": "08:00", "jour": "jeudi", "niveau_congestion": 1.0},
+    {"id": 16, "debut": "08:00", "fin": "10:00", "jour": "jeudi", "niveau_congestion": 1.3},
+    {"id": 17, "debut": "14:00", "fin": "16:00", "jour": "jeudi", "niveau_congestion": 1.1},
+
+    {"id": 18, "debut": "06:00", "fin": "08:00", "jour": "vendredi", "niveau_congestion": 1.0},
+    {"id": 19, "debut": "08:00", "fin": "10:00", "jour": "vendredi", "niveau_congestion": 1.4},
+    {"id": 20, "debut": "10:00", "fin": "12:00", "jour": "vendredi", "niveau_congestion": 1.2}
+  ],
+
+  "contraintes_temporelles": {
+    "fenetres_zone": [
+      {"zone_id": 1, "debut": "06:00", "fin": "20:00"},
+      {"zone_id": 2, "debut": "06:00", "fin": "20:00"},
+      {"zone_id": 3, "debut": "00:00", "fin": "23:59"},
+      {"zone_id": 4, "debut": "08:00", "fin": "18:00"},
+      {"zone_id": 5, "debut": "06:00", "fin": "20:00"}
+    ],
+    "pauses_obligatoires": [
+      {"camion_id": 1, "debut": "12:00", "duree": 1},
+      {"camion_id": 2, "debut": "12:00", "duree": 1},
+      {"camion_id": 3, "debut": "12:30", "duree": 1}
+    ],
+    "zones_interdites_nuit": [1, 2, 5]
+  },
+
+  "horizon_planification": {
+    "date_debut": "2025-01-20",
+    "date_fin": "2025-01-26",
+    "pas_temps": 30
+  }
+}

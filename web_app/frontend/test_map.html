@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Carte</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        #map {
+            width: 100%;
+            height: 600px;
+            background-color: #e8f4f8;
+        }
+        body {
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test de la Carte Leaflet</h1>
+    <div id="status"></div>
+    <div id="map"></div>
+    
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        const status = document.getElementById('status');
+        
+        // Test 1: Leaflet chargé ?
+        if (typeof L === 'undefined') {
+            status.innerHTML = '<p style="color: red;">❌ Leaflet n\'est pas chargé</p>';
+        } else {
+            status.innerHTML = '<p style="color: green;">✅ Leaflet est chargé</p>';
+            
+            // Test 2: Conteneur existe ?
+            const mapContainer = document.getElementById('map');
+            if (!mapContainer) {
+                status.innerHTML += '<p style="color: red;">❌ Le conteneur #map n\'existe pas</p>';
+            } else {
+                status.innerHTML += '<p style="color: green;">✅ Le conteneur #map existe</p>';
+                
+                // Test 3: Initialiser la carte
+                try {
+                    const map = L.map('map').setView([33.5731, -7.5898], 13);
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: '© OpenStreetMap contributors',
+                        maxZoom: 19
+                    }).addTo(map);
+                    
+                    status.innerHTML += '<p style="color: green;">✅ Carte initialisée avec succès</p>';
+                    
+                    setTimeout(() => {
+                        map.invalidateSize();
+                        status.innerHTML += '<p style="color: green;">✅ Redraw effectué</p>';
+                    }, 500);
+                } catch (error) {
+                    status.innerHTML += '<p style="color: red;">❌ Erreur: ' + error.message + '</p>';
+                    console.error(error);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
