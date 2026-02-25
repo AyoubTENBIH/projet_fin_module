@@ -496,7 +496,8 @@
     }
 
     function init() {
-        const section = document.getElementById("niveau3-section");
+        // Utiliser niveau3-config-accordion ou btn-niveau3 pour vérifier que la section existe
+        const section = document.getElementById("niveau3-config-accordion") || document.getElementById("btn-niveau3");
         if (!section) return;
 
         renderCreneauxGrid();

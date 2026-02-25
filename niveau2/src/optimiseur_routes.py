@@ -420,8 +420,9 @@ class OptimiseurRoutes:
         Complexité: O(n² × max_iter)
         """
         points = [p for p in route if p.type_point in ("depot", "collecte")]
-        if len(points) < 4:
-            return points
+        # Retourner tôt si pas assez de points (évite boucle infinie sur i,j quand n=4)
+        if len(points) < 5:
+            return list(points)
         
         import random
         route_sa = list(points)
@@ -434,13 +435,11 @@ class OptimiseurRoutes:
         for _ in range(max_iter):
             if t < t_min:
                 break
-            
-            i, j = 1, 1
-            while i >= j or j - i < 2:
-                i = random.randint(1, n - 2)
-                j = random.randint(1, n - 2)
-            if i > j:
-                i, j = j, i
+            # i < j avec segment [i..j] de taille >= 2 (évite boucle infinie)
+            i = random.randint(1, n - 2)
+            j = random.randint(i + 1, n - 1) if i + 1 <= n - 1 else i + 1
+            if j > n - 1:
+                continue
             
             # Voisin 2-opt
             route_voisin = route_sa[:i] + route_sa[i:j+1][::-1] + route_sa[j+1:]
@@ -1022,18 +1021,22 @@ class OptimiseurRoutes:
     def optimiser_routes(self) -> List[RouteOptimisee]:
         """
         Optimise les routes pour tous les camions.
-        
+
         Stratégie multi-étapes :
         1. Répartir les points entre les camions (algorithme glouton)
         2. Pour chaque camion, construire une route avec Nearest Neighbor
         3. Améliorer chaque route avec 2-opt et Or-opt
         4. Insérer les déchetteries de manière optimale
-        
+
         Returns:
             Liste des routes optimisées
         """
+        print("[Optimiseur] optimiser_routes() début, points=", len(self.points_collecte), "camions=", len(self.camions))
         self.routes_optimisees = []
-        
+        n_total = len(self.points_collecte) + len(self.dechetteries) + 1
+        # Chemin rapide pour très petites instances (évite blocage 50s)
+        mode_rapide = n_total <= 5
+
         # Trier les points par priorité et volume
         points_tries = sorted(
             self.points_collecte,
@@ -1075,6 +1078,7 @@ class OptimiseurRoutes:
         # Borne inférieure (MST) pour évaluation de la qualité
         points_pour_mst = [self.depot] + self.points_collecte
         self._borne_inferieure = self._calculer_borne_inferieure_mst(points_pour_mst)
+        print("[Optimiseur] après MST")
         
         # Statistiques des croisements
         total_croisements_avant = 0
@@ -1091,37 +1095,55 @@ class OptimiseurRoutes:
             route_initiale = self._nearest_neighbor_avec_dechetteries(
                 points_camion, camion['capacite']
             )
+            print("[Optimiseur] après nearest_neighbor")
             
             # Compter les croisements AVANT optimisation
             croisements_avant = self._compter_croisements(route_initiale)
             total_croisements_avant += croisements_avant
             
             n_pts = len(points_camion)
-            max_iter_2opt = min(500, 50 + n_pts * 5)
-            max_iter_3opt = 5 if n_pts > 15 else 10
-            max_iter_sa = 100 if n_pts > 20 else 200
-            
+            if mode_rapide:
+                max_iter_2opt = 5
+                max_iter_3opt = 0
+                max_iter_sa = 10
+            else:
+                max_iter_2opt = min(500, 50 + n_pts * 5)
+                max_iter_3opt = 5 if n_pts > 15 else 10
+                max_iter_sa = 100 if n_pts > 20 else 200
+
             # 2. 2-opt COMPLET pour éliminer les croisements
             route_sans_croisement = self._deux_opt_complet(route_initiale, max_iterations=max_iter_2opt)
+            print("[Optimiseur] après deux_opt_complet(1)")
             
-            # 3. 3-opt (limité si beaucoup de points)
-            route_3opt = self._trois_opt(route_sans_croisement, max_iterations=max_iter_3opt)
-            route_3opt = self._deux_opt_complet(route_3opt, max_iterations=50)
+            # 3. 3-opt (limité si beaucoup de points) — sauté en mode rapide
+            if not mode_rapide and max_iter_3opt > 0:
+                route_3opt = self._trois_opt(route_sans_croisement, max_iterations=max_iter_3opt)
+                route_3opt = self._deux_opt_complet(route_3opt, max_iterations=50)
+            else:
+                route_3opt = self._deux_opt_complet(route_sans_croisement, max_iterations=10)
+            print("[Optimiseur] après trois_opt + 2opt")
             
-            # 4. Or-opt
-            route_amelioree = self._or_opt_simple(route_3opt, max_iterations=30)
+            # 4. Or-opt (limité en mode rapide)
+            route_amelioree = self._or_opt_simple(route_3opt, max_iterations=5 if mode_rapide else 30)
+            print("[Optimiseur] après or_opt_simple")
             
-            # 5. Simulated Annealing
+            # 5. Simulated Annealing (limité en mode rapide)
             route_sa = self._simulated_annealing(route_amelioree, t_initial=30, max_iter=max_iter_sa)
-            route_amelioree = self._deux_opt_complet(route_sa, max_iterations=50)
+            route_amelioree = self._deux_opt_complet(route_sa, max_iterations=10 if mode_rapide else 50)
+            print("[Optimiseur] après simulated_annealing")
             
             # 6. Reconstruire avec déchetteries optimales
             route_avec_dech = self._reconstruire_route_avec_dechetteries(
                 route_amelioree, camion['capacite']
             )
+            print("[Optimiseur] après reconstruire_route_avec_dechetteries")
             
-            # 7. 2-opt final pour éliminer les croisements créés par l'insertion
-            route_finale = self._nettoyer_croisements_final(route_avec_dech, camion['capacite'])
+            # 7. 2-opt final (max 20 itérations en mode rapide)
+            route_finale = self._nettoyer_croisements_final(
+                route_avec_dech, camion['capacite'],
+                max_iterations=20 if mode_rapide else 200
+            )
+            print("[Optimiseur] après nettoyer_croisements_final")
             
             # Compter les croisements APRÈS optimisation
             croisements_apres = self._compter_croisements(route_finale)
@@ -1240,6 +1262,7 @@ def optimiser_collecte(depot_data: Dict, points_data: List[Dict],
     Returns:
         Dictionnaire avec les routes optimisées et statistiques
     """
+    print("[Optimiseur] optimiser_collecte() début, use_osrm=", use_osrm, "points=", len(points_data))
     # Créer les objets Point
     depot = Point(
         id=depot_data.get('id', 0),
@@ -1272,16 +1295,24 @@ def optimiser_collecte(depot_data: Dict, points_data: List[Dict],
         for d in dechetteries_data
     ]
     
-    # Matrice OSRM (optionnel)
+    # Matrice OSRM (optionnel) - même approche que web_app/frontend
     matrice_osrm = None
     if use_osrm and len(points_collecte) + len(dechetteries_data) + 1 <= 100:
         try:
+            print("[Optimiseur] Appel OSRM Table API (matrice distances)...")
             from osrm_client import build_distance_matrix_from_osrm
             matrice_osrm = build_distance_matrix_from_osrm(
                 depot_data, points_data, dechetteries_data if dechetteries_data else []
             )
+            if matrice_osrm:
+                print(f"[Optimiseur] OSRM OK: matrice {len(matrice_osrm)} entrées")
+            else:
+                print("[Optimiseur] OSRM retourne None, utilisation distances euclidiennes")
         except Exception as e:
-            print(f"[Optimiseur] OSRM indisponible: {e}, utilisation distances euclidiennes")
+            import traceback
+            print(f"[Optimiseur] OSRM indisponible: {e}")
+            if True:  # DEBUG
+                traceback.print_exc()
     
     # Créer l'optimiseur et lancer l'optimisation
     optimiseur = OptimiseurRoutes(

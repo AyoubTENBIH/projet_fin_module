@@ -831,6 +831,9 @@ async function runRoutesOptimisees() {
     console.log('- Déchetteries:', dechetteriesData.length);
     console.log('- Camions:', camionsData.length);
     
+    // Contrôleur pour annulation
+    const abortController = new AbortController();
+
     // Afficher un message de chargement (overlay + popup)
     const loadingOverlay = document.createElement('div');
     loadingOverlay.id = 'loading-routes-optimisees';
@@ -839,31 +842,37 @@ async function runRoutesOptimisees() {
         <div style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); text-align: center; min-width: 320px;">
             <div style="font-size: 48px; margin-bottom: 15px;">⏳</div>
             <div style="font-size: 18px; font-weight: bold; margin-bottom: 10px;">Optimisation en cours...</div>
-            <div style="color: #666; font-size: 14px;">
-                Nearest Neighbor → 2-opt → 3-opt → Or-opt → Recuit simulé<br>
-                <em>Veuillez patienter (5-30 sec)</em>
+            <div style="color: #666; font-size: 14px; margin-bottom: 15px;">
+                Nearest Neighbor → 2-opt → Or-opt → Recuit simulé<br>
+                <em>Patience : 30 sec à 2 min (désactiver OSRM si lent)</em>
             </div>
+            <button type="button" id="btn-annuler-routes" style="padding:8px 16px;background:#dc3545;color:white;border:none;border-radius:6px;cursor:pointer;">Annuler</button>
         </div>
     `;
     document.body.appendChild(loadingOverlay);
-    
-    // Sécurité : retirer l'overlay après 90s max (évite blocage permanent)
-    const safetyTimeout = setTimeout(() => {
+
+    // Sécurité : retirer l'overlay après 180s (évite blocage permanent)
+    let safetyTimeoutId = setTimeout(() => {
         const el = document.getElementById('loading-routes-optimisees');
         if (el) {
             el.remove();
-            alert('Le chargement prend plus de temps que prévu. Vérifiez la console (F12) ou désactivez "Utiliser OSRM" pour accélérer.');
+            alert('Le chargement prend plus de temps que prévu (3 min).\n\n💡 Astuce : Désactivez "Utiliser OSRM" pour accélérer (distances euclidiennes au lieu des vraies routes).');
         }
-    }, 90000);
+    }, 180000);
+
+    document.getElementById('btn-annuler-routes').addEventListener('click', () => {
+        abortController.abort();
+        loadingOverlay.remove();
+        clearTimeout(safetyTimeoutId);
+    });
     
     let timeoutId;
     try {
-        const controller = new AbortController();
-        timeoutId = setTimeout(() => controller.abort(), 300000);
+        timeoutId = setTimeout(() => abortController.abort(), 300000);
         const response = await fetch('/api/routes/optimiser', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            signal: controller.signal,
+            signal: abortController.signal,
             body: JSON.stringify({
                 depot: depotData,
                 points: pointsData,
@@ -934,7 +943,7 @@ async function runRoutesOptimisees() {
             : error.message;
         alert('Erreur lors de l\'optimisation des routes: ' + msg);
     } finally {
-        clearTimeout(safetyTimeout); // Annuler le safety timeout
+        clearTimeout(safetyTimeoutId); // Annuler le safety timeout
         // Retirer le message de chargement
         const loadingElement = document.getElementById('loading-routes-optimisees');
         if (loadingElement) {

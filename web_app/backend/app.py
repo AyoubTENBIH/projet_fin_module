@@ -5,6 +5,7 @@ Expose les API pour les niveaux 1 et 2, et sert les fichiers statiques du fronte
 """
 
 import sys
+import threading
 from pathlib import Path
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
@@ -23,15 +24,35 @@ from api.niveau3_routes import (
 # Configuration
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 FRONTEND_DIR = PROJECT_ROOT / "web_app" / "frontend"
+FRONTEND_REACT_DIR = PROJECT_ROOT / "web_app" / "frontend_react" / "dist"
 
 app = Flask(__name__, static_folder=str(FRONTEND_DIR))
-CORS(app)  # Autoriser les requêtes cross-origin
+# CORS explicite pour que le navigateur envoie bien le POST après OPTIONS (dev: front 5173 → back 5000)
+CORS(app, origins=["http://localhost:5173", "http://127.0.0.1:5173", "http://localhost:5000", "http://127.0.0.1:5000"],
+     allow_headers=["Content-Type"], methods=["GET", "POST", "OPTIONS"])
 
 
 @app.route("/")
 def index():
-    """Page d'accueil : servir index.html"""
+    """Page d'accueil : servir index.html (interface classique)"""
     return send_from_directory(FRONTEND_DIR, "index.html")
+
+
+@app.route("/v2")
+@app.route("/v2/")
+def index_react():
+    """Nouvelle interface React (style Airbnb) - nécessite 'npm run build' dans frontend_react"""
+    if FRONTEND_REACT_DIR.exists():
+        return send_from_directory(FRONTEND_REACT_DIR, "index.html")
+    return "Build React requis : cd web_app/frontend_react && npm run build", 404
+
+
+@app.route("/v2/<path:path>")
+def serve_react_static(path):
+    """Fichiers statiques du frontend React"""
+    if FRONTEND_REACT_DIR.exists():
+        return send_from_directory(FRONTEND_REACT_DIR, path)
+    return "Not found", 404
 
 
 @app.route("/<path:path>")
@@ -126,8 +147,13 @@ def api_optimiser_affectation():
 
 # ==================== API ROUTES OPTIMISÉES ====================
 
-@app.route("/api/routes/optimiser", methods=["POST"])
+@app.route("/api/routes/optimiser", methods=["GET", "POST"])
 def api_optimiser_routes():
+    """GET → 405 (il faut utiliser POST). POST → optimisation des routes."""
+    if request.method == "GET":
+        return jsonify({"error": "Méthode GET non supportée. Utilisez POST avec un body JSON."}), 405
+
+    print("[Routes] POST /api/routes/optimiser reçu")
     """
     Endpoint pour optimiser les routes de collecte avec déchetteries.
 
@@ -183,13 +209,50 @@ def api_optimiser_routes():
         if not camions_data:
             return jsonify({"error": "Camions requis"}), 400
 
-        resultat = optimiser_routes_collecte(
-            depot_data,
-            points_data,
-            dechetteries_data,
-            camions_data,
-            use_osrm=use_osrm
-        )
+        # Lancer l'optimisation dans un thread avec timeout (évite blocage > 60s)
+        result_container = {}
+        exc_container = {}
+        def run_optim():
+            try:
+                result_container["result"] = optimiser_routes_collecte(
+                    depot_data,
+                    points_data,
+                    dechetteries_data,
+                    camions_data,
+                    use_osrm=use_osrm
+                )
+            except Exception as e:
+                exc_container["exc"] = e
+
+        thread = threading.Thread(target=run_optim, daemon=True)
+        thread.start()
+        thread.join(timeout=50)
+        if thread.is_alive():
+            print("[Routes] Optimisation timeout 50s - abandon")
+            return jsonify({
+                "error": "Optimisation trop longue (timeout 50s). Réduisez le nombre de points ou réessayez."
+            }), 503
+        if "exc" in exc_container:
+            e = exc_container["exc"]
+            if use_osrm:
+                print(f"[Routes] Erreur avec OSRM, retry sans OSRM: {e}")
+                try:
+                    resultat = optimiser_routes_collecte(
+                        depot_data,
+                        points_data,
+                        dechetteries_data,
+                        camions_data,
+                        use_osrm=False
+                    )
+                    return jsonify(resultat), 200
+                except Exception as e2:
+                    import traceback
+                    print(f"Erreur dans api_optimiser_routes (sans OSRM): {e2}")
+                    print(traceback.format_exc())
+                    return jsonify({"error": str(e2)}), 500
+            raise e
+        resultat = result_container["result"]
+        print("[Routes] Optimisation terminée,", len(resultat.get("routes", [])), "route(s)")
         return jsonify(resultat), 200
 
     except Exception as e:
