@@ -1,13 +1,35 @@
 @import 'tailwindcss';
 
+/* EcoAgadir - Design system (vert écologie, sidebar sombre) */
 @theme {
-  --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --color-primary: #FF5A5F;
-  --color-primary-hover: #E04850;
-  --color-secondary: #00A699;
-  --color-text: #222222;
-  --color-text-muted: #717171;
-  --color-border: #EBEBEB;
+  --font-sans: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --color-primary: #00a86b;
+  --color-primary-dark: #007a4d;
+  --color-primary-light: #e8f8f2;
+  --color-bg-main: #f4f7f5;
+  --color-bg-card: #ffffff;
+  --color-bg-sidebar: #0f2419;
+  --color-sidebar-text: #a8c5b5;
+  --color-sidebar-active: #00a86b;
+  --color-success: #28a745;
+  --color-warning: #ffc107;
+  --color-danger: #dc3545;
+  --color-info: #17a2b8;
+  --color-text: #1a2e25;
+  --color-text-muted: #6c757d;
+  --color-border: #dee2e6;
+}
+
+:root {
+  --primary: #00a86b;
+  --primary-dark: #007a4d;
+  --primary-light: #e8f8f2;
+  --bg-sidebar: #0f2419;
+  --sidebar-text: #a8c5b5;
+  --sidebar-active: #00a86b;
+  --shadow-card: 0 2px 20px rgba(0, 168, 107, 0.08);
+  --shadow-hover: 0 8px 30px rgba(0, 168, 107, 0.15);
+  --radius: 12px;
 }
 
 * {
@@ -19,8 +41,8 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #222222;
-  background: #FFFFFF;
+  color: var(--color-text);
+  background: var(--color-bg-main);
 }
 
 #root {

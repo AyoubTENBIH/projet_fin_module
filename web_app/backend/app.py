@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Serveur Flask principal - Application Web VillePropre
-Expose les API pour les niveaux 1 et 2, et sert les fichiers statiques du frontend.
+Serveur Flask principal - VillePropre + EcoAgadir
+- API optimisation (niveau1, niveau2, niveau3, routes)
+- API EcoAgadir (auth, users, camions, planning, tracking, stats) + MySQL
 """
 
 import sys
@@ -10,7 +11,58 @@ from pathlib import Path
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 
-# Importer les modules API
+# Configuration
+PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+FRONTEND_DIR = PROJECT_ROOT / "web_app" / "frontend"
+FRONTEND_REACT_DIR = PROJECT_ROOT / "web_app" / "frontend_react" / "dist"
+
+app = Flask(__name__, static_folder=str(FRONTEND_DIR))
+
+# EcoAgadir - MySQL (optionnel: si config présente, on active l'API EcoAgadir)
+ECOAGADIR_LOADED = False
+try:
+    from config_eco import config_eco
+    app.config["SQLALCHEMY_DATABASE_URI"] = config_eco.MYSQL_URI
+    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+    from models_eco import db
+    db.init_app(app)
+    from api.eco_auth import auth_bp
+    from api.eco_users import users_bp
+    from api.eco_camions import camions_bp
+    from api.eco_depot import depot_bp
+    from api.eco_points import points_bp
+    from api.eco_dechetteries import dechetteries_bp
+    from api.eco_planning import planning_bp
+    from api.eco_tracking import tracking_bp
+    from api.eco_stats import stats_bp
+    for bp in (auth_bp, users_bp, camions_bp, depot_bp, points_bp, dechetteries_bp, planning_bp, tracking_bp, stats_bp):
+        app.register_blueprint(bp)
+    ECOAGADIR_LOADED = True
+    print("[EcoAgadir] Chargé (MySQL OK)")
+except Exception as e:
+    ECOAGADIR_LOADED = False
+    import traceback
+    print("[EcoAgadir] MySQL/API non chargé:", e)
+    traceback.print_exc()
+
+
+def _ecoagadir_fallback():
+    """Réponse si quelqu'un appelle l'API auth alors qu'EcoAgadir n'est pas chargé."""
+    print("[EcoAgadir] Fallback auth appelé (ce processus n'a pas chargé EcoAgadir)")
+    return jsonify({
+        "error": "Backend EcoAgadir non chargé. Vérifier les logs du terminal backend.",
+    }), 503
+
+
+if not ECOAGADIR_LOADED:
+    app.add_url_rule("/api/auth/login", "eco_auth_fallback", _ecoagadir_fallback, methods=["POST", "OPTIONS"])
+    app.add_url_rule("/api/auth/me", "eco_auth_me_fallback", _ecoagadir_fallback, methods=["GET"])
+
+# CORS (inclut Authorization pour EcoAgadir)
+CORS(app, origins=["http://localhost:5173", "http://127.0.0.1:5173", "http://localhost:5000", "http://127.0.0.1:5000"],
+     allow_headers=["Content-Type", "Authorization"], methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"])
+
+# Importer les modules API VillePropre (optimisation)
 from api.niveau1_api import calculer_matrice_distances, creer_graphe_depuis_points
 from api.niveau2_api import optimiser_affectation
 from api.routes_api import optimiser_routes_collecte
@@ -20,16 +72,6 @@ from api.niveau3_routes import (
     generer_planning_route,
     simulation_temps_reel,
 )
-
-# Configuration
-PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
-FRONTEND_DIR = PROJECT_ROOT / "web_app" / "frontend"
-FRONTEND_REACT_DIR = PROJECT_ROOT / "web_app" / "frontend_react" / "dist"
-
-app = Flask(__name__, static_folder=str(FRONTEND_DIR))
-# CORS explicite pour que le navigateur envoie bien le POST après OPTIONS (dev: front 5173 → back 5000)
-CORS(app, origins=["http://localhost:5173", "http://127.0.0.1:5173", "http://localhost:5000", "http://127.0.0.1:5000"],
-     allow_headers=["Content-Type"], methods=["GET", "POST", "OPTIONS"])
 
 
 @app.route("/")
@@ -55,9 +97,11 @@ def serve_react_static(path):
     return "Not found", 404
 
 
-@app.route("/<path:path>")
+@app.route("/<path:path>", methods=["GET", "HEAD"])
 def serve_static(path):
-    """Servir les fichiers statiques (CSS, JS, assets)"""
+    """Servir les fichiers statiques (CSS, JS, assets). Ne pas capturer /api (évite 405 sur POST)."""
+    if path.startswith("api/"):
+        return jsonify({"error": "Route API non trouvée ou EcoAgadir non chargé (vérifier MySQL)."}), 404
     return send_from_directory(FRONTEND_DIR, path)
 
 
@@ -297,10 +341,18 @@ def health():
 
 
 if __name__ == "__main__":
+    if ECOAGADIR_LOADED:
+        with app.app_context():
+            from models_eco import db
+            db.create_all()
+            from services_eco.auth_service import ensure_demo_users
+            ensure_demo_users()
+    import os
     print("=" * 60)
-    print("[CAMION] Application Web VillePropre")
+    print("[WEB] VillePropre + EcoAgadir sur http://localhost:5000")
+    print("[WEB] PID processus:", os.getpid(), "- C'est CE processus qui doit recevoir les requêtes.")
+    if not ECOAGADIR_LOADED:
+        print("[!] EcoAgadir (login, users, etc.) NON charge - definir MYSQL_USER=root puis relancer")
     print("=" * 60)
-    print(f"[FOLDER] Frontend: {FRONTEND_DIR}")
-    print("[WEB] Serveur demarre sur http://localhost:5000")
-    print("=" * 60)
-    app.run(debug=True, host="0.0.0.0", port=5000)
+    # use_reloader=False évite un 2e processus où EcoAgadir peut échouer au chargement
+    app.run(debug=True, host="0.0.0.0", port=5000, use_reloader=False)

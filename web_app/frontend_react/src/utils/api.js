@@ -2,10 +2,8 @@
  * API VillePropre - Appels aux endpoints Flask
  */
 
-// En dev: appeler le backend directement pour éviter les blocages du proxy Vite
-const API_BASE = typeof import.meta !== 'undefined' && import.meta.env?.DEV
-  ? 'http://127.0.0.1:5000/api'
-  : '/api'
+// Toujours utiliser /api : en dev Vite proxy vers localhost:5000 (évite CORS / "Failed to fetch")
+const API_BASE = '/api'
 
 // Convertir lat/lng (Casablanca) en coordonnées x,y pour le graphe
 function latLngToXY(lat, lng) {
