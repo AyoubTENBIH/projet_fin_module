@@ -75,6 +75,9 @@ export function ProjectProvider({ children }) {
         }))
       )
     }
+    if (Array.isArray(data.creneaux) && data.creneaux.length) {
+      setCreneaux(data.creneaux.map((c, i) => ({ ...c, id: c.id ?? i + 1 })))
+    }
   }
 
   const addDechetterie = (d) => {

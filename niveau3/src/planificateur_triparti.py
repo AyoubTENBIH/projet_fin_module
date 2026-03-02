@@ -80,6 +80,8 @@ class PlanificateurTriparti:
             "dimanche",
         ]
         self.planning = {jour: [] for jour in jours[:horizon_jours]}
+        # Zones qu’on tente de planifier (pour calcul couverture en evaluer_plan)
+        self._zones_a_planifier: set = set()
 
         # Créneaux occupés par camion (évite chevauchement)
         creneaux_occupes: Dict[int, List[CreneauHoraire]] = {
@@ -111,6 +113,7 @@ class PlanificateurTriparti:
             )
 
             for zone in zones_triees:
+                self._zones_a_planifier.add(zone.id)
                 meilleur_creneau = self._trouver_meilleur_creneau(
                     camion, zone, creneaux_occupes[camion_id]
                 )
@@ -227,38 +230,58 @@ class PlanificateurTriparti:
         Évalue la qualité du planning généré.
 
         Returns:
-            Indicateurs : taux_occupation, respect_horaires,
+            Indicateurs : taux_occupation, taux_utilisation_parc, couverture_collecte,
+                         respect_horaires (toutes les affectations respectent les contraintes),
                          congestion_moyenne, retard_moyen.
         """
         nb_camions = len(self.affectateur.camions)
         nb_creneaux = len(self.creneaux)
-        total_creneaux_possibles = nb_creneaux * nb_camions
         creneaux_utilises = sum(len(entries) for entries in plan.values())
 
+        # Taux d'occupation = part des créneaux temporels utilisés (assignations / nb créneaux).
         taux_occupation = (
-            (creneaux_utilises / total_creneaux_possibles * 100)
-            if total_creneaux_possibles > 0
+            min(100.0, (creneaux_utilises / nb_creneaux * 100))
+            if nb_creneaux > 0
             else 0.0
         )
 
+        # Taux d'utilisation du parc = % de camions ayant au moins une tournée.
+        camions_utilises = set()
+        zones_planifiees = set()
+        for jour_entries in plan.values():
+            for entry in jour_entries:
+                camions_utilises.add(entry.get("camion_id"))
+                zones_planifiees.add(entry.get("zone_id"))
+        taux_utilisation_parc = (
+            (len(camions_utilises) / nb_camions * 100) if nb_camions > 0 else 0.0
+        )
+
+        # Couverture de collecte = % des zones (à planifier) qui ont reçu un créneau.
+        zones_a_planifier = getattr(self, "_zones_a_planifier", set())
+        if zones_a_planifier:
+            couverture_collecte = (len(zones_planifiees) / len(zones_a_planifier)) * 100
+        else:
+            couverture_collecte = 100.0 if not plan else 100.0
+
         congestions = []
         creneaux_par_id = {c.id: c for c in self.creneaux}
-
         for jour_entries in plan.values():
             for entry in jour_entries:
                 creneau_id = entry.get("creneau_id")
                 if creneau_id in creneaux_par_id:
                     congestions.append(creneaux_par_id[creneau_id].cout_congestion)
-
         congestion_moyenne = (
             sum(congestions) / len(congestions) if congestions else 1.0
         )
 
+        # Toutes les affectations planifiées respectent les contraintes (créneau réalisable).
         respect_horaires = 100.0
         retard_moyen = 0.0
 
         return {
             "taux_occupation": round(taux_occupation, 1),
+            "taux_utilisation_parc": round(taux_utilisation_parc, 1),
+            "couverture_collecte": round(couverture_collecte, 1),
             "respect_horaires": round(respect_horaires, 1),
             "congestion_moyenne": round(congestion_moyenne, 2),
             "retard_moyen": round(retard_moyen, 1),

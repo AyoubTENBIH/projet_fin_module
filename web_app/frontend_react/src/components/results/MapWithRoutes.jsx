@@ -40,7 +40,7 @@ const TRUCK_ICONS = ROUTE_COLORS.reduce((acc, color) => {
   return acc
 }, {})
 
-function MapBounds({ points, depot, dechetteries, routes }) {
+function MapBounds({ points, depot, dechetteries, routesList }) {
   const map = useMap()
   useEffect(() => {
     const all = [
@@ -48,8 +48,8 @@ function MapBounds({ points, depot, dechetteries, routes }) {
       ...(depot ? [[depot.lat, depot.lng]] : []),
       ...(dechetteries || []).map((d) => [d.lat, d.lng]),
     ]
-    if (routes?.routes) {
-      routes.routes.forEach((r) => {
+    if (routesList?.length) {
+      routesList.forEach((r) => {
         (r.waypoints || []).forEach((wp) => {
           const { lat, lng } = xyToLatLng(wp.x, wp.y)
           all.push([lat, lng])
@@ -59,7 +59,7 @@ function MapBounds({ points, depot, dechetteries, routes }) {
     if (all.length >= 2) {
       map.fitBounds(all, { padding: [40, 40] })
     }
-  }, [map, points, depot, dechetteries, routes])
+  }, [map, points, depot, dechetteries, routesList])
   return null
 }
 
@@ -118,6 +118,13 @@ async function batchOsrmRequests(routePromises, maxConcurrent = 3) {
   return results
 }
 
+// Liste normalisée : accepte { routes: [...] } ou tableau direct
+function getRoutesList(routes) {
+  if (!routes) return []
+  if (Array.isArray(routes)) return routes
+  return routes.routes ?? []
+}
+
 export default function MapWithRoutes({
   routes,
   points,
@@ -125,38 +132,39 @@ export default function MapWithRoutes({
   dechetteries,
   animate = true,
 }) {
+  const routesList = getRoutesList(routes)
   const [progress, setProgress] = useState({})
   const [osrmData, setOsrmData] = useState({})
   const [osrmLoading, setOsrmLoading] = useState(false)
   const animRef = useRef(null)
 
   useEffect(() => {
-    if (!routes?.routes?.length) {
+    if (!routesList.length) {
       setOsrmData({})
       return
     }
     let cancelled = false
     setOsrmLoading(true)
-    const promises = routes.routes.map(async (route) => {
+    const promises = routesList.map(async (route, index) => {
       const waypoints = (route.waypoints || []).map((wp) => xyToLatLng(wp.x, wp.y))
-      if (waypoints.length < 2) return { camion_id: route.camion_id, data: null }
+      if (waypoints.length < 2) return { index, data: null }
       const data = await getOsrmRoute(waypoints)
-      return { camion_id: route.camion_id, data }
+      return { index, data }
     })
     batchOsrmRequests(promises, 3).then((results) => {
       if (cancelled) return
       const next = {}
-      results.forEach(({ camion_id, data }) => {
-        next[camion_id] = data?.coordinates || null
+      results.forEach(({ index, data }) => {
+        next[index] = data?.coordinates || null
       })
       setOsrmData(next)
       setOsrmLoading(false)
     })
     return () => { cancelled = true }
-  }, [routes?.routes])
+  }, [routesList])
 
   useEffect(() => {
-    if (!animate || !routes?.routes?.length) return
+    if (!animate || !routesList.length) return
     const start = Date.now()
     const duration = 8000
 
@@ -164,8 +172,8 @@ export default function MapWithRoutes({
       const elapsed = Date.now() - start
       const t = Math.min(elapsed / duration, 1)
       const next = {}
-      routes.routes.forEach((r) => {
-        next[r.camion_id] = t
+      routesList.forEach((_, i) => {
+        next[i] = t
       })
       setProgress(next)
       if (t < 1) animRef.current = requestAnimationFrame(tick)
@@ -174,7 +182,7 @@ export default function MapWithRoutes({
     return () => {
       if (animRef.current) cancelAnimationFrame(animRef.current)
     }
-  }, [animate, routes])
+  }, [animate, routesList])
 
   const CASABLANCA = [33.5731, -7.5898]
 
@@ -185,7 +193,7 @@ export default function MapWithRoutes({
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        <MapBounds points={points} depot={depot} dechetteries={dechetteries} routes={routes} />
+        <MapBounds points={points} depot={depot} dechetteries={dechetteries} routesList={routesList} />
 
         {depot && (
           <Marker
@@ -212,13 +220,13 @@ export default function MapWithRoutes({
           </Marker>
         ))}
 
-        {routes?.routes?.map((route, i) => (
+        {routesList.map((route, i) => (
           <AnimatedPolyline
-            key={route.camion_id}
+            key={`route-${route.camion_id ?? i}-${i}`}
             route={route}
             color={ROUTE_COLORS[i % ROUTE_COLORS.length]}
-            progress={progress[route.camion_id] ?? 0}
-            osrmCoords={osrmData[route.camion_id]}
+            progress={progress[i] ?? 0}
+            osrmCoords={osrmData[i]}
           />
         ))}
       </MapContainer>

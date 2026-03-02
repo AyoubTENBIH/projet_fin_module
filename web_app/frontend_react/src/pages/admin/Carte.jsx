@@ -92,6 +92,16 @@ function CarteContent() {
     input.click()
   }
 
+  const handleLoadTemplate = () => {
+    fetch('/template_multi_camions.json')
+      .then((r) => r.json())
+      .then((data) => {
+        loadProject(data)
+        setScreen('points')
+      })
+      .catch(() => alert('Impossible de charger le template'))
+  }
+
   return (
     <>
       {screen === 'points' ? (
@@ -113,7 +123,7 @@ function CarteContent() {
         <AnimatePresence mode="wait">
           {screen === 'home' && (
             <motion.div key="home" {...PAGE_TRANSITION}>
-              <Home onStart={() => setScreen('points')} onImport={handleImport} />
+              <Home onStart={() => setScreen('points')} onImport={handleImport} onLoadTemplate={handleLoadTemplate} />
             </motion.div>
           )}
           {screen === 'camions' && (

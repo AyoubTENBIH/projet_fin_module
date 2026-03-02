@@ -1,0 +1,46 @@
+{
+  "description": "Template idéal : plusieurs points de collecte, 4 camions, 3 déchetteries. Les volumes remplissent les camions pour déclencher des trajets vers la déchetterie la plus proche.",
+  "depot": {
+    "id": 0,
+    "lat": 33.5731,
+    "lng": -7.5898,
+    "nom": "Dépôt central"
+  },
+  "points": [
+    { "id": 1, "lat": 33.588, "lng": -7.585, "nom": "Quartier Nord A", "volume": 450 },
+    { "id": 2, "lat": 33.586, "lng": -7.587, "nom": "Quartier Nord B", "volume": 500 },
+    { "id": 3, "lat": 33.579, "lng": -7.590, "nom": "Quartier Nord C", "volume": 400 },
+    { "id": 4, "lat": 33.562, "lng": -7.586, "nom": "Quartier Sud A", "volume": 500 },
+    { "id": 5, "lat": 33.564, "lng": -7.588, "nom": "Quartier Sud B", "volume": 450 },
+    { "id": 6, "lat": 33.565, "lng": -7.582, "nom": "Quartier Sud C", "volume": 400 },
+    { "id": 7, "lat": 33.572, "lng": -7.562, "nom": "Quartier Est A", "volume": 500 },
+    { "id": 8, "lat": 33.574, "lng": -7.564, "nom": "Quartier Est B", "volume": 450 },
+    { "id": 9, "lat": 33.57, "lng": -7.59, "nom": "Centre-ville A", "volume": 400 },
+    { "id": 10, "lat": 33.576, "lng": -7.588, "nom": "Centre-ville B", "volume": 500 },
+    { "id": 11, "lat": 33.568, "lng": -7.59, "nom": "Centre-ville C", "volume": 400 },
+    { "id": 12, "lat": 33.58, "lng": -7.575, "nom": "Zone mixte", "volume": 550 }
+  ],
+  "camions": [
+    { "id": 1, "capacite": 2000, "cout_fixe": 150, "zones_accessibles": [] },
+    { "id": 2, "capacite": 2000, "cout_fixe": 150, "zones_accessibles": [] },
+    { "id": 3, "capacite": 2000, "cout_fixe": 150, "zones_accessibles": [] },
+    { "id": 4, "capacite": 2000, "cout_fixe": 150, "zones_accessibles": [] }
+  ],
+  "dechetteries": [
+    { "id": 101, "lat": 33.595, "lng": -7.592, "nom": "Déchetterie Nord", "capacite_max": 50000 },
+    { "id": 102, "lat": 33.555, "lng": -7.592, "nom": "Déchetterie Sud", "capacite_max": 50000 },
+    { "id": 103, "lat": 33.573, "lng": -7.555, "nom": "Déchetterie Est", "capacite_max": 50000 }
+  ],
+  "creneaux": [
+    { "id": 1, "jour": "lundi", "debut": "06:00", "fin": "10:00", "congestion": 1.1 },
+    { "id": 2, "jour": "lundi", "debut": "14:00", "fin": "18:00", "congestion": 1.2 },
+    { "id": 3, "jour": "mardi", "debut": "06:00", "fin": "10:00", "congestion": 1.1 },
+    { "id": 4, "jour": "mardi", "debut": "14:00", "fin": "18:00", "congestion": 1.2 },
+    { "id": 5, "jour": "mercredi", "debut": "06:00", "fin": "10:00", "congestion": 1.1 },
+    { "id": 6, "jour": "mercredi", "debut": "14:00", "fin": "18:00", "congestion": 1.2 },
+    { "id": 7, "jour": "jeudi", "debut": "06:00", "fin": "10:00", "congestion": 1.1 },
+    { "id": 8, "jour": "jeudi", "debut": "14:00", "fin": "18:00", "congestion": 1.2 },
+    { "id": 9, "jour": "vendredi", "debut": "06:00", "fin": "10:00", "congestion": 1.1 },
+    { "id": 10, "jour": "vendredi", "debut": "14:00", "fin": "18:00", "congestion": 1.2 }
+  ]
+}

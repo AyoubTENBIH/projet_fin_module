@@ -49,14 +49,22 @@ export default function ResultsView({
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8"
+            className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mb-8"
           >
             <div className="bg-white rounded-xl p-4 border border-[#EBEBEB] shadow-sm">
-              <p className="text-sm text-[#717171]">Taux occupation</p>
+              <p className="text-sm text-[#717171]">Occupation des créneaux</p>
               <p className="text-2xl font-bold text-[#222222]">{indicateurs.taux_occupation ?? 0}%</p>
             </div>
             <div className="bg-white rounded-xl p-4 border border-[#EBEBEB] shadow-sm">
-              <p className="text-sm text-[#717171]">Respect horaires</p>
+              <p className="text-sm text-[#717171]">Utilisation du parc</p>
+              <p className="text-2xl font-bold text-[#222222]">{indicateurs.taux_utilisation_parc ?? 0}%</p>
+            </div>
+            <div className="bg-white rounded-xl p-4 border border-[#EBEBEB] shadow-sm" title="Part des zones ayant reçu un créneau">
+              <p className="text-sm text-[#717171]">Couverture de collecte</p>
+              <p className="text-2xl font-bold text-[#222222]">{indicateurs.couverture_collecte ?? 100}%</p>
+            </div>
+            <div className="bg-white rounded-xl p-4 border border-[#EBEBEB] shadow-sm" title="Toutes les affectations respectent les contraintes temporelles">
+              <p className="text-sm text-[#717171]">Respect contraintes</p>
               <p className="text-2xl font-bold text-[#00A699]">{indicateurs.respect_horaires ?? 100}%</p>
             </div>
             <div className="bg-white rounded-xl p-4 border border-[#EBEBEB] shadow-sm">
@@ -188,8 +196,10 @@ export default function ResultsView({
                   <div className="p-4 bg-gray-50 rounded-xl">
                     <h4 className="font-semibold text-[#222222] mb-2">Indicateurs du planning</h4>
                     <ul className="space-y-1 text-sm text-[#717171]">
-                      <li>Taux d&apos;occupation : {indicateurs.taux_occupation ?? 0}%</li>
-                      <li>Respect des horaires : {indicateurs.respect_horaires ?? 100}%</li>
+                      <li>Occupation des créneaux : {indicateurs.taux_occupation ?? 0}%</li>
+                      <li>Utilisation du parc : {indicateurs.taux_utilisation_parc ?? 0}%</li>
+                      <li>Couverture de collecte : {indicateurs.couverture_collecte ?? 100}%</li>
+                      <li>Respect des contraintes : {indicateurs.respect_horaires ?? 100}%</li>
                       <li>Congestion moyenne : {indicateurs.congestion_moyenne ?? 1}</li>
                       <li>Retard moyen : {indicateurs.retard_moyen ?? 0} min</li>
                     </ul>

@@ -660,32 +660,13 @@ class OptimiseurRoutes:
         
         for i, point in enumerate(route_sans_dech[1:-1], 1):  # Ignorer premier et dernier dépôt
             if point.type_point == "collecte":
-                # Vérifier si on a besoin d'aller à la déchetterie avant
+                # Vérifier si on a besoin d'aller à la déchetterie avant (camion plein)
                 if charge + point.volume > capacite and charge > 0:
-                    # Trouver la déchetterie optimale
-                    # Option 1: Déchetterie plus proche de la position actuelle
-                    # Option 2: Déchetterie plus proche du prochain point
-                    
+                    # Toujours aller vers la déchetterie LA PLUS PROCHE de la position actuelle
                     pos_actuelle = nouvelle_route[-1]
-                    dech_proche_actuel, dist1 = self._trouver_dechetterie_plus_proche(pos_actuelle)
-                    dech_proche_suivant, dist2 = self._trouver_dechetterie_plus_proche(point)
-                    
-                    # Choisir la déchetterie qui minimise le détour total
-                    if dech_proche_actuel:
-                        cout1 = dist1 + self._distance(dech_proche_actuel, point)
-                    else:
-                        cout1 = float('inf')
-                    
-                    if dech_proche_suivant:
-                        cout2 = self._distance(pos_actuelle, dech_proche_suivant) + \
-                                self._distance(dech_proche_suivant, point)
-                    else:
-                        cout2 = float('inf')
-                    
-                    meilleure_dech = dech_proche_actuel if cout1 <= cout2 else dech_proche_suivant
-                    
-                    if meilleure_dech:
-                        nouvelle_route.append(meilleure_dech)
+                    dech_plus_proche, _ = self._trouver_dechetterie_plus_proche(pos_actuelle)
+                    if dech_plus_proche:
+                        nouvelle_route.append(dech_plus_proche)
                         charge = 0.0
                 
                 nouvelle_route.append(point)
@@ -1047,11 +1028,13 @@ class OptimiseurRoutes:
         points_par_camion = {c['id']: [] for c in self.camions}
         points_restants = list(points_tries)
         
-        # Algorithme glouton pour la répartition
+        # Algorithme glouton pour la répartition : répartir les points entre tous les camions.
+        # Critère : (1) coût distance + cout_fixe, (2) à égalité, préférer le camion le moins chargé
+        # pour éviter qu'un seul camion reçoive tous les points (même dépôt → même distance).
         for point in points_tries:
-            # Trouver le meilleur camion pour ce point
             meilleur_camion = None
             meilleur_cout = float('inf')
+            meilleure_charge = float('inf')
             
             for camion in self.camions:
                 # Vérifier l'accessibilité
@@ -1059,17 +1042,14 @@ class OptimiseurRoutes:
                 if zones_accessibles and point.id not in zones_accessibles:
                     continue
                 
-                # Vérifier la capacité restante
                 charge_actuelle = sum(p.volume for p in points_par_camion[camion['id']])
-                if charge_actuelle + point.volume > camion['capacite']:
-                    # Peut encore prendre si on va à la déchetterie
-                    pass  # On autorise car on gère les déchetteries
+                # Capacité : on autorise les déchetteries donc pas de rejet ici
                 
-                # Calculer le coût (distance depuis le dépôt)
                 cout = self._distance(self.depot, point) + camion.get('cout_fixe', 0)
-                
-                if cout < meilleur_cout:
+                # À coût égal, préférer le camion avec la charge la plus faible (répartition)
+                if (cout, charge_actuelle) < (meilleur_cout, meilleure_charge):
                     meilleur_cout = cout
+                    meilleure_charge = charge_actuelle
                     meilleur_camion = camion
             
             if meilleur_camion:

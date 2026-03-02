@@ -32,14 +32,22 @@ export default function PlanningView({ planning, indicateurs, onBack }) {
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-12"
+            className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mb-12"
           >
             <div className="bg-white rounded-xl p-4 border border-[#EBEBEB] shadow-sm">
-              <p className="text-sm text-[#717171]">Taux occupation</p>
+              <p className="text-sm text-[#717171]">Occupation des créneaux</p>
               <p className="text-2xl font-bold text-[#222222]">{indicateurs.taux_occupation ?? 0}%</p>
             </div>
             <div className="bg-white rounded-xl p-4 border border-[#EBEBEB] shadow-sm">
-              <p className="text-sm text-[#717171]">Respect horaires</p>
+              <p className="text-sm text-[#717171]">Utilisation du parc</p>
+              <p className="text-2xl font-bold text-[#222222]">{indicateurs.taux_utilisation_parc ?? 0}%</p>
+            </div>
+            <div className="bg-white rounded-xl p-4 border border-[#EBEBEB] shadow-sm">
+              <p className="text-sm text-[#717171]">Couverture de collecte</p>
+              <p className="text-2xl font-bold text-[#222222]">{indicateurs.couverture_collecte ?? 100}%</p>
+            </div>
+            <div className="bg-white rounded-xl p-4 border border-[#EBEBEB] shadow-sm">
+              <p className="text-sm text-[#717171]">Respect contraintes</p>
               <p className="text-2xl font-bold text-[#00A699]">{indicateurs.respect_horaires ?? 100}%</p>
             </div>
             <div className="bg-white rounded-xl p-4 border border-[#EBEBEB] shadow-sm">

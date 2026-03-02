@@ -2,7 +2,7 @@ import { motion } from 'framer-motion'
 import { Truck, MapPin, Zap } from 'lucide-react'
 import Button from '../components/common/Button'
 
-export default function Home({ onStart, onImport }) {
+export default function Home({ onStart, onImport, onLoadTemplate }) {
   return (
     <div className="min-h-screen flex flex-col bg-white">
       {/* Header */}
@@ -45,15 +45,26 @@ export default function Home({ onStart, onImport }) {
               Créer un nouveau projet
             </Button>
 
-            <div className="pt-6 space-y-2">
+            <div className="pt-6 space-y-3">
               <p className="text-sm text-[#717171]">ou charger un projet existant :</p>
-              <Button
-                variant="secondary"
-                onClick={onImport}
-                icon={<MapPin className="w-4 h-4" />}
-              >
-                Importer depuis fichier
-              </Button>
+              <div className="flex flex-wrap justify-center gap-3">
+                <Button
+                  variant="secondary"
+                  onClick={onImport}
+                  icon={<MapPin className="w-4 h-4" />}
+                >
+                  Importer depuis fichier
+                </Button>
+                {onLoadTemplate && (
+                  <Button
+                    variant="secondary"
+                    onClick={onLoadTemplate}
+                    icon={<Truck className="w-4 h-4" />}
+                  >
+                    Template démo (multi-camions)
+                  </Button>
+                )}
+              </div>
             </div>
           </div>
 
