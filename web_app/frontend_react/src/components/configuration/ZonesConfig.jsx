@@ -6,6 +6,7 @@ import L from 'leaflet'
 import Button from '../common/Button'
 import Stepper from '../common/Stepper'
 import { convexHull, bufferPolygon, centroid, buildZonePolygonFromPoints } from '../../utils/zoneGeometry'
+import { clusterPointsIntoZones } from '../../utils/zoneClustering'
 
 const ZONE_COLORS = [
   '#E63946',
@@ -154,6 +155,17 @@ export default function ZonesConfig({
   })
   const [focusZoneId, setFocusZoneId] = useState(null)
   const [previewZone, setPreviewZone] = useState(null)
+  const [showAutoModal, setShowAutoModal] = useState(false)
+  const [autoConfig, setAutoConfig] = useState({
+    k: 3,
+    weightByVolume: true,
+    respectExisting: false,
+    replaceExisting: true,
+    maxVolumePerZone: '',
+    maxDistanceKm: '',
+  })
+  const [autoPreviewZones, setAutoPreviewZones] = useState([])
+  const [autoStats, setAutoStats] = useState(null)
 
   const collectionPoints = points.filter((p) => !depot || p.id !== depot.id)
 
@@ -168,6 +180,95 @@ export default function ZonesConfig({
       nom: form.nom || 'Aperçu',
     })
   }, [showModal, form.point_ids, form.couleur, form.nom])
+
+  const runAutoClustering = useCallback(
+    (config) => {
+      const basePoints = collectionPoints.filter((p) =>
+        config.respectExisting ? !p.zone_id : true
+      )
+      if (!basePoints.length) {
+        setAutoPreviewZones([])
+        setAutoStats(null)
+        return
+      }
+      const k = Math.max(2, Math.min(config.k || (camions?.length || 3), basePoints.length))
+      const maxVol =
+        config.maxVolumePerZone && !Number.isNaN(Number(config.maxVolumePerZone))
+          ? Number(config.maxVolumePerZone)
+          : undefined
+      const maxDist =
+        config.maxDistanceKm && !Number.isNaN(Number(config.maxDistanceKm))
+          ? Number(config.maxDistanceKm)
+          : undefined
+
+      const result = clusterPointsIntoZones(basePoints, camions, {
+        k,
+        weightByVolume: config.weightByVolume,
+        maxIterations: 100,
+        tolerance: 0.0001,
+        maxVolumePerZone: maxVol,
+        maxDistancePerZone: maxDist,
+      })
+      if (!result) {
+        setAutoPreviewZones([])
+        setAutoStats(null)
+        return
+      }
+      const { assignmentsById, centroids, volumes, totalVolume } = result
+      const avgVolume = centroids.length ? totalVolume / centroids.length : 0
+
+      const zonesPreview = centroids.map((c, idx) => {
+        const zonePoints = basePoints.filter((p) => assignmentsById[p.id] === idx)
+        const pointIds = zonePoints.map((p) => p.id)
+        const polygon = buildZonePolygonFromPoints(zonePoints, 0.004)
+        const volume = volumes[idx] || 0
+        let bestCamion = null
+        let bestGap = Infinity
+        camions.forEach((camion) => {
+          if (typeof camion.capacite !== 'number') return
+          const cap = camion.capacite
+          const gap = cap >= volume ? cap - volume : volume - cap
+          if (gap < bestGap) {
+            bestGap = gap
+            bestCamion = camion
+          }
+        })
+        const tours =
+          bestCamion && typeof bestCamion.capacite === 'number' && bestCamion.capacite > 0
+            ? Math.ceil(volume / bestCamion.capacite)
+            : null
+        return {
+          id: idx + 1,
+          nom: `Zone Auto ${String.fromCharCode(65 + idx)}`,
+          couleur: ZONE_COLORS[idx % ZONE_COLORS.length],
+          pointIds,
+          centroid: c,
+          polygon,
+          volume,
+          nbPoints: zonePoints.length,
+          ratioVolume: avgVolume ? volume / avgVolume : 1,
+          camion: bestCamion,
+          tours,
+        }
+      })
+
+      setAutoPreviewZones(zonesPreview)
+      setAutoStats({
+        k: zonesPreview.length,
+        totalVolume,
+        avgVolume,
+      })
+    },
+    [collectionPoints, camions]
+  )
+
+  const openAutoModal = () => {
+    const initialK = Math.max(2, Math.min(camions?.length || 3, 8))
+    const nextConfig = { ...autoConfig, k: initialK }
+    setAutoConfig(nextConfig)
+    setShowAutoModal(true)
+    runAutoClustering(nextConfig)
+  }
 
   const openCreate = () => {
     setEditingZone(null)

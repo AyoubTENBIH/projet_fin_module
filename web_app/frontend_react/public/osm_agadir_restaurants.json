@@ -1,0 +1,1953 @@
+{
+    "version": 0.6,
+    "generator": "Overpass API 0.7.62.10 2d4cfc48",
+    "osm3s": {
+      "timestamp_osm_base": "2026-03-05T09:50:50Z",
+      "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL."
+    },
+    "elements": [
+  
+  {
+    "type": "node",
+    "id": 893350262,
+    "lat": 30.4173858,
+    "lon": -9.6001347,
+    "tags": {
+      "amenity": "fast_food",
+      "name": "InBarbecue"
+    }
+  },
+  {
+    "type": "node",
+    "id": 1054617734,
+    "lat": 30.4209001,
+    "lon": -9.5947798,
+    "tags": {
+      "amenity": "restaurant",
+      "name": "Yacout"
+    }
+  },
+  {
+    "type": "node",
+    "id": 1509637085,
+    "lat": 30.4103843,
+    "lon": -9.5565181,
+    "tags": {
+      "amenity": "restaurant",
+      "cuisine": "regional",
+      "internet_access": "no",
+      "name": "Ait Wadrim",
+      "smoking": "yes",
+      "wheelchair": "yes"
+    }
+  },
+  {
+    "type": "node",
+    "id": 1535868618,
+    "lat": 30.4125515,
+    "lon": -9.5877921,
+    "tags": {
+      "amenity": "restaurant"
+    }
+  },
+  {
+    "type": "node",
+    "id": 1535875954,
+    "lat": 30.4261363,
+    "lon": -9.6195901,
+    "tags": {
+      "amenity": "restaurant",
+      "name": "Fish restaurant area"
+    }
+  },
+  {
+    "type": "node",
+    "id": 1834313773,
+    "lat": 30.4107380,
+    "lon": -9.5949739,
+    "tags": {
+      "amenity": "fast_food",
+      "brand": "ماكدونالدز",
+      "cuisine": "burger",
+      "name": "McDonald's ماكدونالدز",
+      "name:ar": "ماكدونالدز",
+      "name:fr": "McDonald's",
+      "operator": "ماكدونالدز"
+    }
+  },
+  {
+    "type": "node",
+    "id": 1834313774,
+    "lat": 30.4150904,
+    "lon": -9.5974504,
+    "tags": {
+      "amenity": "restaurant",
+      "brand": "Pizza Hut",
+      "brand:wikidata": "Q191615",
+      "brand:wikipedia": "en:Pizza Hut",
+      "cuisine": "pizza",
+      "internet_access": "wlan",
+      "name": "Pizza Hut"
+    }
+  },
+  {
+    "type": "node",
+    "id": 1871529510,
+    "lat": 30.4179942,
+    "lon": -9.6059667,
+    "tags": {
+      "amenity": "restaurant",
+      "cuisine": "fish",
+      "name": "Le Nil",
+      "name:fr": "Le Nil"
+    }
+  },
+  {
+    "type": "node",
+    "id": 1871532422,
+    "lat": 30.4212519,
+    "lon": -9.6001751,
+    "tags": {
+      "amenity": "restaurant",
+      "name": "LE DOME"
+    }
+  },
+  {
+    "type": "node",
+    "id": 2015683005,
+    "lat": 30.4197798,
+    "lon": -9.6040068,
+    "tags": {
+      "amenity": "restaurant",
+      "name": "Baccara Roulette"
+    }
+  },
+  {
+    "type": "node",
+    "id": 2015683007,
+    "lat": 30.4224271,
+    "lon": -9.6077873,
+    "tags": {
+      "amenity": "restaurant",
+      "name": "Etoile Du Sud"
+    }
+  },
+  {
+    "type": "node",
+    "id": 2398447624,
+    "lat": 30.4185697,
+    "lon": -9.6066136,
+    "tags": {
+      "amenity": "restaurant",
+      "name": "La Côte d'Or",
+      "name:fr": "La Côte d'Or"
+    }
+  },
+  {
+    "type": "node",
+    "id": 2836520336,
+    "lat": 30.4086343,
+    "lon": -9.5987442,
+    "tags": {
+      "amenity": "restaurant",
+      "cuisine": "fish",
+      "name": "Le Scala"
+    }
+  },
+  {
+    "type": "node",
+    "id": 3167185421,
+    "lat": 30.4173415,
+    "lon": -9.5962774,
+    "tags": {
+      "amenity": "cafe",
+      "name": "Tafarnout",
+      "smoking": "outside"
+    }
+  },
+  {
+    "type": "node",
+    "id": 3167207244,
+    "lat": 30.4159937,
+    "lon": -9.5965997,
+    "tags": {
+      "addr:city": "Agadir",
+      "addr:street": "Aït Souss",
+      "amenity": "restaurant",
+      "capacity": "20",
+      "cuisine": "moroccan",
+      "name": "Bab Agadir",
+      "name:fr": "Bab Agadir",
+      "smoking": "outside"
+    }
+  },
+  {
+    "type": "node",
+    "id": 3229849813,
+    "lat": 30.4078989,
+    "lon": -9.5809784,
+    "tags": {
+      "amenity": "restaurant",
+      "name": "Crèmerie Ibn Zohr"
+    }
+  },
+  {
+    "type": "node",
+    "id": 3350124786,
+    "lat": 30.3962860,
+    "lon": -9.5988371,
+    "tags": {
+      "amenity": "cafe"
+    }
+  },
+  {
+    "type": "node",
+    "id": 3350189584,
+    "lat": 30.3969893,
+    "lon": -9.5976033,
+    "tags": {
+      "amenity": "restaurant"
+    }
+  },
+  {
+    "type": "node",
+    "id": 3815021455,
+    "lat": 30.4074999,
+    "lon": -9.5807426,
+    "tags": {
+      "amenity": "fast_food",
+      "name": "Chez Ahmed"
+    }
+  },
+  {
+    "type": "node",
+    "id": 3912186907,
+    "lat": 30.3891604,
+    "lon": -9.5993186,
+    "tags": {
+      "amenity": "restaurant",
+      "name": "Strandrestaurant",
+      "name:en": "Beach restaurant",
+      "toilets:wheelchair": "yes",
+      "wheelchair": "yes"
+    }
+  },
+  {
+    "type": "node",
+    "id": 4178844377,
+    "lat": 30.4222562,
+    "lon": -9.6103350,
+    "tags": {
+      "amenity": "restaurant",
+      "cuisine": "italian",
+      "name": "Rugantino"
+    }
+  },
+  {
+    "type": "node",
+    "id": 4337901494,
+    "lat": 30.4235007,
+    "lon": -9.6178587,
+    "tags": {
+      "amenity": "cafe",
+      "name": "فنيزيا ايس",
+      "name:ar": "فنيزيا ايس",
+      "name:en": "Venizia Ice Cafe"
+    }
+  },
+  {
+    "type": "node",
+    "id": 4343430289,
+    "lat": 30.4285419,
+    "lon": -9.5565110,
+    "tags": {
+      "amenity": "cafe",
+      "name": "مقهى الحي المحمدي",
+      "name:ar": "مقهى الحي المحمدي"
+    }
+  },
+  {
+    "type": "node",
+    "id": 4375472691,
+    "lat": 30.4161827,
+    "lon": -9.5956103,
+    "tags": {
+      "amenity": "cafe",
+      "name": "La Fontaine"
+    }
+  },
+  {
+    "type": "node",
+    "id": 4406904397,
+    "lat": 30.4177785,
+    "lon": -9.5958122,
+    "tags": {
+      "amenity": "cafe",
+      "name": "L'Anice",
+      "name:fr": "L'Anice"
+    }
+  },
+  {
+    "type": "node",
+    "id": 4474263089,
+    "lat": 30.4183050,
+    "lon": -9.6063580,
+    "tags": {
+      "alt_name": "PFK;Poulet Frit Kentucky",
+      "alt_name:fr": "PFK;Poulet Frit Kentucky",
+      "amenity": "fast_food",
+      "brand": "KFC",
+      "brand:ar": "دجاج كنتاكي",
+      "brand:fr": "KFC",
+      "brand:wikidata": "Q524757",
+      "brand:wikipedia": "fr:Kentucky Fried Chicken",
+      "cuisine": "chicken",
+      "name": "KFC",
+      "name:ar": "دجاج كنتاكي",
+      "name:fr": "KFC",
+      "takeaway": "yes"
+    }
+  },
+  {
+    "type": "node",
+    "id": 4489484290,
+    "lat": 30.4244030,
+    "lon": -9.5932811,
+    "tags": {
+      "addr:housenumber": "2",
+      "addr:street": "Rue El Mahdi Ibn Toumert",
+      "amenity": "restaurant",
+      "cuisine": "international;moroccan",
+      "name": "Etoile d'Agadir",
+      "name:fr": "Cafe Restaurant Etoile D'Agadir",
+      "outdoor_seating": "yes"
+    }
+  },
+  {
+    "type": "node",
+    "id": 4489500889,
+    "lat": 30.4243190,
+    "lon": -9.5933665,
+    "tags": {
+      "addr:housenumber": "3",
+      "addr:street": "Rue El Mahdi Ibn Toumert",
+      "amenity": "cafe",
+      "name": "Cremerie du sud",
+      "outdoor_seating": "yes"
+    }
+  },
+  {
+    "type": "node",
+    "id": 4489501089,
+    "lat": 30.4244756,
+    "lon": -9.5931949,
+    "tags": {
+      "addr:housenumber": "1",
+      "addr:street": "Rue El Mahdi Ibn Toumert",
+      "amenity": "restaurant",
+      "cuisine": "international;moroccan",
+      "name": "Cafe Restaurant Ibtissam",
+      "name:fr": "Cafe Restaurant Ibtissam",
+      "opening_hours": "Mo-Su 10:00-22:00",
+      "outdoor_seating": "yes",
+      "phone": "0670128435"
+    }
+  },
+  {
+    "type": "node",
+    "id": 4505988092,
+    "lat": 30.4225338,
+    "lon": -9.5999817,
+    "tags": {
+      "addr:housenumber": "42",
+      "addr:postcode": "80000",
+      "addr:street": "Galerie Faiz (Place Cinema Rialto) Avenue des F.A.R.",
+      "amenity": "restaurant",
+      "cuisine": "italian",
+      "internet_access": "wlan",
+      "name:en": "Buon Gusto",
+      "opening_hours": "Mo-Su 10:00-23:30",
+      "phone": "05 28 19 71 91"
+    }
+  },
+  {
+    "type": "node",
+    "id": 4562094289,
+    "lat": 30.4272990,
+    "lon": -9.5878894,
+    "tags": {
+      "amenity": "restaurant",
+      "name": "شواية النهضة",
+      "name:ar": "شواية النهضة"
+    }
+  },
+  {
+    "type": "node",
+    "id": 4568753294,
+    "lat": 30.3939965,
+    "lon": -9.5731285,
+    "tags": {
+      "addr:postcode": "80000",
+      "addr:street": "Barreau Est/Ouest",
+      "amenity": "cafe",
+      "cuisine": "coffee_shop",
+      "internet_access": "wlan",
+      "name": "Café Bouham مقهى بوهام",
+      "name:ar": "مقهى بوهام",
+      "name:en": "Café Bouham",
+      "name:fr": "Café Bouham",
+      "opening_hours": "Mo-Su 08:00-22:30",
+      "operator": "youssef"
+    }
+  },
+  {
+    "type": "node",
+    "id": 4583630040,
+    "lat": 30.4233928,
+    "lon": -9.6043473,
+    "tags": {
+      "amenity": "restaurant"
+    }
+  },
+  {
+    "type": "node",
+    "id": 4583630041,
+    "lat": 30.4235177,
+    "lon": -9.6047175,
+    "tags": {
+      "amenity": "restaurant"
+    }
+  },
+  {
+    "type": "node",
+    "id": 4583630047,
+    "lat": 30.4234668,
+    "lon": -9.6052029,
+    "tags": {
+      "amenity": "restaurant",
+      "name": "Bamboo Thaï"
+    }
+  },
+  {
+    "type": "node",
+    "id": 4583630049,
+    "lat": 30.4209946,
+    "lon": -9.6087279,
+    "tags": {
+      "amenity": "restaurant",
+      "cuisine": "burger;grill;local;moroccan;pizza",
+      "internet_access": "wlan",
+      "name:de": "jour & Nuit",
+      "name:en": "Jour & Nuit Restaurant",
+      "name:fr": "Jour & Nuit Restaurant",
+      "website": "https://jour-et-nuit-agadir.business.site"
+    }
+  },
+  {
+    "type": "node",
+    "id": 4583630050,
+    "lat": 30.4197586,
+    "lon": -9.6075352,
+    "tags": {
+      "amenity": "restaurant",
+      "name:en": "Jour & Nuit Piscine"
+    }
+  },
+  {
+    "type": "node",
+    "id": 4666240796,
+    "lat": 30.4181241,
+    "lon": -9.5954298,
+    "tags": {
+      "addr:postcode": "80000",
+      "amenity": "fast_food",
+      "cuisine": "mexican;turkish",
+      "name:en": "TACOS DE LYON"
+    }
+  },
+  {
+    "type": "node",
+    "id": 4794289421,
+    "lat": 30.4170415,
+    "lon": -9.5869163,
+    "tags": {
+      "amenity": "cafe",
+      "internet_access": "wlan",
+      "name": "Cafe El Hay",
+      "name:fr": "Café El Hay"
+    }
+  },
+  {
+    "type": "node",
+    "id": 4794289621,
+    "lat": 30.4143628,
+    "lon": -9.5845100,
+    "tags": {
+      "amenity": "restaurant",
+      "cuisine": "pizza;italian_pizza",
+      "internet_access": "wlan",
+      "name": "Pizzatino",
+      "opening_hours": "24/7",
+      "operator": "Abdellah"
+    }
+  },
+  {
+    "type": "node",
+    "id": 4795265123,
+    "lat": 30.4083661,
+    "lon": -9.5963887,
+    "tags": {
+      "amenity": "restaurant",
+      "internet_access": "wlan",
+      "name": "Meduza Lounge",
+      "opening_hours": "24/7"
+    }
+  },
+  {
+    "type": "node",
+    "id": 4851287131,
+    "lat": 30.4221569,
+    "lon": -9.6186574,
+    "tags": {
+      "amenity": "restaurant",
+      "cuisine": "fish;french;fine_dining;international;italian;local;seafood;noodles",
+      "name:de": "Pure Passion"
+    }
+  },
+  {
+    "type": "node",
+    "id": 4851290028,
+    "lat": 30.4115433,
+    "lon": -9.6027661,
+    "tags": {
+      "amenity": "restaurant",
+      "internet_access": "wlan",
+      "name": "El Toro",
+      "name:de": "El Toro"
+    }
+  },
+  {
+    "type": "node",
+    "id": 4851290029,
+    "lat": 30.4175488,
+    "lon": -9.5977624,
+    "tags": {
+      "amenity": "restaurant",
+      "name": "Côté Court",
+      "name:de": "Cote' Court"
+    }
+  },
+  {
+    "type": "node",
+    "id": 4851290031,
+    "lat": 30.4231897,
+    "lon": -9.6160470,
+    "tags": {
+      "amenity": "restaurant",
+      "name:de": "Casa Mia"
+    }
+  },
+  {
+    "type": "node",
+    "id": 4851290032,
+    "lat": 30.4114430,
+    "lon": -9.6030852,
+    "tags": {
+      "amenity": "restaurant",
+      "name": "PLAYA"
+    }
+  },
+  {
+    "type": "node",
+    "id": 4851300925,
+    "lat": 30.4116378,
+    "lon": -9.6024722,
+    "tags": {
+      "amenity": "restaurant"
+    }
+  },
+  {
+    "type": "node",
+    "id": 4851301621,
+    "lat": 30.4240304,
+    "lon": -9.6159675,
+    "tags": {
+      "amenity": "restaurant",
+      "name:de": "Havana"
+    }
+  },
+  {
+    "type": "node",
+    "id": 4854000822,
+    "lat": 30.4160206,
+    "lon": -9.6049939,
+    "tags": {
+      "amenity": "restaurant",
+      "name": "Café del Mar",
+      "name:ar": "كافيه ديل مار",
+      "name:de": "Café del Mar",
+      "name:es": "Café del Mar"
+    }
+  },
+  {
+    "type": "node",
+    "id": 5028065221,
+    "lat": 30.3908082,
+    "lon": -9.5451166,
+    "tags": {
+      "addr:street": "Avenue Massoude Al wafqaoui",
+      "amenity": "cafe",
+      "name": "Diamant",
+      "name:fr": "Diamant",
+      "opening_hours": "Mo-Su 08:00-00:00"
+    }
+  },
+  {
+    "type": "node",
+    "id": 5037791925,
+    "lat": 30.4117119,
+    "lon": -9.5510795,
+    "tags": {
+      "amenity": "fast_food",
+      "name": "Aglif",
+      "name:en": "Aglif",
+      "name:fr": "Aglif"
+    }
+  },
+  {
+    "type": "node",
+    "id": 5252834574,
+    "lat": 30.3967305,
+    "lon": -9.5813904,
+    "tags": {
+      "amenity": "fast_food",
+      "brand:wikidata": "Q38076",
+      "internet_access": "wlan",
+      "name": "McDonald's",
+      "outdoor_seating": "yes",
+      "takeaway": "yes"
+    }
+  },
+  {
+    "type": "node",
+    "id": 5298566121,
+    "lat": 30.4229017,
+    "lon": -9.6027282,
+    "tags": {
+      "amenity": "restaurant",
+      "name": "L’ARDOISE GOURMANDE",
+      "name:en": "LARDOISE GOURMANDE"
+    }
+  },
+  {
+    "type": "node",
+    "id": 5337653321,
+    "lat": 30.4189752,
+    "lon": -9.5978850,
+    "tags": {
+      "addr:street": "Boulevard Hassan II",
+      "amenity": "restaurant",
+      "cuisine": "mediterranean",
+      "internet_access": "wlan",
+      "name": "Caverna Pizzeria Ristorante GrillAvenue m"
+    }
+  },
+  {
+    "type": "node",
+    "id": 5469439625,
+    "lat": 30.4272258,
+    "lon": -9.5875540,
+    "tags": {
+      "addr:housenumber": "N1 Dar Taleb",
+      "addr:street": "Avenue Moulay Youssef",
+      "amenity": "restaurant",
+      "name": "Rotisserie NAHDA",
+      "phone": "028827071"
+    }
+  },
+  {
+    "type": "node",
+    "id": 5469439627,
+    "lat": 30.4125616,
+    "lon": -9.5879459,
+    "tags": {
+      "amenity": "restaurant",
+      "name": "Ennaser",
+      "name:fr": "Ennaser"
+    }
+  },
+  {
+    "type": "node",
+    "id": 5469450121,
+    "lat": 30.4125901,
+    "lon": -9.5878082,
+    "tags": {
+      "addr:street": "Rue de Safi",
+      "amenity": "restaurant",
+      "name": "Grillade Fadelo Allah",
+      "name:fr": "Grillade Fadelo Allah"
+    }
+  },
+  {
+    "type": "node",
+    "id": 5525154376,
+    "lat": 30.4260216,
+    "lon": -9.5919032,
+    "tags": {
+      "addr:city": "Agadir",
+      "addr:postcode": "80000",
+      "addr:street": "Boulevard Mohammed Cheikh Saadi",
+      "amenity": "cafe",
+      "name": "Caramel",
+      "opening_hours": "Mo-Su 06:00-22:30",
+      "outdoor_seating": "yes"
+    }
+  },
+  {
+    "type": "node",
+    "id": 5525507076,
+    "lat": 30.4338367,
+    "lon": -9.5884724,
+    "tags": {
+      "amenity": "fast_food",
+      "cuisine": "burger;pizza;cafe",
+      "delivery": "yes",
+      "drive_through": "no",
+      "name": "12 COOL",
+      "outdoor_seating": "yes",
+      "phone": "+212 528823601",
+      "takeaway": "yes"
+    }
+  },
+  {
+    "type": "node",
+    "id": 5525589191,
+    "lat": 30.4182336,
+    "lon": -9.5970894,
+    "tags": {
+      "amenity": "fast_food",
+      "cuisine": "burger",
+      "name": "Mikey's Burger",
+      "opening_hours": "Mo-Su 11:00-00:00"
+    }
+  },
+  {
+    "type": "node",
+    "id": 5525615990,
+    "lat": 30.4239984,
+    "lon": -9.6153658,
+    "tags": {
+      "amenity": "restaurant",
+      "name": "Les Blancs"
+    }
+  },
+  {
+    "type": "node",
+    "id": 5525615991,
+    "lat": 30.4236565,
+    "lon": -9.6116249,
+    "tags": {
+      "amenity": "restaurant",
+      "cuisine": "italian",
+      "name": "Da Celsi"
+    }
+  },
+  {
+    "type": "node",
+    "id": 5525615992,
+    "lat": 30.4236474,
+    "lon": -9.6120248,
+    "tags": {
+      "amenity": "cafe",
+      "description": "Salle de billard",
+      "name": "First"
+    }
+  },
+  {
+    "type": "node",
+    "id": 5548562823,
+    "lat": 30.4090353,
+    "lon": -9.5673744,
+    "tags": {
+      "addr:housenumber": "03",
+      "addr:postcode": "80050",
+      "addr:street": "Avenue Jamal Abdennaser",
+      "amenity": "cafe",
+      "cuisine": "coffee_shop;arab;breakfast;tea",
+      "internet_access": "wlan",
+      "name": "Café Aslal مقهى أسلال",
+      "name:ar": "مقهى أسلال",
+      "name:en": "Café Aslal",
+      "name:fr": "Café Aslal",
+      "opening_hours": "Mo-Su 06:00-22:00"
+    }
+  },
+  {
+    "type": "node",
+    "id": 5593035520,
+    "lat": 30.4171111,
+    "lon": -9.5649341,
+    "tags": {
+      "amenity": "fast_food",
+      "cuisine": "burger;sandwich;fried_food",
+      "name": "AS Burger",
+      "outdoor_seating": "yes"
+    }
+  },
+  {
+    "type": "node",
+    "id": 5600220902,
+    "lat": 30.4226487,
+    "lon": -9.6001023,
+    "tags": {
+      "amenity": "restaurant",
+      "contact:email": "info@116.ma",
+      "contact:facebook": "https://www.facebook.com/116saladebar",
+      "contact:instagram": "https://www.instagram.com/116agadir/",
+      "contact:phone": "+212 5288-20312",
+      "contact:website": "116.ma",
+      "cuisine": "crepe;salad",
+      "name": "116"
+    }
+  },
+  {
+    "type": "node",
+    "id": 5600220904,
+    "lat": 30.4210182,
+    "lon": -9.5999877,
+    "tags": {
+      "amenity": "restaurant",
+      "name": "Little Italy"
+    }
+  },
+  {
+    "type": "node",
+    "id": 5620024521,
+    "lat": 30.4231292,
+    "lon": -9.6116504,
+    "tags": {
+      "amenity": "cafe",
+      "name:de": "Le Marin",
+      "name:en": "Le Marin",
+      "name:fr": "Le Marin",
+      "name:pl": "Le Marin"
+    }
+  },
+  {
+    "type": "node",
+    "id": 5651995021,
+    "lat": 30.4244185,
+    "lon": -9.5934832,
+    "tags": {
+      "amenity": "restaurant",
+      "name": "Rotisserie Marché شواية المارشي",
+      "name:ar": "شواية المارشي",
+      "name:fr": "Rotisserie Marché"
+    }
+  },
+  {
+    "type": "node",
+    "id": 5680509123,
+    "lat": 30.4226849,
+    "lon": -9.6019594,
+    "tags": {
+      "amenity": "restaurant",
+      "cuisine": "moroccan",
+      "name:en": "Daffi Agadir"
+    }
+  },
+  {
+    "type": "node",
+    "id": 5783963634,
+    "lat": 30.4182303,
+    "lon": -9.5969522,
+    "tags": {
+      "amenity": "cafe",
+      "name": "La Veranda"
+    }
+  },
+  {
+    "type": "node",
+    "id": 5798481753,
+    "lat": 30.3997438,
+    "lon": -9.5878898,
+    "tags": {
+      "amenity": "cafe",
+      "internet_access": "wlan",
+      "name": "O.quotidien",
+      "opening_hours": "Mo-Su 07:00-23:00",
+      "website": "https://maboulangerie.ma/annuaire/oquotidien-agadir/"
+    }
+  },
+  {
+    "type": "node",
+    "id": 6030557985,
+    "lat": 30.4272270,
+    "lon": -9.5879643,
+    "tags": {
+      "amenity": "restaurant",
+      "name:en": "very good restaurant - cheep"
+    }
+  },
+  {
+    "type": "node",
+    "id": 6030557986,
+    "lat": 30.4115109,
+    "lon": -9.5802585,
+    "tags": {
+      "amenity": "restaurant",
+      "name": "Rasta Pasta"
+    }
+  },
+  {
+    "type": "node",
+    "id": 6050053485,
+    "lat": 30.4231724,
+    "lon": -9.6013733,
+    "tags": {
+      "amenity": "restaurant",
+      "name": "K-Moon",
+      "name:de": "K-Moon"
+    }
+  },
+  {
+    "type": "node",
+    "id": 6050067586,
+    "lat": 30.4215421,
+    "lon": -9.6188342,
+    "tags": {
+      "amenity": "restaurant",
+      "name:de": "Mama Catarina"
+    }
+  },
+  {
+    "type": "node",
+    "id": 6070543211,
+    "lat": 30.3874864,
+    "lon": -9.5943528,
+    "tags": {
+      "amenity": "cafe",
+      "name": "Café Maure",
+      "wheelchair": "yes"
+    }
+  },
+  {
+    "type": "node",
+    "id": 6070543212,
+    "lat": 30.3877756,
+    "lon": -9.5946814,
+    "tags": {
+      "amenity": "restaurant",
+      "name": "Hauptrestaurant",
+      "name:en": "Main restaurant",
+      "wheelchair": "yes"
+    }
+  },
+  {
+    "type": "node",
+    "id": 6121144870,
+    "lat": 30.4143283,
+    "lon": -9.6012146,
+    "tags": {
+      "amenity": "restaurant",
+      "name": "Le Z"
+    }
+  },
+  {
+    "type": "node",
+    "id": 6121144871,
+    "lat": 30.4138682,
+    "lon": -9.6008507,
+    "tags": {
+      "amenity": "restaurant",
+      "name": "Le Jardin d'eau"
+    }
+  },
+  {
+    "type": "node",
+    "id": 6121144873,
+    "lat": 30.4136409,
+    "lon": -9.6005140,
+    "tags": {
+      "amenity": "restaurant",
+      "name": "Fouquet's"
+    }
+  },
+  {
+    "type": "node",
+    "id": 6121144875,
+    "lat": 30.4173016,
+    "lon": -9.6032377,
+    "tags": {
+      "addr:city": "Agadir",
+      "addr:housenumber": "20",
+      "addr:postcode": "80000",
+      "addr:street": "Boulevard du 20 Aout",
+      "amenity": "restaurant",
+      "email": "bluenote.agadir@gmail.com",
+      "name": "Blue Note Agadir",
+      "name:fr": "Mikasushi",
+      "phone": "+212 6 661-436889",
+      "website": "https://bluenote-agadir.com"
+    }
+  },
+  {
+    "type": "node",
+    "id": 6121170886,
+    "lat": 30.4238152,
+    "lon": -9.5955203,
+    "tags": {
+      "amenity": "fast_food",
+      "cuisine": "pizza",
+      "name": "S.O.S Pizza Kim's"
+    }
+  },
+  {
+    "type": "node",
+    "id": 6121170887,
+    "lat": 30.4160583,
+    "lon": -9.5954236,
+    "tags": {
+      "amenity": "restaurant",
+      "cuisine": "italian",
+      "name": "Mezzo Mezzo"
+    }
+  },
+  {
+    "type": "node",
+    "id": 6123298712,
+    "lat": 30.4228602,
+    "lon": -9.6026800,
+    "tags": {
+      "amenity": "restaurant",
+      "name": "Narcos"
+    }
+  },
+  {
+    "type": "node",
+    "id": 6125412674,
+    "lat": 30.4089992,
+    "lon": -9.5955075,
+    "tags": {
+      "amenity": "restaurant",
+      "indoor_seating": "yes",
+      "name": "La Grillardière",
+      "outdoor_seating": "yes"
+    }
+  },
+  {
+    "type": "node",
+    "id": 6125412678,
+    "lat": 30.4211942,
+    "lon": -9.5995615,
+    "tags": {
+      "amenity": "cafe",
+      "name": "ça papote"
+    }
+  },
+  {
+    "type": "node",
+    "id": 6149731347,
+    "lat": 30.4203156,
+    "lon": -9.5968542,
+    "tags": {
+      "amenity": "fast_food",
+      "cuisine": "chicken",
+      "name": "SOS Poulet"
+    }
+  },
+  {
+    "type": "node",
+    "id": 6165448484,
+    "lat": 30.4224814,
+    "lon": -9.6002253,
+    "tags": {
+      "amenity": "restaurant",
+      "cuisine": "fish",
+      "name": "Pesca Del Dia"
+    }
+  },
+  {
+    "type": "node",
+    "id": 6165449316,
+    "lat": 30.4226107,
+    "lon": -9.6000023,
+    "tags": {
+      "amenity": "restaurant",
+      "cuisine": "pizza",
+      "name": "Vitamix"
+    }
+  },
+  {
+    "type": "node",
+    "id": 6171090593,
+    "lat": 30.4588179,
+    "lon": -9.5685418,
+    "tags": {
+      "amenity": "restaurant",
+      "cuisine": "local",
+      "name": "Panoramique",
+      "phone": "+212762208404"
+    }
+  },
+  {
+    "type": "node",
+    "id": 6174742968,
+    "lat": 30.4035416,
+    "lon": -9.5451541,
+    "tags": {
+      "amenity": "cafe",
+      "name": "Yours Cafe"
+    }
+  },
+  {
+    "type": "node",
+    "id": 6174807092,
+    "lat": 30.4093360,
+    "lon": -9.5573262,
+    "tags": {
+      "amenity": "cafe",
+      "internet_access:fee": "yes",
+      "name": "Jnane Fruits",
+      "opening_hours": "24/7",
+      "outdoor_seating": "yes",
+      "smoking": "outside",
+      "takeaway": "no"
+    }
+  },
+  {
+    "type": "node",
+    "id": 6174807093,
+    "lat": 30.4104678,
+    "lon": -9.5554279,
+    "tags": {
+      "amenity": "cafe",
+      "internet_access": "wlan",
+      "internet_access:fee": "no",
+      "name": "Café Tanmirt",
+      "opening_hours": "24/7",
+      "outdoor_seating": "yes",
+      "smoking": "outside",
+      "takeaway": "no"
+    }
+  },
+  {
+    "type": "node",
+    "id": 6176815205,
+    "lat": 30.4218043,
+    "lon": -9.6010767,
+    "tags": {
+      "amenity": "restaurant",
+      "cuisine": "italian",
+      "name": "La Siciliana",
+      "name:es": "La Siciliana"
+    }
+  },
+  {
+    "type": "node",
+    "id": 6297508185,
+    "lat": 30.4081712,
+    "lon": -9.5873711,
+    "tags": {
+      "amenity": "cafe",
+      "check_date": "2023-07-25",
+      "internet_access": "wlan",
+      "name:en": "Café Founty"
+    }
+  },
+  {
+    "type": "node",
+    "id": 6356932586,
+    "lat": 30.4026674,
+    "lon": -9.5502484,
+    "tags": {
+      "addr:housenumber": "11",
+      "addr:postcode": "80070",
+      "addr:street": "Rue Iligh",
+      "amenity": "restaurant",
+      "cuisine": "moroccan",
+      "email": "rbatigrill@gmail.com",
+      "internet_access": "wlan",
+      "name": "مطعم الرباطي",
+      "name:ar": "مطعم الرباطي",
+      "name:fr": "Restaurant Rbati",
+      "opening_hours": "Mo-Su 07:00-00:00",
+      "phone": "0661615027"
+    }
+  },
+  {
+    "type": "node",
+    "id": 6577689785,
+    "lat": 30.4235041,
+    "lon": -9.6179518,
+    "tags": {
+      "amenity": "cafe",
+      "name": "Senzo"
+    }
+  },
+  {
+    "type": "node",
+    "id": 6700193416,
+    "lat": 30.4209263,
+    "lon": -9.6169652,
+    "tags": {
+      "amenity": "restaurant",
+      "name": "Bianca Beach",
+      "tourism": "attraction"
+    }
+  },
+  {
+    "type": "node",
+    "id": 6744332739,
+    "lat": 30.4367090,
+    "lon": -9.5706299,
+    "tags": {
+      "amenity": "cafe",
+      "name": "Cafe Blaze"
+    }
+  },
+  {
+    "type": "node",
+    "id": 6744332740,
+    "lat": 30.4361956,
+    "lon": -9.5700452,
+    "tags": {
+      "amenity": "cafe",
+      "name": "Cafe Grumium"
+    }
+  },
+  {
+    "type": "node",
+    "id": 6845546785,
+    "lat": 30.4076191,
+    "lon": -9.5982375,
+    "tags": {
+      "amenity": "restaurant",
+      "check_date": "2023-07-28",
+      "cuisine": "fish;international",
+      "name:de": "Le Tapis Rouge",
+      "name:en": "Le Tapis Rouge"
+    }
+  },
+  {
+    "type": "node",
+    "id": 6960799587,
+    "lat": 30.4130600,
+    "lon": -9.5744771,
+    "tags": {
+      "amenity": "cafe"
+    }
+  },
+  {
+    "type": "node",
+    "id": 6969459987,
+    "lat": 30.3958783,
+    "lon": -9.5465216,
+    "tags": {
+      "amenity": "restaurant",
+      "name:en": "Le Petit Pêcheur"
+    }
+  },
+  {
+    "type": "node",
+    "id": 6969477886,
+    "lat": 30.3958816,
+    "lon": -9.5464805,
+    "tags": {
+      "amenity": "restaurant",
+      "name:en": "Le petit pêcheur"
+    }
+  },
+  {
+    "type": "node",
+    "id": 6969490785,
+    "lat": 30.3969349,
+    "lon": -9.5483102,
+    "tags": {
+      "amenity": "restaurant",
+      "name": "عصير اسكلو",
+      "name:ar": "عصير اسكلو"
+    }
+  },
+  {
+    "type": "node",
+    "id": 6969542586,
+    "lat": 30.3970226,
+    "lon": -9.5484126,
+    "tags": {
+      "amenity": "restaurant",
+      "name:en": "M33 Pizzeria"
+    }
+  },
+  {
+    "type": "node",
+    "id": 7105322748,
+    "lat": 30.4183273,
+    "lon": -9.6038006,
+    "tags": {
+      "addr:city": "Agadir",
+      "addr:postcode": "80010",
+      "addr:street": "Boulevard du 20 Août",
+      "amenity": "restaurant",
+      "bar": "yes",
+      "brewery": "yes;casablanca;flag;Heineken",
+      "capacity": "120",
+      "cuisine": "pizza;burger;chicken;international;grill;wine;steak;cocktails;birthday;afterwork;regional;african;moroccan",
+      "name": "Restaurant/Bar LOCOLOCO",
+      "opening_hours": "Mo-Su 11:00-02:00",
+      "reservation": "yes",
+      "wheelchair": "yes"
+    }
+  },
+  {
+    "type": "node",
+    "id": 7209083797,
+    "lat": 30.4697387,
+    "lon": -9.5987223,
+    "tags": {
+      "amenity": "restaurant"
+    }
+  },
+  {
+    "type": "node",
+    "id": 7235376285,
+    "lat": 30.4006754,
+    "lon": -9.5355976,
+    "tags": {
+      "amenity": "cafe",
+      "name:en": "la crèche"
+    }
+  },
+  {
+    "type": "node",
+    "id": 7442013489,
+    "lat": 30.4108667,
+    "lon": -9.5875791,
+    "tags": {
+      "amenity": "restaurant",
+      "cuisine": "pizza",
+      "name": "بيتزا سليمان",
+      "name:ar": "بيتزا سليمان",
+      "name:fr": "Pizzeria Soulaymane"
+    }
+  },
+  {
+    "type": "node",
+    "id": 7932099882,
+    "lat": 30.4161251,
+    "lon": -9.5956677,
+    "tags": {
+      "amenity": "restaurant",
+      "name": "مطعم بيت المنــــدي الخليجـــي",
+      "name:ar": "مطعم بيت المنــــدي الخليجـــي"
+    }
+  },
+  {
+    "type": "node",
+    "id": 8777287777,
+    "lat": 30.4171205,
+    "lon": -9.5796913,
+    "tags": {
+      "amenity": "restaurant",
+      "name": "Dar Chouaya"
+    }
+  },
+  {
+    "type": "node",
+    "id": 9260377017,
+    "lat": 30.4132179,
+    "lon": -9.5789631,
+    "tags": {
+      "amenity": "cafe",
+      "name:en": "Mahis"
+    }
+  },
+  {
+    "type": "node",
+    "id": 9597449917,
+    "lat": 30.4187636,
+    "lon": -9.5965894,
+    "tags": {
+      "amenity": "cafe",
+      "name": "Café Mauro"
+    }
+  },
+  {
+    "type": "node",
+    "id": 9687632317,
+    "lat": 30.4223303,
+    "lon": -9.5933698,
+    "tags": {
+      "amenity": "restaurant",
+      "name": "Carrito"
+    }
+  },
+  {
+    "type": "node",
+    "id": 10114967667,
+    "lat": 30.4219220,
+    "lon": -9.6055479,
+    "tags": {
+      "amenity": "cafe",
+      "name": "Le Calisson"
+    }
+  },
+  {
+    "type": "node",
+    "id": 10115903452,
+    "lat": 30.4012041,
+    "lon": -9.5887048,
+    "tags": {
+      "amenity": "restaurant",
+      "name": "Narjisse",
+      "phone": "+212 5282-33011",
+      "website": "https://clubnarjisse.ma/"
+    }
+  },
+  {
+    "type": "node",
+    "id": 10115907190,
+    "lat": 30.3995781,
+    "lon": -9.5879027,
+    "tags": {
+      "amenity": "restaurant",
+      "name": "Vita mix",
+      "opening_hours": "Mo-Su 11:00-02:00",
+      "phone": "+212 80-8503250"
+    }
+  },
+  {
+    "type": "node",
+    "id": 10117264525,
+    "lat": 30.3990520,
+    "lon": -9.5872171,
+    "tags": {
+      "amenity": "restaurant",
+      "description": "Restaurant mexicain",
+      "name": "EL-Tepeyac",
+      "opening_hours": "Mo-Su 12:00-02:00"
+    }
+  },
+  {
+    "type": "node",
+    "id": 10117272830,
+    "lat": 30.3997123,
+    "lon": -9.5874165,
+    "tags": {
+      "addr:street": "N° 10 Immeuble 03 Bloc 03, Khalij Ennakhil. City Founty",
+      "amenity": "restaurant",
+      "name": "Roastery",
+      "opening_hours": "Mo-Su 07:00-00:00",
+      "phone": "+212528215499",
+      "website": "https://roasteryagadir.com/"
+    }
+  },
+  {
+    "type": "node",
+    "id": 10117280269,
+    "lat": 30.4016716,
+    "lon": -9.5849387,
+    "tags": {
+      "addr:street": "Lot I18 AMO3 Technopole 1 AgadirBay",
+      "amenity": "restaurant",
+      "name": "Dar Jad",
+      "opening_hours": "Mo-Su 07:00-00:00",
+      "phone": "+212 8 08572324",
+      "website": "https://darjad.ma/"
+    }
+  },
+  {
+    "type": "node",
+    "id": 10117302094,
+    "lat": 30.4009585,
+    "lon": -9.5868299,
+    "tags": {
+      "amenity": "restaurant",
+      "name": "Green's",
+      "website": "http://www.greens.ma/"
+    }
+  },
+  {
+    "type": "node",
+    "id": 10118429506,
+    "lat": 30.4003632,
+    "lon": -9.5866799,
+    "tags": {
+      "amenity": "cafe",
+      "indoor_seating": "yes",
+      "name": "Crémerie Sonaba",
+      "outdoor_seating": "yes"
+    }
+  },
+  {
+    "type": "node",
+    "id": 10118452610,
+    "lat": 30.3999966,
+    "lon": -9.5870628,
+    "tags": {
+      "amenity": "restaurant",
+      "name": "La cuccina di Mamma"
+    }
+  },
+  {
+    "type": "node",
+    "id": 10118454382,
+    "lat": 30.4005526,
+    "lon": -9.5866642,
+    "tags": {
+      "amenity": "restaurant",
+      "name": "Brooklyn Pizza"
+    }
+  },
+  {
+    "type": "node",
+    "id": 10118455066,
+    "lat": 30.4005922,
+    "lon": -9.5869803,
+    "tags": {
+      "amenity": "restaurant",
+      "description": "Spécialité italienne",
+      "name": "Zone 11"
+    }
+  },
+  {
+    "type": "node",
+    "id": 10118470302,
+    "lat": 30.3995171,
+    "lon": -9.5879234,
+    "tags": {
+      "amenity": "restaurant",
+      "name": "Arôme de Paris"
+    }
+  },
+  {
+    "type": "node",
+    "id": 10118493269,
+    "lat": 30.4005653,
+    "lon": -9.5867671,
+    "tags": {
+      "amenity": "fast_food",
+      "name": "Waffle city"
+    }
+  },
+  {
+    "type": "node",
+    "id": 10118498423,
+    "lat": 30.3992313,
+    "lon": -9.5875377,
+    "tags": {
+      "amenity": "restaurant",
+      "name": "O'Comptoir"
+    }
+  },
+  {
+    "type": "node",
+    "id": 10118500942,
+    "lat": 30.3990954,
+    "lon": -9.5879869,
+    "tags": {
+      "amenity": "restaurant",
+      "name": "Karisma"
+    }
+  },
+  {
+    "type": "node",
+    "id": 10118501351,
+    "lat": 30.3994745,
+    "lon": -9.5874880,
+    "tags": {
+      "amenity": "restaurant",
+      "name": "Sushi Fleur de Ming"
+    }
+  },
+  {
+    "type": "node",
+    "id": 10118501352,
+    "lat": 30.3996743,
+    "lon": -9.5870621,
+    "tags": {
+      "amenity": "cafe",
+      "name": "Crémerie Bay"
+    }
+  },
+  {
+    "type": "node",
+    "id": 10118501520,
+    "lat": 30.3999870,
+    "lon": -9.5869932,
+    "tags": {
+      "amenity": "restaurant",
+      "name": "Yuzaki"
+    }
+  },
+  {
+    "type": "node",
+    "id": 10119249841,
+    "lat": 30.4169395,
+    "lon": -9.5796009,
+    "tags": {
+      "addr:street": "Rue 2 Mars",
+      "amenity": "restaurant",
+      "name": "Dar Tajine",
+      "opening_hours": "Mo-Su 11:00-01:30",
+      "phone": "+212 5282-11028"
+    }
+  },
+  {
+    "type": "node",
+    "id": 10119754546,
+    "lat": 30.4012773,
+    "lon": -9.5854013,
+    "tags": {
+      "amenity": "restaurant",
+      "name": "Bo Passage",
+      "opening_hours": "Mo-Su 07:00-00:00",
+      "phone": "+212 80-8592749",
+      "website": "https://www.facebook.com/bopassage/"
+    }
+  },
+  {
+    "type": "node",
+    "id": 10121392627,
+    "lat": 30.4144344,
+    "lon": -9.5789127,
+    "tags": {
+      "amenity": "restaurant",
+      "name": "Restaurants"
+    }
+  },
+  {
+    "type": "node",
+    "id": 10300491609,
+    "lat": 30.4484170,
+    "lon": -9.6601069,
+    "tags": {
+      "amenity": "restaurant",
+      "name:en": "Café Mouage"
+    }
+  },
+  {
+    "type": "node",
+    "id": 10562175709,
+    "lat": 30.4121297,
+    "lon": -9.5837073,
+    "tags": {
+      "amenity": "cafe",
+      "name:en": "cafe Maria"
+    }
+  },
+  {
+    "type": "node",
+    "id": 10685435605,
+    "lat": 30.4193330,
+    "lon": -9.5783149,
+    "tags": {
+      "amenity": "cafe",
+      "name:de": "Teehaus"
+    }
+  },
+  {
+    "type": "node",
+    "id": 11065621342,
+    "lat": 30.4107582,
+    "lon": -9.5965100,
+    "tags": {
+      "amenity": "restaurant",
+      "check_date": "2023-07-24",
+      "name": "Kim Hoa"
+    }
+  },
+  {
+    "type": "node",
+    "id": 11067066230,
+    "lat": 30.4103022,
+    "lon": -9.5831611,
+    "tags": {
+      "amenity": "restaurant",
+      "check_date": "2023-07-25",
+      "name": "Belle Passion"
+    }
+  },
+  {
+    "type": "node",
+    "id": 11308397170,
+    "lat": 30.4009641,
+    "lon": -9.5846682,
+    "tags": {
+      "addr:street": "Avenue Mohamed V شارع الحسن الثاني",
+      "amenity": "restaurant",
+      "cuisine": "italian",
+      "name": "Little Mamma"
+    }
+  },
+  {
+    "type": "node",
+    "id": 11403864570,
+    "lat": 30.4364058,
+    "lon": -9.5704308,
+    "tags": {
+      "amenity": "restaurant",
+      "name:de": "Koreanisches Restaurant",
+      "name:en": "Korean restaurant"
+    }
+  },
+  {
+    "type": "node",
+    "id": 11508229769,
+    "lat": 30.4142057,
+    "lon": -9.5808439,
+    "tags": {
+      "amenity": "cafe",
+      "name:en": "Malaysia"
+    }
+  },
+  {
+    "type": "node",
+    "id": 11511170369,
+    "lat": 30.4233094,
+    "lon": -9.6185397,
+    "tags": {
+      "amenity": "cafe",
+      "name:en": "Espresso Lab"
+    }
+  },
+  {
+    "type": "node",
+    "id": 11511925670,
+    "lat": 30.4141660,
+    "lon": -9.6012168,
+    "tags": {
+      "amenity": "restaurant",
+      "name": "Le20"
+    }
+  },
+  {
+    "type": "node",
+    "id": 11512123569,
+    "lat": 30.4219730,
+    "lon": -9.5936098,
+    "tags": {
+      "amenity": "cafe",
+      "name": "iMiM",
+      "outdoor_seating": "yes"
+    }
+  },
+  {
+    "type": "node",
+    "id": 11653099009,
+    "lat": 30.4227700,
+    "lon": -9.5943783,
+    "tags": {
+      "amenity": "cafe",
+      "name": "Cremerie Mazagan",
+      "outdoor_seating": "yes"
+    }
+  },
+  {
+    "type": "node",
+    "id": 11653099012,
+    "lat": 30.4231930,
+    "lon": -9.5922902,
+    "tags": {
+      "amenity": "restaurant",
+      "cuisine": "regional",
+      "name": "Sweet Hamid",
+      "outdoor_seating": "yes"
+    }
+  },
+  {
+    "type": "node",
+    "id": 11653099013,
+    "lat": 30.4244373,
+    "lon": -9.5919905,
+    "tags": {
+      "amenity": "cafe",
+      "name": "Cafe Santiago",
+      "outdoor_seating": "yes"
+    }
+  },
+  {
+    "type": "node",
+    "id": 11653099014,
+    "lat": 30.4245151,
+    "lon": -9.5920938,
+    "tags": {
+      "amenity": "cafe",
+      "name": "Cafe Holanda",
+      "outdoor_seating": "yes"
+    }
+  },
+  {
+    "type": "node",
+    "id": 11653099016,
+    "lat": 30.4243598,
+    "lon": -9.5923033,
+    "tags": {
+      "amenity": "fast_food",
+      "cuisine": "regional",
+      "name": "Restaurant Cafe Nasr"
+    }
+  },
+  {
+    "type": "node",
+    "id": 11756481017,
+    "lat": 30.4122939,
+    "lon": -9.5893344,
+    "tags": {
+      "amenity": "cafe",
+      "name": "Al Fajer"
+    }
+  },
+  {
+    "type": "node",
+    "id": 11772200869,
+    "lat": 30.4083063,
+    "lon": -9.5995719,
+    "tags": {
+      "amenity": "restaurant",
+      "name:en": "Le Santal",
+      "name:fr": "Le Santal"
+    }
+  },
+  {
+    "type": "node",
+    "id": 11772202069,
+    "lat": 30.4083141,
+    "lon": -9.5994067,
+    "tags": {
+      "amenity": "restaurant",
+      "name:en": "Marrakech"
+    }
+  },
+  {
+    "type": "node",
+    "id": 11772203469,
+    "lat": 30.4083227,
+    "lon": -9.5992563,
+    "tags": {
+      "amenity": "restaurant",
+      "name:en": "Krystal"
+    }
+  },
+  {
+    "type": "node",
+    "id": 11772209069,
+    "lat": 30.4085796,
+    "lon": -9.6014653,
+    "tags": {
+      "amenity": "restaurant",
+      "name": "RIU"
+    }
+  },
+  {
+    "type": "node",
+    "id": 12051835269,
+    "lat": 30.4138545,
+    "lon": -9.5931553,
+    "tags": {
+      "amenity": "cafe"
+    }
+  },
+  {
+    "type": "node",
+    "id": 12422439298,
+    "lat": 30.3990631,
+    "lon": -9.5869064,
+    "tags": {
+      "amenity": "restaurant",
+      "cuisine": "pizza",
+      "name": "Delice Pizza Bay Sonaba"
+    }
+  },
+  {
+    "type": "node",
+    "id": 12900504201,
+    "lat": 30.3990293,
+    "lon": -9.5510911,
+    "tags": {
+      "amenity": "cafe",
+      "internet_access": "wlan",
+      "name": "Cafe Rayan"
+    }
+  },
+  {
+    "type": "node",
+    "id": 12981703501,
+    "lat": 30.4123367,
+    "lon": -9.5767684,
+    "tags": {
+      "amenity": "cafe"
+    }
+  },
+  {
+    "type": "node",
+    "id": 13015240802,
+    "lat": 30.3965358,
+    "lon": -9.5457447,
+    "tags": {
+      "amenity": "cafe",
+      "name": "NOUVION (wifi only inside, code:20202020)"
+    }
+  },
+  {
+    "type": "node",
+    "id": 13181284905,
+    "lat": 30.4177005,
+    "lon": -9.6055539,
+    "tags": {
+      "addr:city": "Agadir",
+      "addr:city:fr": "Agadir",
+      "addr:postcode": "80010",
+      "addr:street": "Corniche",
+      "amenity": "fast_food",
+      "brand": "ماكدونالدز",
+      "brand:ar": "ماكدونالدز",
+      "brand:en": "McDonald's",
+      "brand:fr": "McDonald's",
+      "brand:wikidata": "Q38076",
+      "brand:wikipedia": "fr:McDonald's",
+      "cuisine": "burger",
+      "name": "ماكدونالدز",
+      "name:ar": "ماكدونالدز",
+      "name:en": "McDonald's",
+      "name:fr": "McDonald's",
+      "phone": "+212 5 28 72 92 01",
+      "takeaway": "yes",
+      "wheelchair": "yes"
+    }
+  },
+  {
+    "type": "node",
+    "id": 13181284906,
+    "lat": 30.4177541,
+    "lon": -9.6058312,
+    "tags": {
+      "addr:city": "Agadir",
+      "addr:city:fr": "Agadir",
+      "addr:postcode": "80010",
+      "addr:street": "Corniche",
+      "amenity": "restaurant",
+      "brand": "Pizza Hut",
+      "brand:fr": "Pizza Hut",
+      "brand:wikidata": "Q191615",
+      "brand:wikipedia": "fr:Pizza Hut",
+      "cuisine": "pizza",
+      "name": "Pizza Hut",
+      "name:fr": "Pizza Hut",
+      "takeaway": "yes",
+      "wheelchair": "no"
+    }
+  },
+  {
+    "type": "node",
+    "id": 13316026973,
+    "lat": 30.4229292,
+    "lon": -9.6092771,
+    "tags": {
+      "amenity": "cafe"
+    }
+  }
+  
+    ]
+  }
+  

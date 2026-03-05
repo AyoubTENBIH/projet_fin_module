@@ -2,7 +2,13 @@ import { motion } from 'framer-motion'
 import { Truck, MapPin, Zap } from 'lucide-react'
 import Button from '../components/common/Button'
 
-export default function Home({ onStart, onImport, onLoadTemplate, onLoadTemplateAgadir }) {
+export default function Home({
+  onStart,
+  onImport,
+  onLoadTemplate,
+  onLoadTemplateAgadir,
+  onImportOsmRandom,
+}) {
   return (
     <div className="min-h-screen flex flex-col bg-white">
       {/* Header */}
@@ -71,6 +77,15 @@ export default function Home({ onStart, onImport, onLoadTemplate, onLoadTemplate
                     icon={<Truck className="w-4 h-4" />}
                   >
                     Template Agadir (OSM)
+                  </Button>
+                )}
+                {onImportOsmRandom && (
+                  <Button
+                    variant="secondary"
+                    onClick={onImportOsmRandom}
+                    icon={<MapPin className="w-4 h-4" />}
+                  >
+                    Importer JSON OSM (aléatoire)
                   </Button>
                 )}
               </div>

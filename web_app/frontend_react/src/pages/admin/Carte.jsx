@@ -98,6 +98,116 @@ function CarteContent() {
     input.click()
   }
 
+  const handleImportOsmRandom = () => {
+    const input = document.createElement('input')
+    input.type = 'file'
+    input.accept = '.json,.geojson'
+    input.onchange = (e) => {
+      const file = e.target.files[0]
+      if (!file) return
+      const reader = new FileReader()
+      reader.onload = (ev) => {
+        try {
+          const raw = JSON.parse(ev.target.result)
+          const elements =
+            Array.isArray(raw.elements) && raw.elements.length
+              ? raw.elements
+              : Array.isArray(raw.features)
+                ? raw.features.map((f) => ({
+                    type: 'node',
+                    lat: f.geometry?.coordinates?.[1],
+                    lon: f.geometry?.coordinates?.[0],
+                    tags: f.properties || {},
+                  }))
+                : []
+          const nodes = elements.filter((el) => el && el.type === 'node' && typeof el.lat === 'number' && typeof el.lon === 'number')
+          if (!nodes.length) {
+            alert('Aucun noeud OSM valide trouvé dans ce fichier.')
+            return
+          }
+          const amenityFilter = prompt(
+            'Type de lieu à utiliser comme points de collecte (ex: cafe, pharmacy, * pour tous les amenity/shop)',
+            'cafe'
+          )
+          const filt = amenityFilter && amenityFilter.trim() !== '' ? amenityFilter.trim() : '*'
+          let candidates = nodes.filter((n) => n.tags && (n.tags.amenity || n.tags.shop))
+          if (filt !== '*') {
+            candidates = candidates.filter(
+              (n) => n.tags?.amenity === filt || n.tags?.shop === filt
+            )
+          }
+          if (!candidates.length) {
+            alert('Aucun point correspondant à ce filtre amenity/shop.')
+            return
+          }
+          const maxDefault = Math.min(50, candidates.length)
+          const nStr = prompt(
+            `Nombre maximum de points à échantillonner (1–${candidates.length})`,
+            String(maxDefault)
+          )
+          const nVal = parseInt(nStr || String(maxDefault), 10)
+          const n = Number.isFinite(nVal)
+            ? Math.max(1, Math.min(candidates.length, nVal))
+            : maxDefault
+
+          const volumeStr = prompt('Volume moyen par point (kg)', '800')
+          const baseVolume = parseInt(volumeStr || '800', 10) || 800
+
+          const shuffled = [...candidates].sort(() => Math.random() - 0.5)
+          const selected = shuffled.slice(0, n)
+
+          const pointsData = selected.map((n, idx) => ({
+            id: idx + 1,
+            lat: n.lat,
+            lng: n.lon,
+            nom: n.tags?.name || `${n.tags?.amenity || n.tags?.shop || 'Point OSM'} #${idx + 1}`,
+            volume: baseVolume,
+            priorite: 'normale',
+          }))
+
+          const depotLat =
+            pointsData.reduce((s, p) => s + (p.lat || 0), 0) / pointsData.length
+          const depotLng =
+            pointsData.reduce((s, p) => s + (p.lng || 0), 0) / pointsData.length
+
+          const depotPoint = {
+            id: 0,
+            nom: 'Dépôt (centre OSM)',
+            lat: depotLat,
+            lng: depotLng,
+            volume: 0,
+            priorite: 'normale',
+          }
+
+          const dechetNodes = nodes.filter((n) =>
+            ['waste_disposal', 'recycling'].includes(n.tags?.amenity || '')
+          )
+          const dechetteriesData = dechetNodes.map((n, i) => ({
+            id: 200 + i,
+            nom:
+              n.tags?.name ||
+              `${n.tags?.amenity === 'recycling' ? 'Point recyclage' : 'Déchetterie'} OSM #${i + 1}`,
+            lat: n.lat,
+            lng: n.lon,
+            capacite_max: 50000,
+          }))
+
+          loadProject({
+            depot: depotPoint,
+            points: pointsData,
+            dechetteries: dechetteriesData,
+          })
+          setScreen('points')
+        } catch (err) {
+          console.error(err)
+          alert('Fichier OSM invalide ou non supporté.')
+        }
+      }
+      reader.readAsText(file)
+    }
+    input.click()
+  }
+
   const handleLoadTemplate = () => {
     fetch('/template_multi_camions.json')
       .then((r) => r.json())
@@ -157,6 +267,7 @@ function CarteContent() {
                 onImport={handleImport}
                 onLoadTemplate={handleLoadTemplate}
                 onLoadTemplateAgadir={handleLoadTemplateAgadir}
+                onImportOsmRandom={handleImportOsmRandom}
               />
             </motion.div>
           )}
