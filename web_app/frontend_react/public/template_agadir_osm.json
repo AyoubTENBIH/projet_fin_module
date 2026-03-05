@@ -1,0 +1,62 @@
+{
+  "description": "Scénario Agadir (Maroc) basé sur des points OpenStreetMap : paniers à déchets comme points de collecte, conteneurs / déchetteries comme sites de vidage.",
+  "depot": {
+    "id": 0,
+    "lat": 30.410,
+    "lng": -9.600,
+    "nom": "Dépôt Agadir (approx.)"
+  },
+  "points": [
+    { "id": 1, "lat": 30.4293770, "lng": -9.6246318, "nom": "Point OSM 1", "volume": 800 },
+    { "id": 2, "lat": 30.4045452, "lng": -9.6013549, "nom": "Point OSM 2", "volume": 800 },
+    { "id": 3, "lat": 30.4054792, "lng": -9.6014205, "nom": "Point OSM 3", "volume": 800 },
+    { "id": 4, "lat": 30.4008527, "lng": -9.6001104, "nom": "Point OSM 4", "volume": 800 },
+    { "id": 5, "lat": 30.4067243, "lng": -9.5983374, "nom": "Point OSM 5", "volume": 800 },
+    { "id": 6, "lat": 30.4022004, "lng": -9.6006582, "nom": "Point OSM 6", "volume": 800 },
+    { "id": 7, "lat": 30.4014534, "lng": -9.6002554, "nom": "Point OSM 7", "volume": 800 },
+    { "id": 8, "lat": 30.4001976, "lng": -9.6000476, "nom": "Point OSM 8", "volume": 800 },
+    { "id": 9, "lat": 30.4024971, "lng": -9.6007263, "nom": "Point OSM 9", "volume": 800 },
+    { "id": 10, "lat": 30.4017466, "lng": -9.6003636, "nom": "Point OSM 10", "volume": 800 },
+    { "id": 11, "lat": 30.4064426, "lng": -9.6016827, "nom": "Point OSM 11", "volume": 800 },
+    { "id": 12, "lat": 30.4027883, "lng": -9.6008013, "nom": "Point OSM 12", "volume": 800 },
+    { "id": 13, "lat": 30.4068891, "lng": -9.6007872, "nom": "Point OSM 13", "volume": 800 },
+    { "id": 14, "lat": 30.4040522, "lng": -9.6012080, "nom": "Point OSM 14", "volume": 800 },
+    { "id": 15, "lat": 30.4070749, "lng": -9.6018083, "nom": "Point OSM 15", "volume": 800 },
+    { "id": 16, "lat": 30.4057710, "lng": -9.6014759, "nom": "Point OSM 16", "volume": 800 },
+    { "id": 17, "lat": 30.4032776, "lng": -9.6010399, "nom": "Point OSM 17", "volume": 800 },
+    { "id": 18, "lat": 30.4068496, "lng": -9.6013302, "nom": "Point OSM 18", "volume": 800 },
+    { "id": 19, "lat": 30.4037766, "lng": -9.6010875, "nom": "Point OSM 19", "volume": 800 },
+    { "id": 20, "lat": 30.4050786, "lng": -9.6014818, "nom": "Point OSM 20", "volume": 800 },
+    { "id": 21, "lat": 30.4073760, "lng": -9.6018292, "nom": "Point OSM 21", "volume": 800 },
+    { "id": 22, "lat": 30.4069090, "lng": -9.6002989, "nom": "Point OSM 22", "volume": 800 },
+    { "id": 23, "lat": 30.4080099, "lng": -9.5970036, "nom": "Point OSM 23", "volume": 800 },
+    { "id": 24, "lat": 30.4011092, "lng": -9.5877205, "nom": "Point OSM 24", "volume": 800 },
+    { "id": 25, "lat": 30.3981287, "lng": -9.5824877, "nom": "Point OSM 25", "volume": 800 },
+    { "id": 26, "lat": 30.3986394, "lng": -9.5828183, "nom": "Point OSM 26", "volume": 800 },
+    { "id": 27, "lat": 30.3999117, "lng": -9.6000127, "nom": "Point OSM 27", "volume": 800 },
+    { "id": 28, "lat": 30.4189698, "lng": -9.6072876, "nom": "Point OSM 28", "volume": 800 }
+  ],
+  "camions": [
+    { "id": 1, "capacite": 5000, "cout_fixe": 200, "zones_accessibles": [] },
+    { "id": 2, "capacite": 5000, "cout_fixe": 200, "zones_accessibles": [] },
+    { "id": 3, "capacite": 5000, "cout_fixe": 200, "zones_accessibles": [] }
+  ],
+  "dechetteries": [
+    { "id": 201, "lat": 30.4218342, "lng": -9.5957221, "nom": "Déchetterie OSM 624536914", "capacite_max": 50000 },
+    { "id": 202, "lat": 30.4324740, "lng": -9.5937156, "nom": "Déchetterie OSM 5327267550", "capacite_max": 50000 },
+    { "id": 203, "lat": 30.4106444, "lng": -9.5970950, "nom": "Déchetterie OSM 11072568451", "capacite_max": 50000 },
+    { "id": 204, "lat": 30.4039287, "lng": -9.5908298, "nom": "Déchetterie OSM 12425684232", "capacite_max": 50000 }
+  ],
+  "creneaux": [
+    { "id": 1, "jour": "lundi", "debut": "06:00", "fin": "10:00", "congestion": 1.1 },
+    { "id": 2, "jour": "lundi", "debut": "14:00", "fin": "18:00", "congestion": 1.2 },
+    { "id": 3, "jour": "mardi", "debut": "06:00", "fin": "10:00", "congestion": 1.1 },
+    { "id": 4, "jour": "mardi", "debut": "14:00", "fin": "18:00", "congestion": 1.2 },
+    { "id": 5, "jour": "mercredi", "debut": "06:00", "fin": "10:00", "congestion": 1.1 },
+    { "id": 6, "jour": "mercredi", "debut": "14:00", "fin": "18:00", "congestion": 1.2 },
+    { "id": 7, "jour": "jeudi", "debut": "06:00", "fin": "10:00", "congestion": 1.1 },
+    { "id": 8, "jour": "jeudi", "debut": "14:00", "fin": "18:00", "congestion": 1.2 },
+    { "id": 9, "jour": "vendredi", "debut": "06:00", "fin": "10:00", "congestion": 1.1 },
+    { "id": 10, "jour": "vendredi", "debut": "14:00", "fin": "18:00", "congestion": 1.2 }
+  ]
+}

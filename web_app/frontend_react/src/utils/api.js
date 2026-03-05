@@ -15,7 +15,7 @@ function latLngToXY(lat, lng) {
   return { x: Math.round(x * 100) / 100, y: Math.round(y * 100) / 100 }
 }
 
-export function prepareDataForApi(points, camions, depotPoint, dechetteries = []) {
+export function prepareDataForApi(points, camions, depotPoint, dechetteries = [], zonesDef = []) {
   const depot = depotPoint || points[0]
   if (!depot || !points?.length) return null
 
@@ -27,11 +27,10 @@ export function prepareDataForApi(points, camions, depotPoint, dechetteries = []
 
   const ptsApi = [
     { id: 0, x: depotXY.x, y: depotXY.y, nom: depot.nom || 'Dépôt' },
-    ...collectionPoints
-    .map((p) => {
-        const xy = p.lat != null ? latLngToXY(p.lat, p.lng) : { x: p.x || 0, y: p.y || 0 }
-        return { id: p.id, x: xy.x, y: xy.y, nom: p.nom || `Point ${p.id}` }
-      }),
+    ...collectionPoints.map((p) => {
+      const xy = p.lat != null ? latLngToXY(p.lat, p.lng) : { x: p.x || 0, y: p.y || 0 }
+      return { id: p.id, x: xy.x, y: xy.y, nom: p.nom || `Point ${p.id}` }
+    }),
   ]
 
   const ids = ptsApi.map((p) => p.id)
@@ -54,18 +53,46 @@ export function prepareDataForApi(points, camions, depotPoint, dechetteries = []
     }
   })
 
-  const zones = ptsApi
-    .filter((p) => p.id !== 0)
-    .map((p) => {
-      const orig = points.find((pt) => pt.id === p.id)
+  let zones
+  if (zonesDef && zonesDef.length > 0) {
+    zones = zonesDef.map((z) => {
+      const pointIds = z.point_ids || z.points || []
+      const zonePts = points.filter((p) => pointIds.includes(p.id))
+      const volume = zonePts.reduce((s, p) => s + (p.volume ?? 0), 0)
+      const cx = zonePts.length
+        ? zonePts.reduce((s, p) => {
+            const xy = p.lat != null ? latLngToXY(p.lat, p.lng) : { x: p.x || 0, y: p.y || 0 }
+            return s + xy.x
+          }, 0) / zonePts.length
+        : 0
+      const cy = zonePts.length
+        ? zonePts.reduce((s, p) => {
+            const xy = p.lat != null ? latLngToXY(p.lat, p.lng) : { x: p.x || 0, y: p.y || 0 }
+            return s + xy.y
+          }, 0) / zonePts.length
+        : 0
       return {
-        id: p.id,
-        points: [p.id],
-        volume_moyen: orig?.volume || 1000,
-        centre: { x: p.x, y: p.y },
-        priorite: orig?.priorite || 'normale',
+        id: z.id,
+        points: pointIds,
+        volume_moyen: volume || 1000,
+        centre: { x: cx, y: cy },
+        priorite: z.priorite || 'normale',
       }
     })
+  } else {
+    zones = ptsApi
+      .filter((p) => p.id !== 0)
+      .map((p) => {
+        const orig = points.find((pt) => pt.id === p.id)
+        return {
+          id: p.id,
+          points: [p.id],
+          volume_moyen: orig?.volume || 1000,
+          centre: { x: p.x, y: p.y },
+          priorite: orig?.priorite || 'normale',
+        }
+      })
+  }
 
   return {
     points: ptsApi,
@@ -76,7 +103,7 @@ export function prepareDataForApi(points, camions, depotPoint, dechetteries = []
       id: c.id,
       capacite: c.capacite,
       cout_fixe: c.cout_fixe,
-      zones_accessibles: c.zones_accessibles || [],
+      zones_accessibles: c.zones_assignees ?? c.zones_accessibles ?? [],
     })),
     zones,
   }
@@ -183,9 +210,9 @@ export async function getOsrmRoute(pointsArray) {
   }
 }
 
-export async function apiRoutesOptimiser(depot, points, dechetteries, camions, useOsm = false) {
-  console.log('[API] apiRoutesOptimiser: preparing data, depot=', depot?.id, 'points=', points?.length, 'use_osrm=', useOsm)
-  const data = prepareDataForApi(points, camions, depot, dechetteries)
+export async function apiRoutesOptimiser(depot, points, dechetteries, camions, useOsm = false, zones = []) {
+  console.log('[API] apiRoutesOptimiser: preparing data, depot=', depot?.id, 'points=', points?.length, 'zones=', zones?.length, 'use_osrm=', useOsm)
+  const data = prepareDataForApi(points, camions, depot, dechetteries, zones)
   if (!data) throw new Error('Données insuffisantes pour les routes')
   const pointsForRoutes = data.points.filter((p) => p.id !== 0).map((p) => {
     const orig = points.find((pt) => pt.id === p.id)

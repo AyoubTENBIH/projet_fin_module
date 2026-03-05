@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { ProjectProvider, useProject, getSaved, STORAGE_KEY } from '../../context/ProjectContext'
 import Home from '../Home'
 import PointsConfig from '../../components/configuration/PointsConfig'
+import ZonesConfig from '../../components/configuration/ZonesConfig'
 import CamionsConfig from '../../components/configuration/CamionsConfig'
 import CreneauxConfig from '../../components/configuration/CreneauxConfig'
 import ContraintesConfig from '../../components/configuration/ContraintesConfig'
@@ -22,6 +23,7 @@ const PAGE_TRANSITION = {
 function CarteContent() {
   const {
     points,
+    zones,
     camions,
     creneaux,
     setCreneaux,
@@ -39,6 +41,9 @@ function CarteContent() {
     removeDechetterie,
     addPoint,
     removePoint,
+    addZone,
+    updateZone,
+    removeZone,
     addCamion,
     removeCamion,
     updateCamion,
@@ -52,6 +57,7 @@ function CarteContent() {
         JSON.stringify({
           screen,
           points,
+          zones,
           camions,
           creneaux,
           contraintes,
@@ -62,7 +68,7 @@ function CarteContent() {
         })
       )
     } catch (_) {}
-  }, [screen, points, camions, creneaux, contraintes, planningResult, routesResult, depot, dechetteries])
+  }, [screen, points, zones, camions, creneaux, contraintes, planningResult, routesResult, depot, dechetteries])
 
   const handleMapClickAdd = (lat, lng) => {
     const nom = prompt('Nom du point') || `Point ${points.length + 1}`
@@ -102,6 +108,16 @@ function CarteContent() {
       .catch(() => alert('Impossible de charger le template'))
   }
 
+  const handleLoadTemplateAgadir = () => {
+    fetch('/template_agadir_osm.json')
+      .then((r) => r.json())
+      .then((data) => {
+        loadProject(data)
+        setScreen('points')
+      })
+      .catch(() => alert('Impossible de charger le template Agadir'))
+  }
+
   return (
     <>
       {screen === 'points' ? (
@@ -115,26 +131,45 @@ function CarteContent() {
           onMapClickAdd={handleMapClickAdd}
           onManualAdd={handleManualAdd}
           onRemovePoint={removePoint}
-          onNext={() => setScreen('camions')}
+          onNext={() => setScreen('zones')}
           onBack={() => setScreen('home')}
           onImport={handleImport}
+        />
+      ) : screen === 'zones' ? (
+        <ZonesConfig
+          zones={zones}
+          points={points}
+          camions={camions}
+          depot={depot}
+          dechetteries={dechetteries}
+          onAddZone={addZone}
+          onUpdateZone={updateZone}
+          onRemoveZone={removeZone}
+          onNext={() => setScreen('camions')}
+          onBack={() => setScreen('points')}
         />
       ) : (
         <AnimatePresence mode="wait">
           {screen === 'home' && (
             <motion.div key="home" {...PAGE_TRANSITION}>
-              <Home onStart={() => setScreen('points')} onImport={handleImport} onLoadTemplate={handleLoadTemplate} />
+              <Home
+                onStart={() => setScreen('points')}
+                onImport={handleImport}
+                onLoadTemplate={handleLoadTemplate}
+                onLoadTemplateAgadir={handleLoadTemplateAgadir}
+              />
             </motion.div>
           )}
           {screen === 'camions' && (
             <motion.div key="camions" {...PAGE_TRANSITION}>
               <CamionsConfig
                 camions={camions}
+                zones={zones}
                 onAddCamion={addCamion}
                 onUpdateCamion={updateCamion}
                 onRemoveCamion={removeCamion}
                 onNext={() => setScreen('creneaux')}
-                onBack={() => setScreen('points')}
+                onBack={() => setScreen('zones')}
               />
             </motion.div>
           )}
@@ -164,6 +199,7 @@ function CarteContent() {
             <motion.div key="optimization" initial={{ opacity: 1 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
               <OptimizationLoader
                 points={points}
+                zones={zones}
                 camions={camions}
                 depot={depot}
                 dechetteries={dechetteries}
@@ -187,6 +223,7 @@ function CarteContent() {
                 points={points}
                 depot={depot || points?.[0]}
                 dechetteries={dechetteries}
+                zones={zones}
                 onBack={() => {
                   setPlanningResult(null)
                   setRoutesResult(null)

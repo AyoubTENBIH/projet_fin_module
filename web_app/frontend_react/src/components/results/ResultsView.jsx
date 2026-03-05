@@ -21,11 +21,37 @@ export default function ResultsView({
   points,
   depot,
   dechetteries,
+  zones = [],
   onBack,
 }) {
   const [activeTab, setActiveTab] = useState('carte')
+  const [layerVisibility, setLayerVisibility] = useState({
+    zones: true,
+    points: true,
+    trajets: true,
+  })
   const hebdo = planning?.planification_hebdomadaire || {}
   const jours = Object.entries(hebdo)
+  const routesList = routes?.routes ?? []
+
+  const routeCapacityDiagnostics = routesList.map((r) => {
+    const steps = Array.isArray(r.details_etapes) ? r.details_etapes : []
+    let maxCharge = 0
+    steps.forEach((s) => {
+      if (typeof s.charge_apres === 'number' && !Number.isNaN(s.charge_apres)) {
+        if (s.charge_apres > maxCharge) maxCharge = s.charge_apres
+      }
+    })
+    const capacite = typeof r.capacite === 'number' ? r.capacite : null
+    const ok = capacite == null ? true : maxCharge <= capacite + 1e-6
+    return {
+      camionId: r.camion_id,
+      capacite,
+      maxCharge,
+      nbDechetterie: r.nb_visites_dechetterie ?? 0,
+      ok,
+    }
+  })
 
   const tabs = [
     { id: 'carte', label: 'Carte', icon: Map },
@@ -111,13 +137,53 @@ export default function ResultsView({
                   Visualisation des routes optimisées (Dépôt → Collecte → Déchetterie)
                 </p>
                 {routes?.routes?.length > 0 ? (
-                  <MapWithRoutes
-                    routes={routes}
-                    points={points}
-                    depot={depot}
-                    dechetteries={dechetteries}
-                    animate={true}
-                  />
+                  <>
+                    <MapWithRoutes
+                      routes={routes}
+                      points={points}
+                      depot={depot}
+                      dechetteries={dechetteries}
+                      zones={zones}
+                      layerVisibility={layerVisibility}
+                      animate={true}
+                    />
+                    <div className="flex flex-wrap items-center gap-4 pt-3 text-sm text-[#717171]">
+                      <span className="font-medium">Afficher/Masquer :</span>
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={layerVisibility.zones}
+                          onChange={(e) =>
+                            setLayerVisibility((v) => ({ ...v, zones: e.target.checked }))
+                          }
+                          className="rounded border-gray-300"
+                        />
+                        Zones
+                      </label>
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={layerVisibility.points}
+                          onChange={(e) =>
+                            setLayerVisibility((v) => ({ ...v, points: e.target.checked }))
+                          }
+                          className="rounded border-gray-300"
+                        />
+                        Points
+                      </label>
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={layerVisibility.trajets}
+                          onChange={(e) =>
+                            setLayerVisibility((v) => ({ ...v, trajets: e.target.checked }))
+                          }
+                          className="rounded border-gray-300"
+                        />
+                        Trajets
+                      </label>
+                    </div>
+                  </>
                 ) : (
                   <div className="h-[400px] flex items-center justify-center bg-gray-50 rounded-xl text-[#717171]">
                     Aucune route optimisée disponible
@@ -189,6 +255,49 @@ export default function ResultsView({
                       <p className="text-xl font-bold text-[#222222]">
                         {routes.statistiques.volume_total_collecte ?? '-'} kg
                       </p>
+                    </div>
+                  </div>
+                )}
+                {routeCapacityDiagnostics.length > 0 && (
+                  <div className="space-y-3">
+                    <h4 className="font-semibold text-[#222222]">
+                      Contrôle capacité des camions
+                    </h4>
+                    <p className="text-sm text-[#717171]">
+                      Vérification que la charge maximale entre deux passages en déchetterie ne dépasse
+                      jamais la capacité du camion.
+                    </p>
+                    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                      {routeCapacityDiagnostics.map((d, idx) => (
+                        <div
+                          key={`${d.camionId ?? idx}-${idx}`}
+                          className={`p-4 rounded-xl border ${
+                            d.ok
+                              ? 'border-emerald-200 bg-emerald-50'
+                              : 'border-red-200 bg-red-50'
+                          }`}
+                        >
+                          <p className="text-sm font-semibold text-[#222222] mb-1">
+                            Camion {d.camionId ?? '—'}
+                          </p>
+                          <p className="text-sm text-[#717171]">
+                            Capacité : {d.capacite != null ? `${d.capacite} kg` : '—'}
+                          </p>
+                          <p className="text-sm text-[#717171]">
+                            Charge max sur la tournée : {Math.round(d.maxCharge)} kg
+                          </p>
+                          <p className="text-sm text-[#717171]">
+                            Passages en déchetterie : {d.nbDechetterie}
+                          </p>
+                          <p
+                            className={`mt-2 text-sm font-semibold ${
+                              d.ok ? 'text-emerald-700' : 'text-red-600'
+                            }`}
+                          >
+                            {d.ok ? 'Capacité respectée' : 'DÉPASSEMENT détecté'}
+                          </p>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 )}

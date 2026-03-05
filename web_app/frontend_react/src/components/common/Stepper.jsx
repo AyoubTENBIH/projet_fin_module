@@ -1,9 +1,13 @@
 import { motion } from 'framer-motion'
 
 const STEPS = [
-  { id: 'points', label: 'Configuration', short: 'Points' },
+  { id: 'points', label: 'Points', short: 'Points' },
+  { id: 'zones', label: 'Zones', short: 'Zones' },
+  { id: 'camions', label: 'Camions', short: 'Camions' },
+  { id: 'creneaux', label: 'Créneaux', short: 'Créneaux' },
+  { id: 'contraintes', label: 'Contraintes', short: 'Contraintes' },
   { id: 'optimization', label: 'Optimisation', short: 'Optimisation' },
-  { id: 'planning', label: 'Planning', short: 'Planning' },
+  { id: 'planning', label: 'Résultats', short: 'Résultats' },
 ]
 
 export default function Stepper({ currentStep, steps = STEPS }) {

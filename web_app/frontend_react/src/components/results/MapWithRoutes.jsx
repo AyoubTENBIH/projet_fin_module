@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
-import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, Popup, Polyline, Polygon, useMap, LayerGroup } from 'react-leaflet'
 import L from 'leaflet'
 import { xyToLatLng, getOsrmRoute } from '../../utils/api'
+import { convexHull, bufferPolygon, centroid, buildZonePolygonFromPoints } from '../../utils/zoneGeometry'
 
 delete L.Icon.Default.prototype._getIconUrl
 L.Icon.Default.mergeOptions({
@@ -63,7 +64,7 @@ function MapBounds({ points, depot, dechetteries, routesList }) {
   return null
 }
 
-function AnimatedPolyline({ route, color, progress, osrmCoords }) {
+function AnimatedPolyline({ route, color, progress, osrmCoords, zoneLabel }) {
   const waypoints = route?.waypoints || []
   const linearCoords = waypoints.map((wp) => {
     const { lat, lng } = xyToLatLng(wp.x, wp.y)
@@ -74,6 +75,11 @@ function AnimatedPolyline({ route, color, progress, osrmCoords }) {
 
   const idx = Math.floor(progress * (coords.length - 1))
   const drawn = coords.slice(0, Math.max(1, idx + 1))
+  const totalPoints = waypoints.filter((w) => w.type === 'collecte').length
+  const collectedCount = Math.min(Math.floor(progress * (totalPoints + 1)), totalPoints) || 0
+  const popupText = zoneLabel
+    ? `🗺️ ${zoneLabel} · ${collectedCount}/${totalPoints} points`
+    : `Camion ${route.camion_id}`
 
   return (
     <>
@@ -101,7 +107,7 @@ function AnimatedPolyline({ route, color, progress, osrmCoords }) {
           position={drawn[drawn.length - 1]}
           icon={TRUCK_ICONS[color] || TRUCK_ICONS[ROUTE_COLORS[0]]}
         >
-          <Popup>Camion {route.camion_id}</Popup>
+          <Popup>{popupText}</Popup>
         </Marker>
       )}
     </>
@@ -125,16 +131,21 @@ function getRoutesList(routes) {
   return routes.routes ?? []
 }
 
+const defaultLayerVisibility = { zones: true, points: true, trajets: true }
+
 export default function MapWithRoutes({
   routes,
   points,
   depot,
   dechetteries,
+  zones = [],
+  layerVisibility = defaultLayerVisibility,
   animate = true,
 }) {
   const routesList = getRoutesList(routes)
   const [progress, setProgress] = useState({})
   const [osrmData, setOsrmData] = useState({})
+  const [osrmZoneContours, setOsrmZoneContours] = useState({})
   const [osrmLoading, setOsrmLoading] = useState(false)
   const animRef = useRef(null)
 
@@ -164,6 +175,32 @@ export default function MapWithRoutes({
   }, [routesList])
 
   useEffect(() => {
+    if (!zones.length || !points?.length) {
+      setOsrmZoneContours({})
+      return
+    }
+    let cancelled = false
+    const zoneIds = zones.map((z) => z.id)
+    const promises = zoneIds.map(async (zoneId) => {
+      const zone = zones.find((z) => z.id === zoneId)
+      const pointIds = zone?.point_ids ?? zone?.points ?? []
+      const zonePoints = points.filter((p) => pointIds.some((id) => id == p.id))
+      if (zonePoints.length < 1) return { zoneId, coords: null }
+      const coords = buildZonePolygonFromPoints(zonePoints, 0.004)
+      return { zoneId, coords }
+    })
+    batchOsrmRequests(promises, 2).then((results) => {
+      if (cancelled) return
+      const next = {}
+      results.forEach(({ zoneId, coords }) => {
+        next[zoneId] = coords
+      })
+      setOsrmZoneContours(next)
+    })
+    return () => { cancelled = true }
+  }, [zones, points])
+
+  useEffect(() => {
     if (!animate || !routesList.length) return
     const start = Date.now()
     const duration = 8000
@@ -185,6 +222,9 @@ export default function MapWithRoutes({
   }, [animate, routesList])
 
   const CASABLANCA = [33.5731, -7.5898]
+  const showZones = layerVisibility.zones !== false && zones?.length > 0
+  const showPoints = layerVisibility.points !== false
+  const showTrajets = layerVisibility.trajets !== false
 
   return (
     <div className="relative h-[500px] w-full rounded-xl overflow-hidden border border-[#EBEBEB]">
@@ -195,40 +235,117 @@ export default function MapWithRoutes({
         />
         <MapBounds points={points} depot={depot} dechetteries={dechetteries} routesList={routesList} />
 
-        {depot && (
-          <Marker
-            position={[depot.lat, depot.lng]}
-            icon={DEPOT_ICON}
-          >
-            <Popup>Dépôt</Popup>
-          </Marker>
+        {showZones && (
+          <>
+            <LayerGroup>
+              {zones.map((zone) => {
+                const pointIds = zone.point_ids ?? zone.points ?? []
+                const zonePoints = points.filter((p) => pointIds.some((id) => id == p.id))
+                const buffered = buildZonePolygonFromPoints(zonePoints, 0.004)
+                if (!buffered || buffered.length < 3) return null
+                return (
+                  <Polygon
+                    key={`zone-fond-${zone.id}`}
+                    positions={buffered}
+                    pathOptions={{
+                      color: zone.couleur,
+                      fillColor: zone.couleur,
+                      fillOpacity: 0.08,
+                      weight: 2,
+                      opacity: 0.6,
+                      dashArray: '8, 6',
+                    }}
+                  />
+                )
+              })}
+            </LayerGroup>
+            <LayerGroup>
+              {zones.map((zone) => {
+                const coords = osrmZoneContours[zone.id]
+                if (!coords || coords.length < 2) return null
+                return (
+                  <Polyline
+                    key={`zone-contour-${zone.id}`}
+                    positions={coords}
+                    pathOptions={{
+                      color: zone.couleur,
+                      weight: 3,
+                      opacity: 0.5,
+                      dashArray: '12, 8',
+                    }}
+                  />
+                )
+              })}
+            </LayerGroup>
+            <LayerGroup>
+              {zones.map((zone) => {
+                const pointIds = zone.point_ids ?? zone.points ?? []
+                const zonePoints = points.filter((p) => pointIds.some((id) => id == p.id))
+                const center = centroid(zonePoints)
+                if (!center) return null
+                return (
+                  <Marker
+                    key={`zone-label-${zone.id}`}
+                    position={center}
+                    icon={L.divIcon({
+                      className: 'zone-label',
+                      html: `
+                        <div style="
+                          background: ${zone.couleur}22;
+                          border: 2px solid ${zone.couleur};
+                          border-radius: 8px;
+                          padding: 4px 10px;
+                          font-weight: 700;
+                          font-size: 12px;
+                          color: ${zone.couleur};
+                          white-space: nowrap;
+                          backdrop-filter: blur(4px);
+                          box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+                        ">
+                          ${zone.nom} · ${zonePoints.length} pts
+                        </div>
+                      `,
+                      iconAnchor: [0, 0],
+                    })}
+                    zIndexOffset={-500}
+                  />
+                )
+              })}
+            </LayerGroup>
+          </>
         )}
 
-        {(points || []).map((p) => (
-          <Marker key={p.id} position={[p.lat, p.lng]} icon={DEFAULT_ICON}>
-            <Popup>{p.nom || `Point ${p.id}`}</Popup>
-          </Marker>
-        ))}
+        {showPoints && (
+          <>
+            {depot && (
+              <Marker position={[depot.lat, depot.lng]} icon={DEPOT_ICON}>
+                <Popup>Dépôt</Popup>
+              </Marker>
+            )}
+            {(points || []).map((p) => (
+              <Marker key={p.id} position={[p.lat, p.lng]} icon={DEFAULT_ICON}>
+                <Popup>{p.nom || `Point ${p.id}`}</Popup>
+              </Marker>
+            ))}
+            {(dechetteries || []).map((d) => (
+              <Marker key={d.id} position={[d.lat, d.lng]} icon={DECHETTERIE_ICON}>
+                <Popup>♻️ {d.nom || `Déchetterie ${d.id}`}</Popup>
+              </Marker>
+            ))}
+          </>
+        )}
 
-        {(dechetteries || []).map((d) => (
-          <Marker
-            key={d.id}
-            position={[d.lat, d.lng]}
-            icon={DECHETTERIE_ICON}
-          >
-            <Popup>♻️ {d.nom || `Déchetterie ${d.id}`}</Popup>
-          </Marker>
-        ))}
-
-        {routesList.map((route, i) => (
-          <AnimatedPolyline
-            key={`route-${route.camion_id ?? i}-${i}`}
-            route={route}
-            color={ROUTE_COLORS[i % ROUTE_COLORS.length]}
-            progress={progress[i] ?? 0}
-            osrmCoords={osrmData[i]}
-          />
-        ))}
+        {showTrajets &&
+          routesList.map((route, i) => (
+            <AnimatedPolyline
+              key={`route-${route.camion_id ?? i}-${i}`}
+              route={route}
+              color={ROUTE_COLORS[i % ROUTE_COLORS.length]}
+              progress={progress[i] ?? 0}
+              osrmCoords={osrmData[i]}
+              zoneLabel={route.zone_nom || null}
+            />
+          ))}
       </MapContainer>
       {osrmLoading && (
         <div className="absolute top-4 left-1/2 -translate-x-1/2 z-[1000] bg-white/95 px-4 py-2 rounded-lg shadow-lg text-sm text-gray-700">

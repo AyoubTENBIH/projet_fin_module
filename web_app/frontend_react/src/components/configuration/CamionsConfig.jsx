@@ -7,6 +7,7 @@ import Stepper from '../common/Stepper'
 
 export default function CamionsConfig({
   camions,
+  zones = [],
   onAddCamion,
   onUpdateCamion,
   onRemoveCamion,
@@ -15,21 +16,19 @@ export default function CamionsConfig({
 }) {
   const [showModal, setShowModal] = useState(false)
   const [editingId, setEditingId] = useState(null)
-  const [form, setForm] = useState({ id: '', capacite: 5000, cout_fixe: 200, zones_accessibles: '' })
+  const [form, setForm] = useState({ id: '', capacite: 5000, cout_fixe: 200, zones_assignees: [] })
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    const zones = form.zones_accessibles
-      ? form.zones_accessibles.split(',').map((z) => parseInt(z.trim(), 10)).filter(Boolean)
-      : []
+    const zonesAssignees = form.zones_assignees || []
     if (editingId) {
-      onUpdateCamion(editingId, { capacite: form.capacite, cout_fixe: form.cout_fixe, zones_accessibles: zones })
+      onUpdateCamion(editingId, { capacite: form.capacite, cout_fixe: form.cout_fixe, zones_assignees: zonesAssignees })
       setEditingId(null)
     } else {
       const id = form.id ? parseInt(form.id, 10) : (camions.length ? Math.max(...camions.map((c) => c.id)) + 1 : 1)
-      onAddCamion({ id, capacite: form.capacite, cout_fixe: form.cout_fixe, zones_accessibles: zones })
+      onAddCamion({ id, capacite: form.capacite, cout_fixe: form.cout_fixe, zones_assignees: zonesAssignees })
     }
-    setForm({ id: '', capacite: 5000, cout_fixe: 200, zones_accessibles: '' })
+    setForm({ id: '', capacite: 5000, cout_fixe: 200, zones_assignees: [] })
     setShowModal(false)
   }
 
@@ -39,7 +38,7 @@ export default function CamionsConfig({
       id: String(c.id),
       capacite: c.capacite,
       cout_fixe: c.cout_fixe,
-      zones_accessibles: Array.isArray(c.zones_accessibles) ? c.zones_accessibles.join(', ') : '',
+      zones_assignees: Array.isArray(c.zones_assignees) ? c.zones_assignees : (Array.isArray(c.zones_accessibles) ? c.zones_accessibles : []),
     })
     setShowModal(true)
   }
@@ -89,6 +88,9 @@ export default function CamionsConfig({
                         <p className="font-semibold text-[#222222]">Camion {c.id}</p>
                         <p className="text-sm text-[#717171]">
                           Capacité : {c.capacite} kg • Coût journalier : {c.cout_fixe}€
+                          {(c.zones_assignees ?? c.zones_accessibles ?? []).length > 0 && (
+                            <> • Zones : {(c.zones_assignees ?? c.zones_accessibles).join(', ')}</>
+                          )}
                         </p>
                       </div>
                     </div>
@@ -119,7 +121,7 @@ export default function CamionsConfig({
             icon={<Plus className="w-4 h-4" />}
             onClick={() => {
               setEditingId(null)
-              setForm({ id: '', capacite: 5000, cout_fixe: 200, zones_accessibles: '' })
+              setForm({ id: '', capacite: 5000, cout_fixe: 200, zones_assignees: [] })
               setShowModal(true)
             }}
           >
@@ -193,15 +195,24 @@ export default function CamionsConfig({
               </div>
               <div>
                 <label className="block text-sm font-medium text-[#222222] mb-1">
-                  Zones accessibles (IDs séparés par virgule, vide = toutes)
+                  Zones assignées (vide = toutes)
                 </label>
-                <input
-                  type="text"
-                  value={form.zones_accessibles}
-                  onChange={(e) => setForm({ ...form, zones_accessibles: e.target.value })}
-                  className="w-full px-4 py-2 rounded-lg border border-[#EBEBEB] focus:ring-2 focus:ring-[#FF5A5F]/50"
-                  placeholder="1, 2, 3"
-                />
+                <select
+                  multiple
+                  value={form.zones_assignees.map(String)}
+                  onChange={(e) => {
+                    const v = Array.from(e.target.selectedOptions, (o) => Number(o.value))
+                    setForm({ ...form, zones_assignees: v })
+                  }}
+                  className="w-full px-4 py-2 rounded-lg border border-[#EBEBEB] focus:ring-2 focus:ring-[#FF5A5F]/50 min-h-[80px]"
+                >
+                  {zones.map((z) => (
+                    <option key={z.id} value={z.id}>
+                      {z.nom} (Zone {z.id})
+                    </option>
+                  ))}
+                </select>
+                <p className="text-xs text-[#717171] mt-1">Ctrl/Cmd pour sélectionner plusieurs zones.</p>
               </div>
               <div className="flex gap-3 pt-4">
                 <Button type="submit" variant="primary" className="flex-1">

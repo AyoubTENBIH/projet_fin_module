@@ -19,6 +19,7 @@ const STEPS = [
 
 export default function OptimizationLoader({
   points,
+  zones = [],
   camions,
   depot,
   dechetteries,
@@ -39,7 +40,7 @@ export default function OptimizationLoader({
     setError(null)
     setStep('running')
 
-    const data = prepareDataForApi(points, camions, depot || points?.[0], dechetteries)
+    const data = prepareDataForApi(points, camions, depot || points?.[0], dechetteries, zones)
     if (!data || !data.points?.length || !data.camions?.length || !data.zones?.length) {
       setError('Données insuffisantes. Vérifiez points, camions et zones.')
       setStep('error')
@@ -82,18 +83,77 @@ export default function OptimizationLoader({
       setCurrentStepIndex(3)
       let routes = null
       try {
-        console.log('[Optimization] Étape 4: apiRoutesOptimiser START, depot:', depot?.id, 'points:', points?.length, 'camions:', camions?.length)
-        // use_osrm: false → backend utilise distances euclidiennes (rapide, comme ancienne version sans OSRM)
-        // L'affichage des routes réelles se fait côté frontend via OSRM Route API (MapWithRoutes)
-        const t0 = Date.now()
-        routes = await apiRoutesOptimiser(
-          depot || points?.[0],
-          points,
-          dechetteries || [],
-          camions,
-          false
-        )
-        console.log('[Optimization] apiRoutesOptimiser OK en', Date.now() - t0, 'ms, routes:', routes?.routes?.length)
+        const depotPoint = depot || points?.[0]
+        const dechList = dechetteries || []
+
+        if (zones.length > 0) {
+          const allRoutes = []
+          let totalDistance = 0
+          let totalVolume = 0
+          for (const zone of zones) {
+            const pointIds = zone.point_ids ?? zone.points ?? []
+            const zonePoints = points.filter((p) =>
+              pointIds.some((id) => id == p.id)
+            )
+            let assignedCamions = camions.filter((c) =>
+              (c.zones_assignees ?? c.zones_accessibles ?? []).some((z) => z == zone.id)
+            )
+            if (assignedCamions.length === 0) assignedCamions = camions
+            if (zonePoints.length === 0 || assignedCamions.length === 0) continue
+            const t0 = Date.now()
+            const zoneResult = await apiRoutesOptimiser(
+              depotPoint,
+              zonePoints,
+              dechList,
+              assignedCamions,
+              false,
+              []
+            )
+            if (zoneResult?.routes?.length) {
+              allRoutes.push(
+                ...zoneResult.routes.map((r) => ({ ...r, zone_id: zone.id, zone_nom: zone.nom }))
+              )
+              if (zoneResult.statistiques) {
+                totalDistance += zoneResult.statistiques.distance_totale ?? 0
+                totalVolume += zoneResult.statistiques.volume_total_collecte ?? 0
+              }
+            }
+            console.log('[Optimization] Zone', zone.id, 'OK en', Date.now() - t0, 'ms')
+          }
+          if (allRoutes.length === 0) {
+            const t0 = Date.now()
+            const fallback = await apiRoutesOptimiser(depotPoint, points, dechList, camions, false, [])
+            if (fallback?.routes?.length) {
+              routes = fallback
+              console.log('[Optimization] Fallback global (zones sans routes), routes:', fallback.routes?.length)
+            } else {
+              routes = {
+                routes: allRoutes,
+                statistiques: { distance_totale: totalDistance, volume_total_collecte: totalVolume },
+              }
+            }
+          } else {
+            routes = {
+              routes: allRoutes,
+              statistiques: {
+                distance_totale: totalDistance,
+                volume_total_collecte: totalVolume,
+              },
+            }
+          }
+          console.log('[Optimization] apiRoutesOptimiser zone-by-zone OK, routes:', routes?.routes?.length)
+        } else {
+          const t0 = Date.now()
+          routes = await apiRoutesOptimiser(
+            depotPoint,
+            points,
+            dechList,
+            camions,
+            false,
+            []
+          )
+          console.log('[Optimization] apiRoutesOptimiser OK en', Date.now() - t0, 'ms, routes:', routes?.routes?.length)
+        }
       } catch (e) {
         console.error('[Optimization] apiRoutesOptimiser ERROR:', e)
         console.warn('Routes API:', e?.message)

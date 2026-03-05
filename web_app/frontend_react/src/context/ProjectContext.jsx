@@ -18,6 +18,7 @@ const ProjectContext = createContext(null)
 
 export function ProjectProvider({ children }) {
   const [points, setPoints] = useState(() => (Array.isArray(getSaved().points) ? getSaved().points : []))
+  const [zones, setZones] = useState(() => (Array.isArray(getSaved().zones) ? getSaved().zones : []))
   const [camions, setCamions] = useState(() => (Array.isArray(getSaved().camions) ? getSaved().camions : []))
   const [creneaux, setCreneaux] = useState(() => (Array.isArray(getSaved().creneaux) ? getSaved().creneaux : []))
   const [planningResult, setPlanningResult] = useState(() => getSaved().planningResult ?? null)
@@ -40,6 +41,7 @@ export function ProjectProvider({ children }) {
         id: p.id ?? i + 1,
         lat: Number(p.lat) || defLat,
         lng: Number(p.lng) || defLng,
+        zone_id: p.zone_id ?? null,
       }))
     }
     const depotObj = data.depot && typeof data.depot === 'object'
@@ -64,7 +66,14 @@ export function ProjectProvider({ children }) {
       }
     }
     setPoints(pts)
-    if (Array.isArray(data.camions) && data.camions.length) setCamions(data.camions)
+    setZones(Array.isArray(data.zones) ? data.zones : [])
+    if (Array.isArray(data.camions) && data.camions.length) {
+      const camionsData = data.camions.map((c) => ({
+        ...c,
+        zones_assignees: c.zones_assignees ?? c.zones_accessibles ?? [],
+      }))
+      setCamions(camionsData)
+    }
     if (Array.isArray(data.dechetteries) && data.dechetteries.length) {
       setDechetteries(
         data.dechetteries.map((x, i) => ({
@@ -114,11 +123,53 @@ export function ProjectProvider({ children }) {
     )
   }
 
+  const addZone = (zone) => {
+    const pointIds = zone.point_ids ?? zone.points ?? []
+    setZones((prev) => {
+      const newId = zone.id ?? (prev.length ? Math.max(...prev.map((z) => z.id)) + 1 : 1)
+      const newZone = { ...zone, id: newId, statut: zone.statut ?? 'active' }
+      if (pointIds.length) {
+        setPoints((pts) =>
+          pts.map((p) => (pointIds.includes(p.id) ? { ...p, zone_id: newId } : p))
+        )
+      }
+      return [...prev, newZone]
+    })
+  }
+
+  const updateZone = (id, updates) => {
+    const nextPointIds = updates.point_ids ?? updates.points
+    if (nextPointIds) {
+      setPoints((prev) =>
+        prev.map((p) => {
+          if (nextPointIds.includes(p.id)) return { ...p, zone_id: id }
+          if (p.zone_id === id) return { ...p, zone_id: null }
+          return p
+        })
+      )
+    }
+    setZones((prev) =>
+      prev.map((z) => (z.id === id ? { ...z, ...updates } : z))
+    )
+  }
+
+  const removeZone = (id) => {
+    setZones((prev) => prev.filter((z) => z.id !== id))
+    setPoints((prev) =>
+      prev.map((p) => (p.zone_id === id ? { ...p, zone_id: null } : p))
+    )
+  }
+
   const value = {
     points,
     setPoints,
     addPoint,
     removePoint,
+    zones,
+    setZones,
+    addZone,
+    updateZone,
+    removeZone,
     camions,
     setCamions,
     addCamion,
