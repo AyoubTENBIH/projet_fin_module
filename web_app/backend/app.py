@@ -245,7 +245,10 @@ def api_optimiser_routes():
         dechetteries_data = data.get("dechetteries", [])
         camions_data = data.get("camions", [])
         use_osrm = data.get("use_osrm", False)
+        time_limit_seconds = data.get("time_limit_seconds")  # optionnel : évite blocage
+        debug_coverage = data.get("debug_coverage", False)  # trace [COVERAGE_DEBUG] dans la console backend
 
+        print("[Routes] POST /api/routes/optimiser points=", len(points_data), "camions=", len(camions_data), "debug_coverage=", debug_coverage)
         if not depot_data:
             return jsonify({"error": "Dépôt requis"}), 400
         if not points_data:
@@ -263,7 +266,9 @@ def api_optimiser_routes():
                     points_data,
                     dechetteries_data,
                     camions_data,
-                    use_osrm=use_osrm
+                    use_osrm=use_osrm,
+                    time_limit_seconds=time_limit_seconds,
+                    debug_coverage=debug_coverage
                 )
             except Exception as e:
                 exc_container["exc"] = e
@@ -286,7 +291,9 @@ def api_optimiser_routes():
                         points_data,
                         dechetteries_data,
                         camions_data,
-                        use_osrm=False
+                        use_osrm=False,
+                        time_limit_seconds=time_limit_seconds,
+                        debug_coverage=debug_coverage
                     )
                     return jsonify(resultat), 200
                 except Exception as e2:

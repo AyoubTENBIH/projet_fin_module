@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useEffect } from 'react'
+import { useState, useRef, useCallback, useEffect, useMemo } from 'react'
 import { MapContainer, TileLayer, Marker, Polygon, useMap } from 'react-leaflet'
 import { motion } from 'framer-motion'
 import { Plus, MapPin } from 'lucide-react'
@@ -168,6 +168,37 @@ export default function ZonesConfig({
   const [autoStats, setAutoStats] = useState(null)
 
   const collectionPoints = points.filter((p) => !depot || p.id !== depot.id)
+
+  const mapCenter = useMemo(() => {
+    // Si des zones existent déjà, centrer sur les points de zones
+    if (zones && zones.length && points && points.length) {
+      const allZonePointIds = new Set()
+      zones.forEach((z) => {
+        const ids = z.point_ids || z.points || []
+        ids.forEach((id) => allZonePointIds.add(id))
+      })
+      const zonePoints = points.filter((p) => allZonePointIds.has(p.id))
+      if (zonePoints.length) {
+        const n = zonePoints.length
+        const avgLat = zonePoints.reduce((s, p) => s + (p.lat || 0), 0) / n
+        const avgLng = zonePoints.reduce((s, p) => s + (p.lng || 0), 0) / n
+        return [avgLat || CASABLANCA_CENTER[0], avgLng || CASABLANCA_CENTER[1]]
+      }
+    }
+    // Sinon centrer sur le dépôt si présent
+    if (depot && depot.lat != null && depot.lng != null) {
+      return [depot.lat, depot.lng]
+    }
+    // Sinon sur les points de collecte
+    if (points && points.length) {
+      const n = points.length
+      const avgLat = points.reduce((s, p) => s + (p.lat || 0), 0) / n
+      const avgLng = points.reduce((s, p) => s + (p.lng || 0), 0) / n
+      return [avgLat || CASABLANCA_CENTER[0], avgLng || CASABLANCA_CENTER[1]]
+    }
+    // Fallback Casablanca
+    return CASABLANCA_CENTER
+  }, [zones, points, depot])
 
   useEffect(() => {
     if (!showModal || !form.point_ids?.length) {
@@ -347,6 +378,13 @@ export default function ZonesConfig({
                 />
                 <span className="text-sm text-[#717171]">Afficher zones sur carte</span>
               </label>
+              <Button
+                variant="secondary"
+                onClick={openAutoModal}
+                className="bg-gradient-to-r from-emerald-500 to-sky-500 text-white border-none hover:opacity-90"
+              >
+                ✨ Générer zones automatiquement
+              </Button>
               <Button variant="primary" icon={<Plus className="w-4 h-4" />} onClick={openCreate}>
                 Nouvelle Zone
               </Button>
@@ -377,7 +415,7 @@ export default function ZonesConfig({
             <div className="lg:col-span-2 bg-white rounded-xl border border-[#EBEBEB] overflow-hidden">
               <div className="h-[400px] w-full">
                 <MapContainer
-                  center={CASABLANCA_CENTER}
+                  center={mapCenter}
                   zoom={DEFAULT_ZOOM}
                   className="h-full w-full"
                 >
@@ -539,6 +577,273 @@ export default function ZonesConfig({
           </div>
         </div>
       </main>
+      {showAutoModal && (
+        <div
+          className="fixed inset-0 bg-black/50 flex items-center justify-center z-[9998] p-4"
+          onClick={() => setShowAutoModal(false)}
+          aria-modal="true"
+          role="dialog"
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.96, y: 10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            onClick={(e) => e.stopPropagation()}
+            className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto p-6 space-y-6"
+          >
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <h3 className="text-xl font-bold text-[#222222] mb-1">
+                  Générer des zones automatiquement
+                </h3>
+                <p className="text-sm text-[#717171]">
+                  Clustering géographique pondéré par volume. Aperçu en temps réel avant
+                  application.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowAutoModal(false)}
+                className="text-[#717171] hover:text-[#222222]"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="grid gap-6 md:grid-cols-2">
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-[#222222] mb-1">
+                    Nombre de zones
+                  </label>
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="range"
+                      min={2}
+                      max={8}
+                      value={autoConfig.k}
+                      onChange={(e) => {
+                        const k = Number(e.target.value) || 2
+                        const next = { ...autoConfig, k }
+                        setAutoConfig(next)
+                        runAutoClustering(next)
+                      }}
+                      className="flex-1"
+                    />
+                    <span className="w-10 text-sm font-semibold text-[#222222] text-right">
+                      {autoConfig.k}
+                    </span>
+                  </div>
+                  <p className="text-xs text-[#717171] mt-1">
+                    Par défaut : nombre de camions ({camions?.length || 0}).
+                  </p>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={autoConfig.weightByVolume}
+                      onChange={(e) => {
+                        const next = { ...autoConfig, weightByVolume: e.target.checked }
+                        setAutoConfig(next)
+                        runAutoClustering(next)
+                      }}
+                      className="rounded"
+                    />
+                    <span className="text-sm text-[#222222]">
+                      Équilibrer par volume collecté
+                    </span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={autoConfig.respectExisting}
+                      onChange={(e) => {
+                        const next = { ...autoConfig, respectExisting: e.target.checked }
+                        setAutoConfig(next)
+                        runAutoClustering(next)
+                      }}
+                      className="rounded"
+                    />
+                    <span className="text-sm text-[#222222]">
+                      Garder les zones manuelles existantes
+                    </span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={autoConfig.replaceExisting}
+                      onChange={(e) =>
+                        setAutoConfig({ ...autoConfig, replaceExisting: e.target.checked })
+                      }
+                      className="rounded"
+                    />
+                    <span className="text-sm text-[#222222]">
+                      Remplacer les zones existantes
+                    </span>
+                  </label>
+                </div>
+
+                <div className="space-y-3">
+                  <div>
+                    <label className="block text-sm font-medium text-[#222222] mb-1">
+                      Volume max par zone (kg)
+                    </label>
+                    <input
+                      type="number"
+                      value={autoConfig.maxVolumePerZone}
+                      onChange={(e) =>
+                        setAutoConfig({ ...autoConfig, maxVolumePerZone: e.target.value })
+                      }
+                      className="w-full px-3 py-2 rounded-lg border border-[#EBEBEB] text-sm"
+                      placeholder="Laisser vide pour ne pas contraindre"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-[#222222] mb-1">
+                      Distance max entre points (km)
+                    </label>
+                    <input
+                      type="number"
+                      value={autoConfig.maxDistanceKm}
+                      onChange={(e) =>
+                        setAutoConfig({ ...autoConfig, maxDistanceKm: e.target.value })
+                      }
+                      className="w-full px-3 py-2 rounded-lg border border-[#EBEBEB] text-sm"
+                      placeholder="Ex: 3"
+                    />
+                  </div>
+                </div>
+
+                {autoStats && (
+                  <div className="p-3 rounded-xl bg-gray-50 border border-[#EBEBEB] text-xs text-[#555] space-y-1">
+                    <p>
+                      Zones : <strong>{autoStats.k}</strong>
+                    </p>
+                    <p>
+                      Volume total : <strong>{Math.round(autoStats.totalVolume)} kg</strong>
+                    </p>
+                    <p>
+                      Volume moyen par zone : <strong>{Math.round(autoStats.avgVolume)} kg</strong>
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              <div className="space-y-3">
+                <div className="h-[300px] w-full rounded-xl border border-[#EBEBEB] overflow-hidden">
+                  <MapContainer center={mapCenter} zoom={DEFAULT_ZOOM} className="h-full w-full">
+                    <TileLayer
+                      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    />
+                    {collectionPoints.map((p) => (
+                      <Marker key={p.id} position={[p.lat, p.lng]} />
+                    ))}
+                    {autoPreviewZones.map((zone) => {
+                      const zonePoints = collectionPoints.filter((p) =>
+                        zone.pointIds.includes(p.id)
+                      )
+                      if (!zonePoints.length || !zone.polygon) return null
+                      return (
+                        <Polygon
+                          key={zone.id}
+                          positions={zone.polygon}
+                          pathOptions={{
+                            color: zone.couleur,
+                            fillColor: zone.couleur,
+                            fillOpacity: 0.1,
+                            weight: 2,
+                          }}
+                        />
+                      )
+                    })}
+                  </MapContainer>
+                </div>
+
+                <div className="space-y-2 max-h-40 overflow-y-auto">
+                  {autoPreviewZones.map((zone) => (
+                    <div
+                      key={zone.id}
+                      className="p-2 rounded-lg border border-[#EBEBEB] flex flex-col gap-1 text-xs"
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="font-semibold text-[#222222]">
+                          {zone.nom} · {zone.nbPoints} pts
+                        </span>
+                        <span
+                          className={`px-2 py-0.5 rounded-full ${
+                            zone.ratioVolume > 1.5
+                              ? 'bg-red-50 text-red-600'
+                              : zone.ratioVolume < 0.6
+                                ? 'bg-amber-50 text-amber-700'
+                                : 'bg-emerald-50 text-emerald-700'
+                          }`}
+                        >
+                          {Math.round(zone.volume)} kg
+                        </span>
+                      </div>
+                      <div className="flex flex-wrap items-center gap-2 text-[#555]">
+                        <span>
+                          Camion recommandé :{' '}
+                          {zone.camion ? `Camion ${zone.camion.id} (${zone.camion.capacite} kg)` : '—'}
+                        </span>
+                        {zone.tours && zone.camion && (
+                          <span>
+                            · Tournées estimées :{' '}
+                            {zone.tours === 1 ? '1 tournée' : `${zone.tours} tournées`}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                  {autoPreviewZones.length === 0 && (
+                    <p className="text-xs text-[#717171]">
+                      Ajustez les paramètres pour voir une proposition de zones.
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-3 pt-4">
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() => setShowAutoModal(false)}
+              >
+                Annuler
+              </Button>
+              <Button
+                type="button"
+                variant="primary"
+                onClick={() => {
+                  if (!autoPreviewZones.length) {
+                    setShowAutoModal(false)
+                    return
+                  }
+                  if (autoConfig.replaceExisting) {
+                    zones.forEach((z) => onRemoveZone(z.id))
+                  }
+                  autoPreviewZones.forEach((zone) => {
+                    if (!zone.pointIds.length) return
+                    onAddZone({
+                      nom: zone.nom,
+                      couleur: zone.couleur,
+                      point_ids: zone.pointIds,
+                      camion_ids: zone.camion ? [zone.camion.id] : [],
+                      auto: true,
+                    })
+                  })
+                  setShowAutoModal(false)
+                }}
+              >
+                Appliquer ces zones
+              </Button>
+            </div>
+          </motion.div>
+        </div>
+      )}
 
       {showModal && (
         <div

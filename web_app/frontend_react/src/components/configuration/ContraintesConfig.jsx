@@ -105,21 +105,23 @@ export default function ContraintesConfig({
             {zones.length === 0 ? (
               <p className="text-[#717171] py-4">Aucun point de collecte. Configurez les points d&apos;abord.</p>
             ) : (
-              <div className="space-y-3">
-                {zones.map((z) => (
-                  <label
-                    key={z.id}
-                    className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer"
-                  >
-                    <input
-                      type="checkbox"
-                      checked={zonesNuit.includes(z.id)}
-                      onChange={() => toggleZoneNuit(z.id)}
-                      className="w-5 h-5 rounded border-gray-300 text-[#FF5A5F] focus:ring-[#FF5A5F]"
-                    />
-                    <span className="font-medium">{z.nom || `Point ${z.id}`}</span>
-                  </label>
-                ))}
+              <div className="max-h-[320px] overflow-y-auto rounded-lg border border-[#EBEBEB]">
+                <div className="space-y-3 p-1">
+                  {zones.map((z) => (
+                    <label
+                      key={z.id}
+                      className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={zonesNuit.includes(z.id)}
+                        onChange={() => toggleZoneNuit(z.id)}
+                        className="w-5 h-5 rounded border-gray-300 text-[#FF5A5F] focus:ring-[#FF5A5F]"
+                      />
+                      <span className="font-medium">{z.nom || `Point ${z.id}`}</span>
+                    </label>
+                  ))}
+                </div>
               </div>
             )}
           </Card>
@@ -179,33 +181,35 @@ export default function ContraintesConfig({
             {zones.length === 0 ? (
               <p className="text-[#717171] py-4">Aucun point de collecte.</p>
             ) : (
-              <div className="space-y-3">
-                {zones.map((z) => {
-                  const f = getFenetre(z.id)
-                  return (
-                    <div
-                      key={z.id}
-                      className="flex flex-wrap items-center justify-between gap-4 p-4 bg-gray-50 rounded-xl"
-                    >
-                      <span className="font-medium">{z.nom || `Point ${z.id}`}</span>
-                      <div className="flex items-center gap-2">
-                        <input
-                          type="time"
-                          value={f.debut}
-                          onChange={(e) => updateFenetre(z.id, e.target.value, f.fin)}
-                          className="px-3 py-2 rounded-lg border border-[#EBEBEB]"
-                        />
-                        <span className="text-[#717171]">–</span>
-                        <input
-                          type="time"
-                          value={f.fin}
-                          onChange={(e) => updateFenetre(z.id, f.debut, e.target.value)}
-                          className="px-3 py-2 rounded-lg border border-[#EBEBEB]"
-                        />
+              <div className="max-h-[320px] overflow-y-auto rounded-lg border border-[#EBEBEB]">
+                <div className="space-y-3 p-1">
+                  {zones.map((z) => {
+                    const f = getFenetre(z.id)
+                    return (
+                      <div
+                        key={z.id}
+                        className="flex flex-wrap items-center justify-between gap-4 p-4 bg-gray-50 rounded-xl"
+                      >
+                        <span className="font-medium">{z.nom || `Point ${z.id}`}</span>
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="time"
+                            value={f.debut}
+                            onChange={(e) => updateFenetre(z.id, e.target.value, f.fin)}
+                            className="px-3 py-2 rounded-lg border border-[#EBEBEB]"
+                          />
+                          <span className="text-[#717171]">–</span>
+                          <input
+                            type="time"
+                            value={f.fin}
+                            onChange={(e) => updateFenetre(z.id, f.debut, e.target.value)}
+                            className="px-3 py-2 rounded-lg border border-[#EBEBEB]"
+                          />
+                        </div>
                       </div>
-                    </div>
-                  )
-                })}
+                    )
+                  })}
+                </div>
               </div>
             )}
           </Card>

@@ -8,6 +8,8 @@ export default function Home({
   onLoadTemplate,
   onLoadTemplateAgadir,
   onImportOsmRandom,
+  onImportAgadirStructures,
+  onLoadTest500,
 }) {
   return (
     <div className="min-h-screen flex flex-col bg-white">
@@ -86,6 +88,24 @@ export default function Home({
                     icon={<MapPin className="w-4 h-4" />}
                   >
                     Importer JSON OSM (aléatoire)
+                  </Button>
+                )}
+                {onImportAgadirStructures && (
+                  <Button
+                    variant="secondary"
+                    onClick={onImportAgadirStructures}
+                    icon={<MapPin className="w-4 h-4" />}
+                  >
+                    Structures Agadir (localisations)
+                  </Button>
+                )}
+                {onLoadTest500 && (
+                  <Button
+                    variant="secondary"
+                    onClick={onLoadTest500}
+                    icon={<MapPin className="w-4 h-4" />}
+                  >
+                    500 points (test LNS)
                   </Button>
                 )}
               </div>

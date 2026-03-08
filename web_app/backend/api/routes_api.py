@@ -14,37 +14,28 @@ sys.path.insert(0, str(NIVEAU2_SRC))
 from optimiseur_routes import optimiser_collecte
 
 
-def optimiser_routes_collecte(depot_data: dict, points_data: list, 
+def optimiser_routes_collecte(depot_data: dict, points_data: list,
                                dechetteries_data: list, camions_data: list,
-                               use_osrm: bool = False) -> dict:
+                               use_osrm: bool = False, time_limit_seconds: float = None,
+                               debug_coverage: bool = False) -> dict:
     """
-    Optimise les routes de collecte avec gestion intelligente des déchetteries.
+    Optimise les routes de collecte avec stratégie hybride (adaptation automatique
+    au nombre de points) et méta-heuristiques pour les grandes instances.
     
-    Cette fonction utilise plusieurs algorithmes d'optimisation :
-    1. Nearest Neighbor (Plus Proche Voisin) - O(n²)
-    2. 2-opt Local Search - O(n³) dans le pire cas
-    3. Or-opt - O(n²) par itération
-    4. Insertion Intelligente des Déchetteries - O(n×d)
-    
-    Le processus complet :
-    1. Répartit les points de collecte entre les camions
-    2. Construit une route initiale pour chaque camion
-    3. Insère les visites aux déchetteries quand nécessaire (capacité atteinte)
-    4. Améliore les routes avec 2-opt et Or-opt
-    5. Optimise le placement des déchetteries pour minimiser les détours
+    Stratégie : selon le nombre de points (small/medium/large/xlarge), les algorithmes
+    (2-opt, 3-opt, Or-opt, recuit simulé, ILS) et les plafonds d'itérations sont
+    choisis automatiquement pour éviter blocage et lenteur.
     
     Args:
         depot_data: Données du dépôt {id, x, y, nom}
         points_data: Liste des points de collecte [{id, x, y, nom, volume, priorite}, ...]
         dechetteries_data: Liste des déchetteries [{id, x, y, nom, capacite_max}, ...]
         camions_data: Liste des camions [{id, capacite, cout_fixe, zones_accessibles}, ...]
+        use_osrm: Si True, utilise les distances routières OSRM
+        time_limit_seconds: Limite de temps (s). Au-delà, améliorations raccourcies (évite blocage).
     
     Returns:
-        Dictionnaire contenant :
-        - routes: Liste des routes optimisées avec détails des étapes
-        - statistiques: Statistiques globales (distance totale, volume, etc.)
-        - depot: Informations du dépôt
-        - dechetteries: Liste des déchetteries utilisées
+        Dictionnaire : routes, statistiques (dont strategie_optimisation), depot, dechetteries
     """
     # Valider les données d'entrée
     if not depot_data:
@@ -63,13 +54,14 @@ def optimiser_routes_collecte(depot_data: dict, points_data: list,
         if 'volume' not in point:
             point['volume'] = 0
     
-    # Appeler l'optimiseur
+    # Appeler l'optimiseur (stratégie hybride + optionnel time_limit + debug couverture)
     resultat = optimiser_collecte(
         depot_data=depot_data,
         points_data=points_data,
         dechetteries_data=dechetteries_data,
         camions_data=camions_data,
-        use_osrm=use_osrm
+        use_osrm=use_osrm,
+        time_limit_seconds=time_limit_seconds,
+        debug_coverage=debug_coverage
     )
-    
     return resultat

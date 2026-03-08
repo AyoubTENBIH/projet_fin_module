@@ -87,18 +87,59 @@ export default function OptimizationLoader({
         const dechList = dechetteries || []
 
         if (zones.length > 0) {
+          const depotId = (depotPoint?.id ?? points?.[0]?.id) ?? 0
           const allRoutes = []
           let totalDistance = 0
           let totalVolume = 0
           for (const zone of zones) {
             const pointIds = zone.point_ids ?? zone.points ?? []
-            const zonePoints = points.filter((p) =>
-              pointIds.some((id) => id == p.id)
+            const zonePoints = points.filter(
+              (p) =>
+                !p.isDepot &&
+                p.id !== depotId &&
+                (pointIds.some((id) => id == p.id) || p.zone_id === zone.id)
             )
-            let assignedCamions = camions.filter((c) =>
-              (c.zones_assignees ?? c.zones_accessibles ?? []).some((z) => z == zone.id)
-            )
+            // 1) Camions explicitement associés à la zone (camion_ids côté zone)
+            const explicitIds = zone.camion_ids || zone.camions || []
+            let assignedCamions = []
+            if (explicitIds.length) {
+              assignedCamions = camions.filter((c) => explicitIds.some((id) => id == c.id))
+            }
+            // 2) Sinon, camions dont zones_assignees / zones_accessibles contient cette zone
+            if (!assignedCamions.length) {
+              assignedCamions = camions.filter((c) =>
+                (c.zones_assignees ?? c.zones_accessibles ?? []).some((z) => z == zone.id)
+              )
+            }
+            // 3) Fallback : tous les camions
             if (assignedCamions.length === 0) assignedCamions = camions
+
+            // Répartition multi-camions selon la charge de la zone
+            const zoneVolume = zonePoints.reduce(
+              (s, p) => s + (typeof p.volume === 'number' ? p.volume : 0),
+              0
+            )
+            if (zoneVolume > 0 && assignedCamions.length > 1) {
+              const withCap = assignedCamions.filter(
+                (c) => typeof c.capacite === 'number' && c.capacite > 0
+              )
+              if (withCap.length) {
+                const sorted = [...withCap].sort((a, b) => (b.capacite || 0) - (a.capacite || 0))
+                const selected = []
+                let remaining = zoneVolume
+                for (const c of sorted) {
+                  selected.push(c)
+                  remaining -= c.capacite
+                  if (remaining <= 0) break
+                }
+                // Inclure aussi les camions sans capacité définie si besoin
+                const noCap = assignedCamions.filter(
+                  (c) => typeof c.capacite !== 'number' || c.capacite <= 0
+                )
+                assignedCamions = [...selected, ...noCap]
+              }
+            }
+
             if (zonePoints.length === 0 || assignedCamions.length === 0) continue
             const t0 = Date.now()
             const zoneResult = await apiRoutesOptimiser(
@@ -119,6 +160,43 @@ export default function OptimizationLoader({
               }
             }
             console.log('[Optimization] Zone', zone.id, 'OK en', Date.now() - t0, 'ms')
+          }
+          const collectionPointIds = new Set(
+            (points || []).filter((p) => !p.isDepot && p.id !== depotId).map((p) => p.id)
+          )
+          const visitedFromRoutes = new Set()
+          allRoutes.forEach((r) => {
+            (r.waypoints || []).forEach((wp) => {
+              if ((wp.type === 'collecte' || wp.type_point === 'collecte') && wp.id != null && wp.id !== 0) {
+                visitedFromRoutes.add(wp.id)
+              }
+            })
+          })
+          const missingIds = [...collectionPointIds].filter((id) => !visitedFromRoutes.has(id))
+          if (missingIds.length > 0) {
+            const missingPoints = points.filter((p) => missingIds.includes(p.id))
+            console.log('[Optimization] Couverture partielle: ajout tournées pour', missingIds.length, 'points non couverts')
+            try {
+              const complement = await apiRoutesOptimiser(
+                depotPoint,
+                missingPoints,
+                dechList,
+                camions,
+                false,
+                [],
+                true
+              )
+              if (complement?.routes?.length) {
+                allRoutes.push(...complement.routes.map((r) => ({ ...r, zone_id: null })))
+                if (complement.statistiques) {
+                  totalDistance += complement.statistiques.distance_totale ?? 0
+                  totalVolume += complement.statistiques.volume_total_collecte ?? 0
+                }
+                console.log('[Optimization] Fallback OK:', complement.routes.length, 'routes,', missingIds.length, 'points')
+              }
+            } catch (e) {
+              console.error('[Optimization] Fallback points non couverts échoué:', e?.message)
+            }
           }
           if (allRoutes.length === 0) {
             const t0 = Date.now()

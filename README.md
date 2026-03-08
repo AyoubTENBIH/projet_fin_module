@@ -94,6 +94,55 @@ Barème : Fonctionnalité 80 %, Qualité du code 10 %, Tests 5 %, Rapport 5 %.
 
 ---
 
-## 5. Prochaine étape
+## 5. Tests prédéfinis (niveau 2)
+
+Trois jeux de tests avec données prédéfinies sont fournis :
+
+| Test | Camions | Points de collecte |
+|------|---------|---------------------|
+| 1    | 5       | 50                  |
+| 2    | 10      | 100                 |
+| 3    | 20      | 500                 |
+
+Chaque point de collecte peut contenir **2 ou 3 bennes** ; le **poids total par point** est compris entre **150 kg et 600 kg** (selon le nombre de bennes). Les entrées sont générées avec une graine fixe (reproductibilité) et enregistrées dans `niveau2/data/tests_predefinis/`.
+
+**Lancer les trois tests** (depuis la racine du projet, venv activé) :
+
+```powershell
+python niveau2/run_tests_predefinis.py
+```
+
+Pour n’exécuter que les tests 5/50 et 10/100 (le test 20/500 peut prendre plusieurs minutes) :
+
+```powershell
+python niveau2/run_tests_predefinis.py --quick
+```
+
+**Mesures de performance affichées** : distance totale, volume total collecté, nombre de camions utilisés, visites déchetteries, **tonnage transporté par kilomètre (t/km) par camion** et **moyenne sur l’ensemble des camions**.
+
+---
+
+## 6. Stratégie hybride et méta-heuristiques (sans blocage)
+
+L’optimiseur adapte **automatiquement** les algorithmes au nombre de points (et à la taille des tournées) :
+
+- **Small** (≤ 50 points) : 2-opt, 3-opt, Or-opt, recuit simulé (SA).
+- **Medium** (≤ 150) : 2-opt, 3-opt limité, Or-opt, SA.
+- **Large** (≤ 400) : 2-opt, Or-opt limité, **ILS** (Iterated Local Search) + SA.
+- **Xlarge** (> 400) : 2-opt léger, **ILS** + SA, plafonds stricts ; le calcul de la borne MST est ignoré pour accélérer.
+
+Une option **time_limit_seconds** (dans l’API : body `time_limit_seconds`) permet de limiter le temps de calcul pour garantir une réponse sans blocage, quel que soit le nombre de points.
+
+---
+
+## 7. Document explicatif des algorithmes
+
+Un document détaillé décrit les algorithmes utilisés, leur fonctionnement, leur complexité et une discussion sur l’optimalité dans ce contexte :
+
+- **`docs/DOCUMENTATION_ALGORITHMES.md`** : Dijkstra, Plus proche voisin, 2-opt, 3-opt, Or-opt, recuit simulé, **stratégie hybride**, **ILS**, borne MST, métriques (dont tonnage/km), et garantie de non-blocage.
+
+---
+
+## 8. Prochaine étape
 
 Commencer par **le Niveau 1** : modéliser le réseau routier (graphe), implémenter Dijkstra et produire la matrice des distances + `output_niveau1.json` conforme au format du cahier des charges.

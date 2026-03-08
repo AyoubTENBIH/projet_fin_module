@@ -1,0 +1,1154 @@
+{
+  "routes": [
+    {
+      "camion_id": 1,
+      "capacite": 4000,
+      "waypoints": [
+        {
+          "id": 0,
+          "x": 50.0,
+          "y": 50.0,
+          "nom": "Dépôt",
+          "type": "depot",
+          "volume": 0
+        },
+        {
+          "id": 44,
+          "x": 48.8332,
+          "y": 53.1387,
+          "nom": "Point 44",
+          "type": "collecte",
+          "volume": 219.62
+        },
+        {
+          "id": 37,
+          "x": 48.0226,
+          "y": 53.9843,
+          "nom": "Point 37",
+          "type": "collecte",
+          "volume": 182.1
+        },
+        {
+          "id": 22,
+          "x": 44.2747,
+          "y": 56.6826,
+          "nom": "Point 22",
+          "type": "collecte",
+          "volume": 524.1
+        },
+        {
+          "id": 39,
+          "x": 41.9194,
+          "y": 63.735,
+          "nom": "Point 39",
+          "type": "collecte",
+          "volume": 328.24
+        },
+        {
+          "id": 31,
+          "x": 33.8756,
+          "y": 61.116,
+          "nom": "Point 31",
+          "type": "collecte",
+          "volume": 367.63
+        },
+        {
+          "id": 10,
+          "x": 33.4543,
+          "y": 60.2912,
+          "nom": "Point 10",
+          "type": "collecte",
+          "volume": 323.64
+        },
+        {
+          "id": 47,
+          "x": 14.3337,
+          "y": 62.2764,
+          "nom": "Point 47",
+          "type": "collecte",
+          "volume": 559.15
+        },
+        {
+          "id": 41,
+          "x": 11.6827,
+          "y": 54.3137,
+          "nom": "Point 41",
+          "type": "collecte",
+          "volume": 166.01
+        },
+        {
+          "id": 49,
+          "x": 25.2167,
+          "y": 45.8891,
+          "nom": "Point 49",
+          "type": "collecte",
+          "volume": 212.16
+        },
+        {
+          "id": 6,
+          "x": 22.7727,
+          "y": 43.8092,
+          "nom": "Point 6",
+          "type": "collecte",
+          "volume": 339.7
+        },
+        {
+          "id": 3,
+          "x": 17.4956,
+          "y": 28.6129,
+          "nom": "Point 3",
+          "type": "collecte",
+          "volume": 309.53
+        },
+        {
+          "id": 51,
+          "x": 20.0,
+          "y": 20.0,
+          "nom": "Déchetterie Sud-Ouest",
+          "type": "dechetterie",
+          "volume": 0
+        },
+        {
+          "id": 14,
+          "x": 26.7606,
+          "y": 31.3582,
+          "nom": "Point 14",
+          "type": "collecte",
+          "volume": 242.55
+        },
+        {
+          "id": 1,
+          "x": 32.0023,
+          "y": 27.8569,
+          "nom": "Point 1",
+          "type": "collecte",
+          "volume": 156.25
+        },
+        {
+          "id": 28,
+          "x": 37.214,
+          "y": 33.48,
+          "nom": "Point 28",
+          "type": "collecte",
+          "volume": 530.58
+        },
+        {
+          "id": 8,
+          "x": 38.7184,
+          "y": 37.5165,
+          "nom": "Point 8",
+          "type": "collecte",
+          "volume": 244.98
+        },
+        {
+          "id": 46,
+          "x": 44.4841,
+          "y": 43.8863,
+          "nom": "Point 46",
+          "type": "collecte",
+          "volume": 174.23
+        },
+        {
+          "id": 45,
+          "x": 47.8378,
+          "y": 42.5648,
+          "nom": "Point 45",
+          "type": "collecte",
+          "volume": 372.9
+        },
+        {
+          "id": 26,
+          "x": 47.444,
+          "y": 30.1131,
+          "nom": "Point 26",
+          "type": "collecte",
+          "volume": 478.77
+        },
+        {
+          "id": 25,
+          "x": 43.7728,
+          "y": 15.0822,
+          "nom": "Point 25",
+          "type": "collecte",
+          "volume": 348.02
+        },
+        {
+          "id": 33,
+          "x": 49.0885,
+          "y": 18.9494,
+          "nom": "Point 33",
+          "type": "collecte",
+          "volume": 299.74
+        },
+        {
+          "id": 40,
+          "x": 51.4061,
+          "y": 19.6803,
+          "nom": "Point 40",
+          "type": "collecte",
+          "volume": 431.43
+        },
+        {
+          "id": 35,
+          "x": 55.3886,
+          "y": 16.3006,
+          "nom": "Point 35",
+          "type": "collecte",
+          "volume": 210.22
+        },
+        {
+          "id": 11,
+          "x": 66.3657,
+          "y": 13.666,
+          "nom": "Point 11",
+          "type": "collecte",
+          "volume": 473.21
+        },
+        {
+          "id": 52,
+          "x": 80.0,
+          "y": 20.0,
+          "nom": "Déchetterie Sud-Est",
+          "type": "dechetterie",
+          "volume": 0
+        },
+        {
+          "id": 2,
+          "x": 81.3744,
+          "y": 16.9551,
+          "nom": "Point 2",
+          "type": "collecte",
+          "volume": 319.17
+        },
+        {
+          "id": 43,
+          "x": 78.7708,
+          "y": 15.6686,
+          "nom": "Point 43",
+          "type": "collecte",
+          "volume": 376.36
+        },
+        {
+          "id": 42,
+          "x": 66.6273,
+          "y": 14.7099,
+          "nom": "Point 42",
+          "type": "collecte",
+          "volume": 151.8
+        },
+        {
+          "id": 24,
+          "x": 78.8882,
+          "y": 22.2273,
+          "nom": "Point 24",
+          "type": "collecte",
+          "volume": 338.95
+        },
+        {
+          "id": 9,
+          "x": 68.3785,
+          "y": 52.8982,
+          "nom": "Point 9",
+          "type": "collecte",
+          "volume": 542.14
+        },
+        {
+          "id": 30,
+          "x": 70.957,
+          "y": 50.6145,
+          "nom": "Point 30",
+          "type": "collecte",
+          "volume": 591.57
+        },
+        {
+          "id": 18,
+          "x": 74.4037,
+          "y": 42.0932,
+          "nom": "Point 18",
+          "type": "collecte",
+          "volume": 355.45
+        },
+        {
+          "id": 34,
+          "x": 76.5332,
+          "y": 34.6011,
+          "nom": "Point 34",
+          "type": "collecte",
+          "volume": 563.62
+        },
+        {
+          "id": 7,
+          "x": 86.577,
+          "y": 36.9276,
+          "nom": "Point 7",
+          "type": "collecte",
+          "volume": 346.64
+        },
+        {
+          "id": 52,
+          "x": 80.0,
+          "y": 20.0,
+          "nom": "Déchetterie Sud-Est",
+          "type": "dechetterie",
+          "volume": 0
+        },
+        {
+          "id": 32,
+          "x": 71.0009,
+          "y": 53.1503,
+          "nom": "Point 32",
+          "type": "collecte",
+          "volume": 188.21
+        },
+        {
+          "id": 23,
+          "x": 89.803,
+          "y": 50.7621,
+          "nom": "Point 23",
+          "type": "collecte",
+          "volume": 365.8
+        },
+        {
+          "id": 36,
+          "x": 88.2388,
+          "y": 52.6165,
+          "nom": "Point 36",
+          "type": "collecte",
+          "volume": 544.81
+        },
+        {
+          "id": 12,
+          "x": 88.8177,
+          "y": 78.4254,
+          "nom": "Point 12",
+          "type": "collecte",
+          "volume": 343.27
+        },
+        {
+          "id": 29,
+          "x": 86.3053,
+          "y": 80.0682,
+          "nom": "Point 29",
+          "type": "collecte",
+          "volume": 263.43
+        },
+        {
+          "id": 19,
+          "x": 85.4328,
+          "y": 80.1094,
+          "nom": "Point 19",
+          "type": "collecte",
+          "volume": 202.75
+        },
+        {
+          "id": 17,
+          "x": 77.4282,
+          "y": 72.08,
+          "nom": "Point 17",
+          "type": "collecte",
+          "volume": 321.15
+        },
+        {
+          "id": 48,
+          "x": 68.2571,
+          "y": 74.0474,
+          "nom": "Point 48",
+          "type": "collecte",
+          "volume": 165.15
+        },
+        {
+          "id": 4,
+          "x": 67.2816,
+          "y": 66.106,
+          "nom": "Point 4",
+          "type": "collecte",
+          "volume": 290.31
+        },
+        {
+          "id": 5,
+          "x": 57.1413,
+          "y": 74.7544,
+          "nom": "Point 5",
+          "type": "collecte",
+          "volume": 366.13
+        },
+        {
+          "id": 38,
+          "x": 58.5275,
+          "y": 87.149,
+          "nom": "Point 38",
+          "type": "collecte",
+          "volume": 458.3
+        },
+        {
+          "id": 53,
+          "x": 50.0,
+          "y": 85.0,
+          "nom": "Déchetterie Nord",
+          "type": "dechetterie",
+          "volume": 0
+        },
+        {
+          "id": 16,
+          "x": 31.5958,
+          "y": 84.0313,
+          "nom": "Point 16",
+          "type": "collecte",
+          "volume": 265.57
+        },
+        {
+          "id": 27,
+          "x": 19.1641,
+          "y": 80.7831,
+          "nom": "Point 27",
+          "type": "collecte",
+          "volume": 320.07
+        },
+        {
+          "id": 21,
+          "x": 21.1704,
+          "y": 69.5991,
+          "nom": "Point 21",
+          "type": "collecte",
+          "volume": 342.86
+        },
+        {
+          "id": 15,
+          "x": 23.6911,
+          "y": 68.3301,
+          "nom": "Point 15",
+          "type": "collecte",
+          "volume": 302.28
+        },
+        {
+          "id": 13,
+          "x": 46.2728,
+          "y": 76.7288,
+          "nom": "Point 13",
+          "type": "collecte",
+          "volume": 245.03
+        },
+        {
+          "id": 50,
+          "x": 47.0102,
+          "y": 79.9589,
+          "nom": "Point 50",
+          "type": "collecte",
+          "volume": 355.05
+        },
+        {
+          "id": 53,
+          "x": 50.0,
+          "y": 85.0,
+          "nom": "Déchetterie Nord",
+          "type": "dechetterie",
+          "volume": 0
+        },
+        {
+          "id": 20,
+          "x": 49.9385,
+          "y": 80.7747,
+          "nom": "Point 20",
+          "type": "collecte",
+          "volume": 363.79
+        },
+        {
+          "id": 0,
+          "x": 50.0,
+          "y": 50.0,
+          "nom": "Dépôt",
+          "type": "depot",
+          "volume": 0
+        }
+      ],
+      "distance_totale": 586.54,
+      "volume_total_collecte": 16784.42,
+      "tonnage_par_km": 0.0286,
+      "nb_visites_dechetterie": 5,
+      "details_etapes": [
+        {
+          "ordre": 0,
+          "point_id": 0,
+          "point_nom": "Dépôt",
+          "type": "depot",
+          "x": 50.0,
+          "y": 50.0,
+          "action": "DEPART",
+          "volume_action": 0,
+          "charge_apres": 0.0
+        },
+        {
+          "ordre": 1,
+          "point_id": 44,
+          "point_nom": "Point 44",
+          "type": "collecte",
+          "x": 48.8332,
+          "y": 53.1387,
+          "action": "COLLECTE",
+          "volume_action": 219.62,
+          "charge_apres": 219.62
+        },
+        {
+          "ordre": 2,
+          "point_id": 37,
+          "point_nom": "Point 37",
+          "type": "collecte",
+          "x": 48.0226,
+          "y": 53.9843,
+          "action": "COLLECTE",
+          "volume_action": 182.1,
+          "charge_apres": 401.72
+        },
+        {
+          "ordre": 3,
+          "point_id": 22,
+          "point_nom": "Point 22",
+          "type": "collecte",
+          "x": 44.2747,
+          "y": 56.6826,
+          "action": "COLLECTE",
+          "volume_action": 524.1,
+          "charge_apres": 925.82
+        },
+        {
+          "ordre": 4,
+          "point_id": 39,
+          "point_nom": "Point 39",
+          "type": "collecte",
+          "x": 41.9194,
+          "y": 63.735,
+          "action": "COLLECTE",
+          "volume_action": 328.24,
+          "charge_apres": 1254.06
+        },
+        {
+          "ordre": 5,
+          "point_id": 31,
+          "point_nom": "Point 31",
+          "type": "collecte",
+          "x": 33.8756,
+          "y": 61.116,
+          "action": "COLLECTE",
+          "volume_action": 367.63,
+          "charge_apres": 1621.69
+        },
+        {
+          "ordre": 6,
+          "point_id": 10,
+          "point_nom": "Point 10",
+          "type": "collecte",
+          "x": 33.4543,
+          "y": 60.2912,
+          "action": "COLLECTE",
+          "volume_action": 323.64,
+          "charge_apres": 1945.33
+        },
+        {
+          "ordre": 7,
+          "point_id": 47,
+          "point_nom": "Point 47",
+          "type": "collecte",
+          "x": 14.3337,
+          "y": 62.2764,
+          "action": "COLLECTE",
+          "volume_action": 559.15,
+          "charge_apres": 2504.48
+        },
+        {
+          "ordre": 8,
+          "point_id": 41,
+          "point_nom": "Point 41",
+          "type": "collecte",
+          "x": 11.6827,
+          "y": 54.3137,
+          "action": "COLLECTE",
+          "volume_action": 166.01,
+          "charge_apres": 2670.49
+        },
+        {
+          "ordre": 9,
+          "point_id": 49,
+          "point_nom": "Point 49",
+          "type": "collecte",
+          "x": 25.2167,
+          "y": 45.8891,
+          "action": "COLLECTE",
+          "volume_action": 212.16,
+          "charge_apres": 2882.6499999999996
+        },
+        {
+          "ordre": 10,
+          "point_id": 6,
+          "point_nom": "Point 6",
+          "type": "collecte",
+          "x": 22.7727,
+          "y": 43.8092,
+          "action": "COLLECTE",
+          "volume_action": 339.7,
+          "charge_apres": 3222.3499999999995
+        },
+        {
+          "ordre": 11,
+          "point_id": 3,
+          "point_nom": "Point 3",
+          "type": "collecte",
+          "x": 17.4956,
+          "y": 28.6129,
+          "action": "COLLECTE",
+          "volume_action": 309.53,
+          "charge_apres": 3531.879999999999
+        },
+        {
+          "ordre": 12,
+          "point_id": 51,
+          "point_nom": "Déchetterie Sud-Ouest",
+          "type": "dechetterie",
+          "x": 20.0,
+          "y": 20.0,
+          "action": "DECHARGE",
+          "volume_action": 3531.879999999999,
+          "charge_apres": 0
+        },
+        {
+          "ordre": 13,
+          "point_id": 14,
+          "point_nom": "Point 14",
+          "type": "collecte",
+          "x": 26.7606,
+          "y": 31.3582,
+          "action": "COLLECTE",
+          "volume_action": 242.55,
+          "charge_apres": 242.55
+        },
+        {
+          "ordre": 14,
+          "point_id": 1,
+          "point_nom": "Point 1",
+          "type": "collecte",
+          "x": 32.0023,
+          "y": 27.8569,
+          "action": "COLLECTE",
+          "volume_action": 156.25,
+          "charge_apres": 398.8
+        },
+        {
+          "ordre": 15,
+          "point_id": 28,
+          "point_nom": "Point 28",
+          "type": "collecte",
+          "x": 37.214,
+          "y": 33.48,
+          "action": "COLLECTE",
+          "volume_action": 530.58,
+          "charge_apres": 929.3800000000001
+        },
+        {
+          "ordre": 16,
+          "point_id": 8,
+          "point_nom": "Point 8",
+          "type": "collecte",
+          "x": 38.7184,
+          "y": 37.5165,
+          "action": "COLLECTE",
+          "volume_action": 244.98,
+          "charge_apres": 1174.3600000000001
+        },
+        {
+          "ordre": 17,
+          "point_id": 46,
+          "point_nom": "Point 46",
+          "type": "collecte",
+          "x": 44.4841,
+          "y": 43.8863,
+          "action": "COLLECTE",
+          "volume_action": 174.23,
+          "charge_apres": 1348.5900000000001
+        },
+        {
+          "ordre": 18,
+          "point_id": 45,
+          "point_nom": "Point 45",
+          "type": "collecte",
+          "x": 47.8378,
+          "y": 42.5648,
+          "action": "COLLECTE",
+          "volume_action": 372.9,
+          "charge_apres": 1721.4900000000002
+        },
+        {
+          "ordre": 19,
+          "point_id": 26,
+          "point_nom": "Point 26",
+          "type": "collecte",
+          "x": 47.444,
+          "y": 30.1131,
+          "action": "COLLECTE",
+          "volume_action": 478.77,
+          "charge_apres": 2200.26
+        },
+        {
+          "ordre": 20,
+          "point_id": 25,
+          "point_nom": "Point 25",
+          "type": "collecte",
+          "x": 43.7728,
+          "y": 15.0822,
+          "action": "COLLECTE",
+          "volume_action": 348.02,
+          "charge_apres": 2548.28
+        },
+        {
+          "ordre": 21,
+          "point_id": 33,
+          "point_nom": "Point 33",
+          "type": "collecte",
+          "x": 49.0885,
+          "y": 18.9494,
+          "action": "COLLECTE",
+          "volume_action": 299.74,
+          "charge_apres": 2848.0200000000004
+        },
+        {
+          "ordre": 22,
+          "point_id": 40,
+          "point_nom": "Point 40",
+          "type": "collecte",
+          "x": 51.4061,
+          "y": 19.6803,
+          "action": "COLLECTE",
+          "volume_action": 431.43,
+          "charge_apres": 3279.4500000000003
+        },
+        {
+          "ordre": 23,
+          "point_id": 35,
+          "point_nom": "Point 35",
+          "type": "collecte",
+          "x": 55.3886,
+          "y": 16.3006,
+          "action": "COLLECTE",
+          "volume_action": 210.22,
+          "charge_apres": 3489.67
+        },
+        {
+          "ordre": 24,
+          "point_id": 11,
+          "point_nom": "Point 11",
+          "type": "collecte",
+          "x": 66.3657,
+          "y": 13.666,
+          "action": "COLLECTE",
+          "volume_action": 473.21,
+          "charge_apres": 3962.88
+        },
+        {
+          "ordre": 25,
+          "point_id": 52,
+          "point_nom": "Déchetterie Sud-Est",
+          "type": "dechetterie",
+          "x": 80.0,
+          "y": 20.0,
+          "action": "DECHARGE",
+          "volume_action": 3962.88,
+          "charge_apres": 0
+        },
+        {
+          "ordre": 26,
+          "point_id": 2,
+          "point_nom": "Point 2",
+          "type": "collecte",
+          "x": 81.3744,
+          "y": 16.9551,
+          "action": "COLLECTE",
+          "volume_action": 319.17,
+          "charge_apres": 319.17
+        },
+        {
+          "ordre": 27,
+          "point_id": 43,
+          "point_nom": "Point 43",
+          "type": "collecte",
+          "x": 78.7708,
+          "y": 15.6686,
+          "action": "COLLECTE",
+          "volume_action": 376.36,
+          "charge_apres": 695.53
+        },
+        {
+          "ordre": 28,
+          "point_id": 42,
+          "point_nom": "Point 42",
+          "type": "collecte",
+          "x": 66.6273,
+          "y": 14.7099,
+          "action": "COLLECTE",
+          "volume_action": 151.8,
+          "charge_apres": 847.3299999999999
+        },
+        {
+          "ordre": 29,
+          "point_id": 24,
+          "point_nom": "Point 24",
+          "type": "collecte",
+          "x": 78.8882,
+          "y": 22.2273,
+          "action": "COLLECTE",
+          "volume_action": 338.95,
+          "charge_apres": 1186.28
+        },
+        {
+          "ordre": 30,
+          "point_id": 9,
+          "point_nom": "Point 9",
+          "type": "collecte",
+          "x": 68.3785,
+          "y": 52.8982,
+          "action": "COLLECTE",
+          "volume_action": 542.14,
+          "charge_apres": 1728.42
+        },
+        {
+          "ordre": 31,
+          "point_id": 30,
+          "point_nom": "Point 30",
+          "type": "collecte",
+          "x": 70.957,
+          "y": 50.6145,
+          "action": "COLLECTE",
+          "volume_action": 591.57,
+          "charge_apres": 2319.9900000000002
+        },
+        {
+          "ordre": 32,
+          "point_id": 18,
+          "point_nom": "Point 18",
+          "type": "collecte",
+          "x": 74.4037,
+          "y": 42.0932,
+          "action": "COLLECTE",
+          "volume_action": 355.45,
+          "charge_apres": 2675.44
+        },
+        {
+          "ordre": 33,
+          "point_id": 34,
+          "point_nom": "Point 34",
+          "type": "collecte",
+          "x": 76.5332,
+          "y": 34.6011,
+          "action": "COLLECTE",
+          "volume_action": 563.62,
+          "charge_apres": 3239.06
+        },
+        {
+          "ordre": 34,
+          "point_id": 7,
+          "point_nom": "Point 7",
+          "type": "collecte",
+          "x": 86.577,
+          "y": 36.9276,
+          "action": "COLLECTE",
+          "volume_action": 346.64,
+          "charge_apres": 3585.7
+        },
+        {
+          "ordre": 35,
+          "point_id": 52,
+          "point_nom": "Déchetterie Sud-Est",
+          "type": "dechetterie",
+          "x": 80.0,
+          "y": 20.0,
+          "action": "DECHARGE",
+          "volume_action": 3585.7,
+          "charge_apres": 0
+        },
+        {
+          "ordre": 36,
+          "point_id": 32,
+          "point_nom": "Point 32",
+          "type": "collecte",
+          "x": 71.0009,
+          "y": 53.1503,
+          "action": "COLLECTE",
+          "volume_action": 188.21,
+          "charge_apres": 188.21
+        },
+        {
+          "ordre": 37,
+          "point_id": 23,
+          "point_nom": "Point 23",
+          "type": "collecte",
+          "x": 89.803,
+          "y": 50.7621,
+          "action": "COLLECTE",
+          "volume_action": 365.8,
+          "charge_apres": 554.01
+        },
+        {
+          "ordre": 38,
+          "point_id": 36,
+          "point_nom": "Point 36",
+          "type": "collecte",
+          "x": 88.2388,
+          "y": 52.6165,
+          "action": "COLLECTE",
+          "volume_action": 544.81,
+          "charge_apres": 1098.82
+        },
+        {
+          "ordre": 39,
+          "point_id": 12,
+          "point_nom": "Point 12",
+          "type": "collecte",
+          "x": 88.8177,
+          "y": 78.4254,
+          "action": "COLLECTE",
+          "volume_action": 343.27,
+          "charge_apres": 1442.09
+        },
+        {
+          "ordre": 40,
+          "point_id": 29,
+          "point_nom": "Point 29",
+          "type": "collecte",
+          "x": 86.3053,
+          "y": 80.0682,
+          "action": "COLLECTE",
+          "volume_action": 263.43,
+          "charge_apres": 1705.52
+        },
+        {
+          "ordre": 41,
+          "point_id": 19,
+          "point_nom": "Point 19",
+          "type": "collecte",
+          "x": 85.4328,
+          "y": 80.1094,
+          "action": "COLLECTE",
+          "volume_action": 202.75,
+          "charge_apres": 1908.27
+        },
+        {
+          "ordre": 42,
+          "point_id": 17,
+          "point_nom": "Point 17",
+          "type": "collecte",
+          "x": 77.4282,
+          "y": 72.08,
+          "action": "COLLECTE",
+          "volume_action": 321.15,
+          "charge_apres": 2229.42
+        },
+        {
+          "ordre": 43,
+          "point_id": 48,
+          "point_nom": "Point 48",
+          "type": "collecte",
+          "x": 68.2571,
+          "y": 74.0474,
+          "action": "COLLECTE",
+          "volume_action": 165.15,
+          "charge_apres": 2394.57
+        },
+        {
+          "ordre": 44,
+          "point_id": 4,
+          "point_nom": "Point 4",
+          "type": "collecte",
+          "x": 67.2816,
+          "y": 66.106,
+          "action": "COLLECTE",
+          "volume_action": 290.31,
+          "charge_apres": 2684.88
+        },
+        {
+          "ordre": 45,
+          "point_id": 5,
+          "point_nom": "Point 5",
+          "type": "collecte",
+          "x": 57.1413,
+          "y": 74.7544,
+          "action": "COLLECTE",
+          "volume_action": 366.13,
+          "charge_apres": 3051.01
+        },
+        {
+          "ordre": 46,
+          "point_id": 38,
+          "point_nom": "Point 38",
+          "type": "collecte",
+          "x": 58.5275,
+          "y": 87.149,
+          "action": "COLLECTE",
+          "volume_action": 458.3,
+          "charge_apres": 3509.3100000000004
+        },
+        {
+          "ordre": 47,
+          "point_id": 53,
+          "point_nom": "Déchetterie Nord",
+          "type": "dechetterie",
+          "x": 50.0,
+          "y": 85.0,
+          "action": "DECHARGE",
+          "volume_action": 3509.3100000000004,
+          "charge_apres": 0
+        },
+        {
+          "ordre": 48,
+          "point_id": 16,
+          "point_nom": "Point 16",
+          "type": "collecte",
+          "x": 31.5958,
+          "y": 84.0313,
+          "action": "COLLECTE",
+          "volume_action": 265.57,
+          "charge_apres": 265.57
+        },
+        {
+          "ordre": 49,
+          "point_id": 27,
+          "point_nom": "Point 27",
+          "type": "collecte",
+          "x": 19.1641,
+          "y": 80.7831,
+          "action": "COLLECTE",
+          "volume_action": 320.07,
+          "charge_apres": 585.64
+        },
+        {
+          "ordre": 50,
+          "point_id": 21,
+          "point_nom": "Point 21",
+          "type": "collecte",
+          "x": 21.1704,
+          "y": 69.5991,
+          "action": "COLLECTE",
+          "volume_action": 342.86,
+          "charge_apres": 928.5
+        },
+        {
+          "ordre": 51,
+          "point_id": 15,
+          "point_nom": "Point 15",
+          "type": "collecte",
+          "x": 23.6911,
+          "y": 68.3301,
+          "action": "COLLECTE",
+          "volume_action": 302.28,
+          "charge_apres": 1230.78
+        },
+        {
+          "ordre": 52,
+          "point_id": 13,
+          "point_nom": "Point 13",
+          "type": "collecte",
+          "x": 46.2728,
+          "y": 76.7288,
+          "action": "COLLECTE",
+          "volume_action": 245.03,
+          "charge_apres": 1475.81
+        },
+        {
+          "ordre": 53,
+          "point_id": 50,
+          "point_nom": "Point 50",
+          "type": "collecte",
+          "x": 47.0102,
+          "y": 79.9589,
+          "action": "COLLECTE",
+          "volume_action": 355.05,
+          "charge_apres": 1830.86
+        },
+        {
+          "ordre": 54,
+          "point_id": 53,
+          "point_nom": "Déchetterie Nord",
+          "type": "dechetterie",
+          "x": 50.0,
+          "y": 85.0,
+          "action": "DECHARGE",
+          "volume_action": 1830.86,
+          "charge_apres": 0
+        },
+        {
+          "ordre": 55,
+          "point_id": 20,
+          "point_nom": "Point 20",
+          "type": "collecte",
+          "x": 49.9385,
+          "y": 80.7747,
+          "action": "COLLECTE",
+          "volume_action": 363.79,
+          "charge_apres": 363.79
+        },
+        {
+          "ordre": 56,
+          "point_id": 0,
+          "point_nom": "Dépôt",
+          "type": "depot",
+          "x": 50.0,
+          "y": 50.0,
+          "action": "RETOUR",
+          "volume_action": 0,
+          "charge_apres": 363.79
+        }
+      ],
+      "optimisation_2opt": {
+        "croisements_avant": 11,
+        "croisements_apres": 2,
+        "croisements_elimines": 9
+      }
+    }
+  ],
+  "statistiques": {
+    "distance_totale": 586.54,
+    "volume_total_collecte": 16784.42,
+    "nb_camions_utilises": 1,
+    "nb_total_visites_dechetteries": 5,
+    "distance_moyenne_par_camion": 586.54,
+    "ecart_type_distance": 0,
+    "tonnage_par_km_par_camion": [
+      0.0286
+    ],
+    "moyenne_tonnage_par_km": 0.0286,
+    "nb_points_collecte": 50,
+    "nb_dechetteries_disponibles": 3,
+    "borne_inferieure_km": 362.59,
+    "gap_pourcent": 61.8,
+    "use_osrm": false,
+    "strategie_optimisation": "small",
+    "optimisation_2opt": {
+      "croisements_avant": 11,
+      "croisements_apres": 2,
+      "pourcentage_elimination": 81.8,
+      "message": "2-opt a elimine 9 croisements (81.8%)"
+    }
+  },
+  "depot": {
+    "id": 0,
+    "x": 50.0,
+    "y": 50.0,
+    "nom": "Dépôt"
+  },
+  "dechetteries": [
+    {
+      "id": 51,
+      "x": 20.0,
+      "y": 20.0,
+      "nom": "Déchetterie Sud-Ouest"
+    },
+    {
+      "id": 52,
+      "x": 80.0,
+      "y": 20.0,
+      "nom": "Déchetterie Sud-Est"
+    },
+    {
+      "id": 53,
+      "x": 50.0,
+      "y": 85.0,
+      "nom": "Déchetterie Nord"
+    }
+  ]
+}

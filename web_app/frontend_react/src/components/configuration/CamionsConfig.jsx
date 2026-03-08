@@ -16,19 +16,49 @@ export default function CamionsConfig({
 }) {
   const [showModal, setShowModal] = useState(false)
   const [editingId, setEditingId] = useState(null)
-  const [form, setForm] = useState({ id: '', capacite: 5000, cout_fixe: 200, zones_assignees: [] })
+  const [form, setForm] = useState({ id: '', nom: '', capacite: 5000, cout_fixe: 200, zones_assignees: [] })
+  const [bulkCount, setBulkCount] = useState(5)
+  const BULK_OPTIONS = [2, 3, 5, 10, 15, 20]
+
+  const nextCamionId = () =>
+    camions.length ? Math.max(...camions.map((c) => c.id)) + 1 : 1
+
+  const handleAddBulk = () => {
+    const count = Math.min(Math.max(1, bulkCount), 50)
+    let id = nextCamionId()
+    for (let i = 0; i < count; i++) {
+      onAddCamion({
+        id: id + i,
+        nom: `Camion ${id + i}`,
+        capacite: 5000,
+        cout_fixe: 200,
+        zones_assignees: [],
+      })
+    }
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault()
     const zonesAssignees = form.zones_assignees || []
     if (editingId) {
-      onUpdateCamion(editingId, { capacite: form.capacite, cout_fixe: form.cout_fixe, zones_assignees: zonesAssignees })
+      onUpdateCamion(editingId, {
+        nom: form.nom || undefined,
+        capacite: form.capacite,
+        cout_fixe: form.cout_fixe,
+        zones_assignees: zonesAssignees,
+      })
       setEditingId(null)
     } else {
-      const id = form.id ? parseInt(form.id, 10) : (camions.length ? Math.max(...camions.map((c) => c.id)) + 1 : 1)
-      onAddCamion({ id, capacite: form.capacite, cout_fixe: form.cout_fixe, zones_assignees: zonesAssignees })
+      const id = form.id ? parseInt(form.id, 10) : nextCamionId()
+      onAddCamion({
+        id,
+        nom: form.nom || `Camion ${id}`,
+        capacite: form.capacite,
+        cout_fixe: form.cout_fixe,
+        zones_assignees: zonesAssignees,
+      })
     }
-    setForm({ id: '', capacite: 5000, cout_fixe: 200, zones_assignees: [] })
+    setForm({ id: '', nom: '', capacite: 5000, cout_fixe: 200, zones_assignees: [] })
     setShowModal(false)
   }
 
@@ -36,6 +66,7 @@ export default function CamionsConfig({
     setEditingId(c.id)
     setForm({
       id: String(c.id),
+      nom: c.nom || '',
       capacite: c.capacite,
       cout_fixe: c.cout_fixe,
       zones_assignees: Array.isArray(c.zones_assignees) ? c.zones_assignees : (Array.isArray(c.zones_accessibles) ? c.zones_accessibles : []),
@@ -85,7 +116,7 @@ export default function CamionsConfig({
                         <Truck className="w-6 h-6 text-[#FF5A5F]" />
                       </div>
                       <div>
-                        <p className="font-semibold text-[#222222]">Camion {c.id}</p>
+                        <p className="font-semibold text-[#222222]">{c.nom || `Camion ${c.id}`}</p>
                         <p className="text-sm text-[#717171]">
                           Capacité : {c.capacite} kg • Coût journalier : {c.cout_fixe}€
                           {(c.zones_assignees ?? c.zones_accessibles ?? []).length > 0 && (
@@ -116,12 +147,38 @@ export default function CamionsConfig({
             </AnimatePresence>
           </div>
 
+          <Card className="bg-gray-50 border-dashed border-2 border-[#EBEBEB]">
+            <p className="text-sm font-medium text-[#222222] mb-2">Ajouter plusieurs camions en une fois</p>
+            <p className="text-xs text-[#717171] mb-3">
+              Sélectionnez le nombre de camions à créer ; les noms seront générés automatiquement (Camion 1, Camion 2, …).
+            </p>
+            <div className="flex flex-wrap items-center gap-3">
+              <label className="flex items-center gap-2">
+                <span className="text-sm text-[#717171]">Nombre :</span>
+                <select
+                  value={bulkCount}
+                  onChange={(e) => setBulkCount(Number(e.target.value))}
+                  className="px-3 py-2 rounded-lg border border-[#EBEBEB] bg-white min-w-[80px]"
+                >
+                  {BULK_OPTIONS.map((n) => (
+                    <option key={n} value={n}>
+                      {n} camion{n > 1 ? 's' : ''}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <Button variant="secondary" onClick={handleAddBulk}>
+                Ajouter {bulkCount} camion{bulkCount > 1 ? 's' : ''}
+              </Button>
+            </div>
+          </Card>
+
           <Button
             variant="secondary"
             icon={<Plus className="w-4 h-4" />}
             onClick={() => {
               setEditingId(null)
-              setForm({ id: '', capacite: 5000, cout_fixe: 200, zones_assignees: [] })
+              setForm({ id: '', nom: '', capacite: 5000, cout_fixe: 200, zones_assignees: [] })
               setShowModal(true)
             }}
           >
@@ -168,10 +225,20 @@ export default function CamionsConfig({
                     value={form.id}
                     onChange={(e) => setForm({ ...form, id: e.target.value })}
                     className="w-full px-4 py-2 rounded-lg border border-[#EBEBEB] focus:ring-2 focus:ring-[#FF5A5F]/50 focus:border-[#FF5A5F]"
-                    placeholder="1"
+                    placeholder="Auto"
                   />
                 </div>
               )}
+              <div>
+                <label className="block text-sm font-medium text-[#222222] mb-1">Nom (affichage)</label>
+                <input
+                  type="text"
+                  value={form.nom}
+                  onChange={(e) => setForm({ ...form, nom: e.target.value })}
+                  className="w-full px-4 py-2 rounded-lg border border-[#EBEBEB] focus:ring-2 focus:ring-[#FF5A5F]/50"
+                  placeholder={editingId ? (camions.find((c) => c.id === editingId)?.nom || `Camion ${editingId}`) : 'Camion 1'}
+                />
+              </div>
               <div>
                 <label className="block text-sm font-medium text-[#222222] mb-1">Capacité (kg)</label>
                 <input

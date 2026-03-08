@@ -1,0 +1,940 @@
+{
+  "depot": {
+    "id": 0,
+    "x": 50.0,
+    "y": 50.0,
+    "nom": "Dépôt"
+  },
+  "points_collecte": [
+    {
+      "id": 1,
+      "x": 32.0023,
+      "y": 27.8569,
+      "nom": "Point 1",
+      "volume": 156.25,
+      "nb_bennes": 2
+    },
+    {
+      "id": 2,
+      "x": 81.3744,
+      "y": 16.9551,
+      "nom": "Point 2",
+      "volume": 319.17,
+      "nb_bennes": 2
+    },
+    {
+      "id": 3,
+      "x": 17.4956,
+      "y": 28.6129,
+      "nom": "Point 3",
+      "volume": 309.53,
+      "nb_bennes": 3
+    },
+    {
+      "id": 4,
+      "x": 67.2816,
+      "y": 66.106,
+      "nom": "Point 4",
+      "volume": 290.31,
+      "nb_bennes": 2
+    },
+    {
+      "id": 5,
+      "x": 57.1413,
+      "y": 74.7544,
+      "nom": "Point 5",
+      "volume": 366.13,
+      "nb_bennes": 3
+    },
+    {
+      "id": 6,
+      "x": 22.7727,
+      "y": 43.8092,
+      "nom": "Point 6",
+      "volume": 339.7,
+      "nb_bennes": 2
+    },
+    {
+      "id": 7,
+      "x": 86.577,
+      "y": 36.9276,
+      "nom": "Point 7",
+      "volume": 346.64,
+      "nb_bennes": 3
+    },
+    {
+      "id": 8,
+      "x": 38.7184,
+      "y": 37.5165,
+      "nom": "Point 8",
+      "volume": 244.98,
+      "nb_bennes": 2
+    },
+    {
+      "id": 9,
+      "x": 68.3785,
+      "y": 52.8982,
+      "nom": "Point 9",
+      "volume": 542.14,
+      "nb_bennes": 3
+    },
+    {
+      "id": 10,
+      "x": 33.4543,
+      "y": 60.2912,
+      "nom": "Point 10",
+      "volume": 323.64,
+      "nb_bennes": 3
+    },
+    {
+      "id": 11,
+      "x": 66.3657,
+      "y": 13.666,
+      "nom": "Point 11",
+      "volume": 473.21,
+      "nb_bennes": 3
+    },
+    {
+      "id": 12,
+      "x": 88.8177,
+      "y": 78.4254,
+      "nom": "Point 12",
+      "volume": 343.27,
+      "nb_bennes": 2
+    },
+    {
+      "id": 13,
+      "x": 46.2728,
+      "y": 76.7288,
+      "nom": "Point 13",
+      "volume": 245.03,
+      "nb_bennes": 2
+    },
+    {
+      "id": 14,
+      "x": 26.7606,
+      "y": 31.3582,
+      "nom": "Point 14",
+      "volume": 242.55,
+      "nb_bennes": 2
+    },
+    {
+      "id": 15,
+      "x": 23.6911,
+      "y": 68.3301,
+      "nom": "Point 15",
+      "volume": 302.28,
+      "nb_bennes": 2
+    },
+    {
+      "id": 16,
+      "x": 31.5958,
+      "y": 84.0313,
+      "nom": "Point 16",
+      "volume": 265.57,
+      "nb_bennes": 2
+    },
+    {
+      "id": 17,
+      "x": 77.4282,
+      "y": 72.08,
+      "nom": "Point 17",
+      "volume": 321.15,
+      "nb_bennes": 2
+    },
+    {
+      "id": 18,
+      "x": 74.4037,
+      "y": 42.0932,
+      "nom": "Point 18",
+      "volume": 355.45,
+      "nb_bennes": 2
+    },
+    {
+      "id": 19,
+      "x": 85.4328,
+      "y": 80.1094,
+      "nom": "Point 19",
+      "volume": 202.75,
+      "nb_bennes": 2
+    },
+    {
+      "id": 20,
+      "x": 49.9385,
+      "y": 80.7747,
+      "nom": "Point 20",
+      "volume": 363.79,
+      "nb_bennes": 3
+    },
+    {
+      "id": 21,
+      "x": 21.1704,
+      "y": 69.5991,
+      "nom": "Point 21",
+      "volume": 342.86,
+      "nb_bennes": 3
+    },
+    {
+      "id": 22,
+      "x": 44.2747,
+      "y": 56.6826,
+      "nom": "Point 22",
+      "volume": 524.1,
+      "nb_bennes": 3
+    },
+    {
+      "id": 23,
+      "x": 89.803,
+      "y": 50.7621,
+      "nom": "Point 23",
+      "volume": 365.8,
+      "nb_bennes": 3
+    },
+    {
+      "id": 24,
+      "x": 78.8882,
+      "y": 22.2273,
+      "nom": "Point 24",
+      "volume": 338.95,
+      "nb_bennes": 2
+    },
+    {
+      "id": 25,
+      "x": 43.7728,
+      "y": 15.0822,
+      "nom": "Point 25",
+      "volume": 348.02,
+      "nb_bennes": 2
+    },
+    {
+      "id": 26,
+      "x": 47.444,
+      "y": 30.1131,
+      "nom": "Point 26",
+      "volume": 478.77,
+      "nb_bennes": 3
+    },
+    {
+      "id": 27,
+      "x": 19.1641,
+      "y": 80.7831,
+      "nom": "Point 27",
+      "volume": 320.07,
+      "nb_bennes": 2
+    },
+    {
+      "id": 28,
+      "x": 37.214,
+      "y": 33.48,
+      "nom": "Point 28",
+      "volume": 530.58,
+      "nb_bennes": 3
+    },
+    {
+      "id": 29,
+      "x": 86.3053,
+      "y": 80.0682,
+      "nom": "Point 29",
+      "volume": 263.43,
+      "nb_bennes": 2
+    },
+    {
+      "id": 30,
+      "x": 70.957,
+      "y": 50.6145,
+      "nom": "Point 30",
+      "volume": 591.57,
+      "nb_bennes": 3
+    },
+    {
+      "id": 31,
+      "x": 33.8756,
+      "y": 61.116,
+      "nom": "Point 31",
+      "volume": 367.63,
+      "nb_bennes": 2
+    },
+    {
+      "id": 32,
+      "x": 71.0009,
+      "y": 53.1503,
+      "nom": "Point 32",
+      "volume": 188.21,
+      "nb_bennes": 2
+    },
+    {
+      "id": 33,
+      "x": 49.0885,
+      "y": 18.9494,
+      "nom": "Point 33",
+      "volume": 299.74,
+      "nb_bennes": 2
+    },
+    {
+      "id": 34,
+      "x": 76.5332,
+      "y": 34.6011,
+      "nom": "Point 34",
+      "volume": 563.62,
+      "nb_bennes": 3
+    },
+    {
+      "id": 35,
+      "x": 55.3886,
+      "y": 16.3006,
+      "nom": "Point 35",
+      "volume": 210.22,
+      "nb_bennes": 2
+    },
+    {
+      "id": 36,
+      "x": 88.2388,
+      "y": 52.6165,
+      "nom": "Point 36",
+      "volume": 544.81,
+      "nb_bennes": 3
+    },
+    {
+      "id": 37,
+      "x": 48.0226,
+      "y": 53.9843,
+      "nom": "Point 37",
+      "volume": 182.1,
+      "nb_bennes": 2
+    },
+    {
+      "id": 38,
+      "x": 58.5275,
+      "y": 87.149,
+      "nom": "Point 38",
+      "volume": 458.3,
+      "nb_bennes": 3
+    },
+    {
+      "id": 39,
+      "x": 41.9194,
+      "y": 63.735,
+      "nom": "Point 39",
+      "volume": 328.24,
+      "nb_bennes": 2
+    },
+    {
+      "id": 40,
+      "x": 51.4061,
+      "y": 19.6803,
+      "nom": "Point 40",
+      "volume": 431.43,
+      "nb_bennes": 3
+    },
+    {
+      "id": 41,
+      "x": 11.6827,
+      "y": 54.3137,
+      "nom": "Point 41",
+      "volume": 166.01,
+      "nb_bennes": 2
+    },
+    {
+      "id": 42,
+      "x": 66.6273,
+      "y": 14.7099,
+      "nom": "Point 42",
+      "volume": 151.8,
+      "nb_bennes": 2
+    },
+    {
+      "id": 43,
+      "x": 78.7708,
+      "y": 15.6686,
+      "nom": "Point 43",
+      "volume": 376.36,
+      "nb_bennes": 2
+    },
+    {
+      "id": 44,
+      "x": 48.8332,
+      "y": 53.1387,
+      "nom": "Point 44",
+      "volume": 219.62,
+      "nb_bennes": 2
+    },
+    {
+      "id": 45,
+      "x": 47.8378,
+      "y": 42.5648,
+      "nom": "Point 45",
+      "volume": 372.9,
+      "nb_bennes": 3
+    },
+    {
+      "id": 46,
+      "x": 44.4841,
+      "y": 43.8863,
+      "nom": "Point 46",
+      "volume": 174.23,
+      "nb_bennes": 2
+    },
+    {
+      "id": 47,
+      "x": 14.3337,
+      "y": 62.2764,
+      "nom": "Point 47",
+      "volume": 559.15,
+      "nb_bennes": 3
+    },
+    {
+      "id": 48,
+      "x": 68.2571,
+      "y": 74.0474,
+      "nom": "Point 48",
+      "volume": 165.15,
+      "nb_bennes": 2
+    },
+    {
+      "id": 49,
+      "x": 25.2167,
+      "y": 45.8891,
+      "nom": "Point 49",
+      "volume": 212.16,
+      "nb_bennes": 2
+    },
+    {
+      "id": 50,
+      "x": 47.0102,
+      "y": 79.9589,
+      "nom": "Point 50",
+      "volume": 355.05,
+      "nb_bennes": 3
+    },
+    {
+      "id": 51,
+      "x": 78.9079,
+      "y": 54.026,
+      "nom": "Point 51",
+      "volume": 260.78,
+      "nb_bennes": 2
+    },
+    {
+      "id": 52,
+      "x": 53.247,
+      "y": 11.1806,
+      "nom": "Point 52",
+      "volume": 313.04,
+      "nb_bennes": 2
+    },
+    {
+      "id": 53,
+      "x": 77.8957,
+      "y": 23.3049,
+      "nom": "Point 53",
+      "volume": 381.59,
+      "nb_bennes": 2
+    },
+    {
+      "id": 54,
+      "x": 79.172,
+      "y": 82.1954,
+      "nom": "Point 54",
+      "volume": 444.41,
+      "nb_bennes": 3
+    },
+    {
+      "id": 55,
+      "x": 88.8247,
+      "y": 31.2162,
+      "nom": "Point 55",
+      "volume": 244.74,
+      "nb_bennes": 2
+    },
+    {
+      "id": 56,
+      "x": 65.7273,
+      "y": 68.4404,
+      "nom": "Point 56",
+      "volume": 385.57,
+      "nb_bennes": 3
+    },
+    {
+      "id": 57,
+      "x": 33.7366,
+      "y": 87.4967,
+      "nom": "Point 57",
+      "volume": 346.44,
+      "nb_bennes": 3
+    },
+    {
+      "id": 58,
+      "x": 14.5732,
+      "y": 56.7342,
+      "nom": "Point 58",
+      "volume": 336.99,
+      "nb_bennes": 2
+    },
+    {
+      "id": 59,
+      "x": 50.6263,
+      "y": 78.1074,
+      "nom": "Point 59",
+      "volume": 164.22,
+      "nb_bennes": 2
+    },
+    {
+      "id": 60,
+      "x": 64.017,
+      "y": 28.8163,
+      "nom": "Point 60",
+      "volume": 298.76,
+      "nb_bennes": 2
+    },
+    {
+      "id": 61,
+      "x": 55.574,
+      "y": 56.3135,
+      "nom": "Point 61",
+      "volume": 385.4,
+      "nb_bennes": 2
+    },
+    {
+      "id": 62,
+      "x": 43.538,
+      "y": 56.6938,
+      "nom": "Point 62",
+      "volume": 304.85,
+      "nb_bennes": 2
+    },
+    {
+      "id": 63,
+      "x": 26.3407,
+      "y": 67.2953,
+      "nom": "Point 63",
+      "volume": 580.41,
+      "nb_bennes": 3
+    },
+    {
+      "id": 64,
+      "x": 20.4703,
+      "y": 61.6401,
+      "nom": "Point 64",
+      "volume": 216.4,
+      "nb_bennes": 2
+    },
+    {
+      "id": 65,
+      "x": 70.1492,
+      "y": 15.8034,
+      "nom": "Point 65",
+      "volume": 394.85,
+      "nb_bennes": 3
+    },
+    {
+      "id": 66,
+      "x": 55.0395,
+      "y": 17.9985,
+      "nom": "Point 66",
+      "volume": 486.35,
+      "nb_bennes": 3
+    },
+    {
+      "id": 67,
+      "x": 20.5965,
+      "y": 37.9207,
+      "nom": "Point 67",
+      "volume": 276.47,
+      "nb_bennes": 2
+    },
+    {
+      "id": 68,
+      "x": 39.5622,
+      "y": 22.6197,
+      "nom": "Point 68",
+      "volume": 369.82,
+      "nb_bennes": 2
+    },
+    {
+      "id": 69,
+      "x": 88.9786,
+      "y": 62.3181,
+      "nom": "Point 69",
+      "volume": 483.5,
+      "nb_bennes": 3
+    },
+    {
+      "id": 70,
+      "x": 54.3682,
+      "y": 84.5405,
+      "nom": "Point 70",
+      "volume": 316.97,
+      "nb_bennes": 2
+    },
+    {
+      "id": 71,
+      "x": 20.7433,
+      "y": 19.2343,
+      "nom": "Point 71",
+      "volume": 384.73,
+      "nb_bennes": 2
+    },
+    {
+      "id": 72,
+      "x": 22.4358,
+      "y": 32.5405,
+      "nom": "Point 72",
+      "volume": 335.6,
+      "nb_bennes": 2
+    },
+    {
+      "id": 73,
+      "x": 26.2878,
+      "y": 60.739,
+      "nom": "Point 73",
+      "volume": 329.4,
+      "nb_bennes": 2
+    },
+    {
+      "id": 74,
+      "x": 30.0897,
+      "y": 82.6527,
+      "nom": "Point 74",
+      "volume": 451.62,
+      "nb_bennes": 3
+    },
+    {
+      "id": 75,
+      "x": 43.8861,
+      "y": 32.1344,
+      "nom": "Point 75",
+      "volume": 173.07,
+      "nb_bennes": 2
+    },
+    {
+      "id": 76,
+      "x": 20.4656,
+      "y": 88.3838,
+      "nom": "Point 76",
+      "volume": 233.39,
+      "nb_bennes": 2
+    },
+    {
+      "id": 77,
+      "x": 54.1344,
+      "y": 44.215,
+      "nom": "Point 77",
+      "volume": 335.31,
+      "nb_bennes": 2
+    },
+    {
+      "id": 78,
+      "x": 85.6041,
+      "y": 65.2816,
+      "nom": "Point 78",
+      "volume": 177.97,
+      "nb_bennes": 2
+    },
+    {
+      "id": 79,
+      "x": 76.7676,
+      "y": 56.6008,
+      "nom": "Point 79",
+      "volume": 286.4,
+      "nb_bennes": 2
+    },
+    {
+      "id": 80,
+      "x": 13.3463,
+      "y": 39.1721,
+      "nom": "Point 80",
+      "volume": 257.45,
+      "nb_bennes": 2
+    },
+    {
+      "id": 81,
+      "x": 26.8061,
+      "y": 29.9624,
+      "nom": "Point 81",
+      "volume": 374.73,
+      "nb_bennes": 2
+    },
+    {
+      "id": 82,
+      "x": 54.7907,
+      "y": 79.977,
+      "nom": "Point 82",
+      "volume": 238.42,
+      "nb_bennes": 2
+    },
+    {
+      "id": 83,
+      "x": 28.939,
+      "y": 23.0001,
+      "nom": "Point 83",
+      "volume": 381.44,
+      "nb_bennes": 2
+    },
+    {
+      "id": 84,
+      "x": 11.9829,
+      "y": 68.9252,
+      "nom": "Point 84",
+      "volume": 370.35,
+      "nb_bennes": 2
+    },
+    {
+      "id": 85,
+      "x": 42.9371,
+      "y": 63.5926,
+      "nom": "Point 85",
+      "volume": 534.72,
+      "nb_bennes": 3
+    },
+    {
+      "id": 86,
+      "x": 72.99,
+      "y": 18.6477,
+      "nom": "Point 86",
+      "volume": 216.7,
+      "nb_bennes": 2
+    },
+    {
+      "id": 87,
+      "x": 27.7947,
+      "y": 75.3269,
+      "nom": "Point 87",
+      "volume": 364.65,
+      "nb_bennes": 2
+    },
+    {
+      "id": 88,
+      "x": 75.6429,
+      "y": 79.7058,
+      "nom": "Point 88",
+      "volume": 404.9,
+      "nb_bennes": 3
+    },
+    {
+      "id": 89,
+      "x": 25.4504,
+      "y": 36.261,
+      "nom": "Point 89",
+      "volume": 155.92,
+      "nb_bennes": 2
+    },
+    {
+      "id": 90,
+      "x": 32.33,
+      "y": 61.3185,
+      "nom": "Point 90",
+      "volume": 391.72,
+      "nb_bennes": 2
+    },
+    {
+      "id": 91,
+      "x": 77.4929,
+      "y": 36.492,
+      "nom": "Point 91",
+      "volume": 503.86,
+      "nb_bennes": 3
+    },
+    {
+      "id": 92,
+      "x": 87.632,
+      "y": 24.2854,
+      "nom": "Point 92",
+      "volume": 178.84,
+      "nb_bennes": 2
+    },
+    {
+      "id": 93,
+      "x": 57.7257,
+      "y": 37.655,
+      "nom": "Point 93",
+      "volume": 311.48,
+      "nb_bennes": 3
+    },
+    {
+      "id": 94,
+      "x": 88.7389,
+      "y": 19.2517,
+      "nom": "Point 94",
+      "volume": 430.92,
+      "nb_bennes": 3
+    },
+    {
+      "id": 95,
+      "x": 66.7028,
+      "y": 10.1353,
+      "nom": "Point 95",
+      "volume": 213.68,
+      "nb_bennes": 2
+    },
+    {
+      "id": 96,
+      "x": 15.5979,
+      "y": 63.139,
+      "nom": "Point 96",
+      "volume": 241.06,
+      "nb_bennes": 2
+    },
+    {
+      "id": 97,
+      "x": 63.071,
+      "y": 19.97,
+      "nom": "Point 97",
+      "volume": 486.95,
+      "nb_bennes": 3
+    },
+    {
+      "id": 98,
+      "x": 63.3514,
+      "y": 36.0946,
+      "nom": "Point 98",
+      "volume": 452.14,
+      "nb_bennes": 3
+    },
+    {
+      "id": 99,
+      "x": 25.3472,
+      "y": 63.1944,
+      "nom": "Point 99",
+      "volume": 466.32,
+      "nb_bennes": 3
+    },
+    {
+      "id": 100,
+      "x": 82.2244,
+      "y": 59.2412,
+      "nom": "Point 100",
+      "volume": 503.2,
+      "nb_bennes": 3
+    }
+  ],
+  "dechetteries": [
+    {
+      "id": 101,
+      "x": 20.0,
+      "y": 20.0,
+      "nom": "Déchetterie Sud-Ouest",
+      "capacite_max": 50000
+    },
+    {
+      "id": 102,
+      "x": 80.0,
+      "y": 20.0,
+      "nom": "Déchetterie Sud-Est",
+      "capacite_max": 50000
+    },
+    {
+      "id": 103,
+      "x": 50.0,
+      "y": 85.0,
+      "nom": "Déchetterie Nord",
+      "capacite_max": 50000
+    }
+  ],
+  "camions": [
+    {
+      "id": 1,
+      "capacite": 4000,
+      "cout_fixe": 110,
+      "zones_accessibles": [],
+      "position_initiale": {
+        "x": 50.0,
+        "y": 50.0
+      }
+    },
+    {
+      "id": 2,
+      "capacite": 4000,
+      "cout_fixe": 120,
+      "zones_accessibles": [],
+      "position_initiale": {
+        "x": 50.0,
+        "y": 50.0
+      }
+    },
+    {
+      "id": 3,
+      "capacite": 4000,
+      "cout_fixe": 130,
+      "zones_accessibles": [],
+      "position_initiale": {
+        "x": 50.0,
+        "y": 50.0
+      }
+    },
+    {
+      "id": 4,
+      "capacite": 4000,
+      "cout_fixe": 140,
+      "zones_accessibles": [],
+      "position_initiale": {
+        "x": 50.0,
+        "y": 50.0
+      }
+    },
+    {
+      "id": 5,
+      "capacite": 4000,
+      "cout_fixe": 150,
+      "zones_accessibles": [],
+      "position_initiale": {
+        "x": 50.0,
+        "y": 50.0
+      }
+    },
+    {
+      "id": 6,
+      "capacite": 4000,
+      "cout_fixe": 160,
+      "zones_accessibles": [],
+      "position_initiale": {
+        "x": 50.0,
+        "y": 50.0
+      }
+    },
+    {
+      "id": 7,
+      "capacite": 4000,
+      "cout_fixe": 170,
+      "zones_accessibles": [],
+      "position_initiale": {
+        "x": 50.0,
+        "y": 50.0
+      }
+    },
+    {
+      "id": 8,
+      "capacite": 4000,
+      "cout_fixe": 180,
+      "zones_accessibles": [],
+      "position_initiale": {
+        "x": 50.0,
+        "y": 50.0
+      }
+    },
+    {
+      "id": 9,
+      "capacite": 4000,
+      "cout_fixe": 190,
+      "zones_accessibles": [],
+      "position_initiale": {
+        "x": 50.0,
+        "y": 50.0
+      }
+    },
+    {
+      "id": 10,
+      "capacite": 4000,
+      "cout_fixe": 200,
+      "zones_accessibles": [],
+      "position_initiale": {
+        "x": 50.0,
+        "y": 50.0
+      }
+    }
+  ],
+  "meta": {
+    "nb_camions": 10,
+    "nb_points": 100,
+    "seed": 42
+  }
+}

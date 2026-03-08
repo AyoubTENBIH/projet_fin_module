@@ -1,8 +1,9 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
-import { MapContainer, TileLayer, Marker, Popup, useMapEvents, useMap } from 'react-leaflet'
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
+import { MapContainer, TileLayer, Marker, Popup, Polyline, useMapEvents, useMap } from 'react-leaflet'
 import { motion } from 'framer-motion'
-import { Plus, FileSpreadsheet, MapPin, Trash2 } from 'lucide-react'
+import { Plus, FileSpreadsheet, MapPin, Trash2, Search } from 'lucide-react'
 import L from 'leaflet'
+import { analyzeDensity } from '../../utils/densityAnalysis'
 import Button from '../common/Button'
 import Card from '../common/Card'
 import Stepper from '../common/Stepper'
@@ -34,6 +35,18 @@ const DECHETTERIE_ICON = L.divIcon({
 })
 
 const DEFAULT_ICON = new L.Icon.Default()
+
+function createColoredIcon(color, blinking = false) {
+  return L.divIcon({
+    className: 'density-marker',
+    html: `<div style="background:${color};width:28px;height:28px;border-radius:50%;border:2px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.3);${blinking ? 'animation: blink 1s ease-in-out infinite;' : ''}"></div>`,
+    iconSize: [28, 28],
+    iconAnchor: [14, 14],
+  })
+}
+const ICON_KEPT = createColoredIcon('#22c55e')
+const ICON_DENSE_KEPT = createColoredIcon('#f97316')
+const ICON_CANDIDATE = createColoredIcon('#ef4444', true)
 
 /** Notifie quand la carte Leaflet est vraiment prête (évite createIcon / _leaflet_events undefined) */
 function MapReadyNotifier({ onReady }) {
@@ -76,6 +89,7 @@ export default function PointsConfig({
   onMapClickAdd,
   onManualAdd,
   onRemovePoint,
+  onRemovePoints,
   onNext,
   onBack,
   onImport,
@@ -99,6 +113,32 @@ export default function PointsConfig({
   const [mapInstanceReady, setMapInstanceReady] = useState(false)
   const [mapKey, setMapKey] = useState(0)
   const prevCountRef = useRef({ points: 0, dechetteries: 0 })
+  const [densityResult, setDensityResult] = useState(null)
+  const [proximityThreshold, setProximityThreshold] = useState(100)
+  const [showDensityPanel, setShowDensityPanel] = useState(false)
+  const [manualSelection, setManualSelection] = useState(new Set())
+  const [manualMode, setManualMode] = useState(false)
+
+  useEffect(() => {
+    if (showDensityPanel && (points?.length ?? 0) > 0) {
+      setDensityResult(analyzeDensity(points ?? [], proximityThreshold))
+      setManualSelection(new Set())
+      setManualMode(false)
+    }
+  }, [proximityThreshold, showDensityPanel, points])
+
+  const mapCenter = useMemo(() => {
+    if (depot && depot.lat != null && depot.lng != null) {
+      return [depot.lat, depot.lng]
+    }
+    if (points && points.length) {
+      const n = points.length
+      const avgLat = points.reduce((s, p) => s + (p.lat || 0), 0) / n
+      const avgLng = points.reduce((s, p) => s + (p.lng || 0), 0) / n
+      return [avgLat || CASABLANCA_LAT, avgLng || CASABLANCA_LNG]
+    }
+    return CASABLANCA_CENTER
+  }, [depot, points])
 
   // Après import ou gros changement : retirer les marqueurs puis démonter la carte pour éviter _leaflet_events au cleanup
   useEffect(() => {
@@ -182,7 +222,7 @@ export default function PointsConfig({
                 <>
                   <MapContainer
                     key={`points-map-${mapKey}`}
-                    center={CASABLANCA_CENTER}
+                    center={mapCenter}
                     zoom={DEFAULT_ZOOM}
                     className="h-full w-full"
                     style={{ minHeight: 400 }}
@@ -223,11 +263,19 @@ export default function PointsConfig({
                             </Popup>
                           </Marker>
                         ))}
-                        {points.filter((p) => p && (p.lat != null) && (p.lng != null)).map((p) => (
+                        {points.filter((p) => p && (p.lat != null) && (p.lng != null)).map((p) => {
+                          let icon = depot?.id === p.id ? DEPOT_ICON : DEFAULT_ICON
+                          if (densityResult?.byPointId[p.id]) {
+                            const info = densityResult.byPointId[p.id]
+                            if (info.candidate) icon = ICON_CANDIDATE
+                            else if (info.category === 'dense') icon = ICON_DENSE_KEPT
+                            else icon = ICON_KEPT
+                          }
+                          return (
                           <Marker
                             key={p.id}
                             position={[p.lat, p.lng]}
-                            icon={depot?.id === p.id ? DEPOT_ICON : DEFAULT_ICON}
+                            icon={icon}
                           >
                             <Popup>
                               <div className="p-2">
@@ -242,7 +290,25 @@ export default function PointsConfig({
                               </div>
                             </Popup>
                           </Marker>
-                        ))}
+                          )
+                        })}
+                        {densityResult?.candidates?.length > 0 && (() => {
+                          const pointsById = Object.fromEntries((points ?? []).map((p) => [p.id, p]))
+                          return densityResult.candidates.map((c) => {
+                            const ref = pointsById[c.referenceId]
+                            if (!ref || !pointsById[c.id]) return null
+                            return (
+                              <Polyline
+                                key={`line-${c.id}-${c.referenceId}`}
+                                positions={[
+                                  [pointsById[c.id].lat, pointsById[c.id].lng],
+                                  [ref.lat, ref.lng],
+                                ]}
+                                pathOptions={{ color: '#ef4444', weight: 2, opacity: 0.7, dashArray: '5,5' }}
+                              />
+                            )
+                          })
+                        })()}
                       </>
                     )}
                   </MapContainer>
@@ -322,7 +388,131 @@ export default function PointsConfig({
             <Button variant="ghost" onClick={onImport} icon={<FileSpreadsheet className="w-4 h-4" />}>
               Importer CSV
             </Button>
+            <Button
+              variant="ghost"
+              onClick={() => {
+                const result = analyzeDensity(points ?? [], proximityThreshold)
+                setDensityResult(result)
+                setShowDensityPanel(true)
+                setManualSelection(new Set())
+              }}
+              icon={<Search className="w-4 h-4" />}
+            >
+              Analyser Densité
+            </Button>
           </div>
+
+          {showDensityPanel && densityResult && (
+            <Card className="mt-4">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-[#222222]">Résultats analyse densité</h3>
+                <button
+                  type="button"
+                  onClick={() => { setShowDensityPanel(false); setDensityResult(null); setManualMode(false); }}
+                  className="text-gray-500 hover:text-gray-700 text-sm"
+                >
+                  Fermer
+                </button>
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-[#222222] mb-1">
+                  Seuil de proximité : {proximityThreshold} m
+                </label>
+                <input
+                  type="range"
+                  min={50}
+                  max={300}
+                  step={10}
+                  value={proximityThreshold}
+                  onChange={(e) => setProximityThreshold(Number(e.target.value))}
+                  className="w-full h-2 rounded-lg appearance-none cursor-pointer bg-gray-200 accent-[#222222]"
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-2 text-sm mb-4">
+                <p className="text-[#717171]">Bennes analysées</p>
+                <p className="font-medium">{densityResult.totalAnalyzed}</p>
+                <p className="text-[#717171]">Candidates à la suppression</p>
+                <p className="font-medium text-red-600">{densityResult.candidates.length}</p>
+                <p className="text-[#717171]">Volume perdu si suppression (kg)</p>
+                <p className="font-medium">{densityResult.totalVolumeToLose}</p>
+              </div>
+              {densityResult.candidates.length > 0 && (
+                <>
+                  <p className="text-sm font-medium text-[#222222] mb-2">Liste des bennes candidates</p>
+                  <div className="max-h-48 overflow-y-auto space-y-1 mb-4 pr-2">
+                    {densityResult.candidates.map((c) => (
+                      <div key={c.id} className="flex items-center gap-2 text-sm">
+                        {manualMode ? (
+                          <input
+                            type="checkbox"
+                            checked={manualSelection.has(c.id)}
+                            onChange={(e) => {
+                              setManualSelection((prev) => {
+                                const next = new Set(prev)
+                                if (e.target.checked) next.add(c.id)
+                                else next.delete(c.id)
+                                return next
+                              })
+                            }}
+                          />
+                        ) : null}
+                        <span className="flex-1">{c.nom}</span>
+                        <span className="text-gray-500">{c.distanceToReference} m → réf.</span>
+                        <span className="text-gray-500">{c.volume} kg</span>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {!manualMode ? (
+                      <>
+                        <Button
+                          variant="primary"
+                          onClick={() => {
+                            const ids = densityResult.candidates.map((c) => c.id)
+                            onRemovePoints?.(ids)
+                            setShowDensityPanel(false)
+                            setDensityResult(null)
+                          }}
+                        >
+                          Supprimer les bennes redondantes
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          onClick={() => setManualMode(true)}
+                        >
+                          Choisir manuellement
+                        </Button>
+                      </>
+                    ) : (
+                      <>
+                        <Button
+                          variant="primary"
+                          onClick={() => {
+                            if (manualSelection.size > 0) {
+                              onRemovePoints?.(Array.from(manualSelection))
+                              setShowDensityPanel(false)
+                              setDensityResult(null)
+                              setManualSelection(new Set())
+                            }
+                            setManualMode(false)
+                          }}
+                          disabled={manualSelection.size === 0}
+                        >
+                          Supprimer la sélection
+                        </Button>
+                        <Button variant="ghost" onClick={() => { setManualMode(false); setManualSelection(new Set()); }}>
+                          Annuler
+                        </Button>
+                      </>
+                    )}
+                  </div>
+                </>
+              )}
+              {densityResult.candidates.length === 0 && (
+                <p className="text-sm text-[#717171]">Aucune benne candidate à la suppression pour ce seuil.</p>
+              )}
+            </Card>
+          )}
 
           <div className="flex justify-end pt-8">
             <Button variant="primary" onClick={onNext} disabled={points.length < 2 || !depot}>

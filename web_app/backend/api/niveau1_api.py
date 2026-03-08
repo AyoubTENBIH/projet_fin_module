@@ -2,9 +2,11 @@
 """
 API Niveau 1 - Calcul des distances optimales
 Expose les fonctionnalités du niveau 1 via endpoints REST.
+Pour les grandes instances (n > 80), matrice euclidienne directe O(n²) au lieu de Dijkstra O(n³).
 """
 
 import json
+import math
 import sys
 from pathlib import Path
 
@@ -16,6 +18,9 @@ sys.path.insert(0, str(NIVEAU1_SRC))
 from graphe_routier import GrapheRoutier
 from point_collecte import PointCollecte
 from dechetterie import Dechetterie
+
+# Au-delà de ce nombre de sommets, on utilise la matrice euclidienne directe (rapide)
+NIVEAU1_FAST_PATH_THRESHOLD = 80
 
 
 def creer_graphe_depuis_points(points_data: list, connexions: list, dechetteries_data: list = None) -> GrapheRoutier:
@@ -70,27 +75,54 @@ def creer_graphe_depuis_points(points_data: list, connexions: list, dechetteries
     return graphe
 
 
+def _distance_euclidienne(p1: dict, p2: dict) -> float:
+    """Distance euclidienne entre deux points {x, y}."""
+    return math.sqrt((p1["x"] - p2["x"]) ** 2 + (p1["y"] - p2["y"]) ** 2)
+
+
 def calculer_matrice_distances(points_data: list, connexions: list, dechetteries_data: list = None) -> dict:
     """
     Calcule la matrice des distances pour les points donnés.
 
-    Args:
-        points_data: Liste des points avec id, x, y
-        connexions: Liste des connexions entre points
-        dechetteries_data: Liste des déchetteries (optionnel)
+    Pour n > NIVEAU1_FAST_PATH_THRESHOLD : matrice euclidienne directe O(n²), sans Dijkstra.
+    Sinon : graphe + Dijkstra (comportement historique).
 
     Returns:
-        Dict avec matrice_distances et chemins_calcules
+        Dict avec matrice_distances, chemins_calcules (vide si fast path), ids_ordonnes.
     """
+    dechetteries_data = dechetteries_data or []
+    n_sommets = len(points_data) + len(dechetteries_data)
+
+    if n_sommets > NIVEAU1_FAST_PATH_THRESHOLD:
+        # Chemin rapide : matrice euclidienne directe, pas de Dijkstra (évite lenteur 500 points)
+        all_points = list(points_data) + [
+            {"id": d["id"], "x": d["x"], "y": d["y"], "nom": d.get("nom", "")}
+            for d in dechetteries_data
+        ]
+        ids_ordonnes = sorted(p["id"] for p in all_points)
+        id_to_point = {p["id"]: p for p in all_points}
+        n = len(ids_ordonnes)
+        matrice = [[0.0] * n for _ in range(n)]
+        for i in range(n):
+            for j in range(n):
+                if i == j:
+                    matrice[i][j] = 0.0
+                else:
+                    p1 = id_to_point[ids_ordonnes[i]]
+                    p2 = id_to_point[ids_ordonnes[j]]
+                    matrice[i][j] = round(_distance_euclidienne(p1, p2), 2)
+        return {
+            "matrice_distances": [[matrice[i][j] for j in range(n)] for i in range(n)],
+            "chemins_calcules": [],
+            "ids_ordonnes": ids_ordonnes,
+        }
+    # Comportement standard (petites instances)
     graphe = creer_graphe_depuis_points(points_data, connexions, dechetteries_data)
     matrice = graphe.matrice_distances()
 
     ids_ordonnes = sorted(graphe.sommets.keys())
-    id_depot = ids_ordonnes[0] if ids_ordonnes else None
 
     chemins_calcules = []
-    # Calculer TOUS les chemins possibles entre tous les points (pas seulement depuis le dépôt)
-    # Cela permet aux camions d'aller directement d'un point à un autre
     for id_depart in ids_ordonnes:
         for id_arrivee in ids_ordonnes:
             if id_depart == id_arrivee:

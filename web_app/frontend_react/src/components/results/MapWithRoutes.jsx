@@ -349,7 +349,7 @@ export default function MapWithRoutes({
       </MapContainer>
       {osrmLoading && (
         <div className="absolute top-4 left-1/2 -translate-x-1/2 z-[1000] bg-white/95 px-4 py-2 rounded-lg shadow-lg text-sm text-gray-700">
-          Chargement des routes OSRM…
+          Chargement des routes (tracé réel)… Peut prendre 1–2 min pour beaucoup de tournées.
         </div>
       )}
     </div>

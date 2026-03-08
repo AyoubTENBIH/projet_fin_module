@@ -146,13 +146,160 @@ export function xyToLatLng(x, y) {
 /** Cache OSRM pour éviter requêtes répétées (même approche que web_app/frontend map.js) */
 const osrmCache = new Map()
 const OSRM_DEBUG = true
+/** Nombre max de waypoints par requête OSRM (limite API ~100, URL longue ; 25 = fiable et rapide) */
+const MAX_OSRM_WAYPOINTS_PER_REQUEST = 25
+/** Délai minimum entre deux requêtes OSRM (évite 429 Too Many Requests sur le serveur public) */
+const OSRM_MIN_DELAY_MS = 1300
+/** Timeout par segment (ms) */
+const OSRM_SEGMENT_TIMEOUT_MS = 22000
 function _osrmDebug(msg, ...args) {
   if (OSRM_DEBUG && typeof console !== 'undefined') console.log('[OSRM Frontend]', msg, ...args)
 }
 
+// File d'attente OSRM : une seule requête à la fois + délai pour respecter les limites du serveur public
+let osrmLastRequestTime = 0
+const osrmQueue = []
+let osrmQueueProcessing = false
+function processOsrmQueue() {
+  if (osrmQueueProcessing || osrmQueue.length === 0) return
+  osrmQueueProcessing = true
+  const item = osrmQueue.shift()
+  const { pointsArray, resolve } = item
+  const delay = Math.max(0, OSRM_MIN_DELAY_MS - (Date.now() - osrmLastRequestTime))
+  setTimeout(() => {
+    osrmLastRequestTime = Date.now()
+    doOneOsrmFetch(pointsArray).then(resolve).catch((err) => {
+      _osrmDebug('Queue fetch error:', err?.message)
+      resolve({
+        coordinates: pointsArray.map((p) => [p.lat, p.lng]),
+        totalDistance: null,
+        totalDuration: null,
+      })
+    }).finally(() => {
+      osrmQueueProcessing = false
+      processOsrmQueue()
+    })
+  }, delay)
+}
+
 /**
- * Appel OSRM Route API - MÊME APPROCHE que web_app/frontend map.js getFullRoute()
- * Format: route/v1/driving/{lng1},{lat1};{lng2},{lat2};...?overview=full&geometries=geojson
+ * Une seule requête HTTP OSRM (sans cache, sans file). Utilisée par la file pour éviter 429.
+ * @private
+ */
+async function doOneOsrmFetch(pointsArray) {
+  if (!pointsArray?.length) return { coordinates: [], totalDistance: 0, totalDuration: 0 }
+  if (pointsArray.length === 1) {
+    return {
+      coordinates: [[pointsArray[0].lat, pointsArray[0].lng]],
+      totalDistance: 0,
+      totalDuration: 0,
+    }
+  }
+  const waypoints = pointsArray.map((p) => `${p.lng},${p.lat}`).join(';')
+  const url = `https://router.project-osrm.org/route/v1/driving/${waypoints}?overview=full&geometries=geojson`
+  for (let attempt = 0; attempt <= 1; attempt++) {
+    try {
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), OSRM_SEGMENT_TIMEOUT_MS)
+      const response = await fetch(url, { signal: controller.signal })
+      clearTimeout(timeoutId)
+      if (response.status === 429) {
+        const retryAfter = 4000 + attempt * 2000
+        _osrmDebug('429 Too Many Requests, attente', retryAfter / 1000, 's puis retry')
+        await new Promise((r) => setTimeout(r, retryAfter))
+        continue
+      }
+      if (!response.ok) throw new Error(`OSRM API error: ${response.status}`)
+      const data = await response.json()
+      if (!data.routes?.length) throw new Error('No route found')
+      const route = data.routes[0]
+      const coordinates = route.geometry.coordinates.map((c) => [c[1], c[0]])
+      return {
+        coordinates,
+        totalDistance: route.distance / 1000,
+        totalDuration: route.duration / 60,
+      }
+    } catch (err) {
+      if (err.name === 'AbortError') {
+        _osrmDebug('Timeout', OSRM_SEGMENT_TIMEOUT_MS / 1000, 's - segment')
+      } else {
+        _osrmDebug('Erreur segment:', err?.message)
+      }
+      return {
+        coordinates: pointsArray.map((p) => [p.lat, p.lng]),
+        totalDistance: null,
+        totalDuration: null,
+      }
+    }
+  }
+  return {
+    coordinates: pointsArray.map((p) => [p.lat, p.lng]),
+    totalDistance: null,
+    totalDuration: null,
+  }
+}
+
+/**
+ * Appel OSRM Route API pour un seul tronçon, via la file (évite 429).
+ * @private
+ */
+function getOsrmRouteSingleSegment(pointsArray) {
+  if (!pointsArray?.length) return Promise.resolve({ coordinates: [], totalDistance: 0, totalDuration: 0 })
+  if (pointsArray.length === 1) {
+    return Promise.resolve({
+      coordinates: [[pointsArray[0].lat, pointsArray[0].lng]],
+      totalDistance: 0,
+      totalDuration: 0,
+    })
+  }
+  return new Promise((resolve) => {
+    osrmQueue.push({ pointsArray, resolve })
+    processOsrmQueue()
+  })
+}
+
+/**
+ * Route OSRM pour un grand nombre de waypoints : découpe en tronçons, appelle OSRM par tronçon,
+ * concatène les géométries. Évite les échecs (URL trop longue / limite API) tout en gardant le tracé routier.
+ */
+async function getOsrmRouteSegmented(pointsArray) {
+  const max = MAX_OSRM_WAYPOINTS_PER_REQUEST
+  const segments = []
+  for (let start = 0; start < pointsArray.length; start += max - 1) {
+    const end = Math.min(start + max, pointsArray.length)
+    segments.push(pointsArray.slice(start, end))
+    if (end >= pointsArray.length) break
+  }
+  _osrmDebug('Route longue:', pointsArray.length, 'waypoints →', segments.length, 'tronçons OSRM')
+  const results = []
+  for (let i = 0; i < segments.length; i += 2) {
+    const batch = segments.slice(i, i + 2).map((seg) => getOsrmRouteSingleSegment(seg))
+    results.push(...(await Promise.all(batch)))
+  }
+  const coordinates = []
+  let totalDistance = 0
+  let totalDuration = 0
+  for (let i = 0; i < results.length; i++) {
+    const coords = results[i].coordinates || []
+    if (coords.length === 0) continue
+    if (i === 0) {
+      coordinates.push(...coords)
+    } else {
+      coordinates.push(...coords.slice(1))
+    }
+    if (results[i].totalDistance != null) totalDistance += results[i].totalDistance
+    if (results[i].totalDuration != null) totalDuration += results[i].totalDuration
+  }
+  return {
+    coordinates: coordinates.length ? coordinates : pointsArray.map((p) => [p.lat, p.lng]),
+    totalDistance: totalDistance || null,
+    totalDuration: totalDuration || null,
+  }
+}
+
+/**
+ * Appel OSRM Route API - tracé routier réel.
+ * Pour les longues routes (> MAX_OSRM_WAYPOINTS_PER_REQUEST), découpe en tronçons puis concatène.
  * @param {Array<{lat: number, lng: number}>} pointsArray
  * @returns {Promise<{coordinates: Array<[lat,lng]>, totalDistance: number|null, totalDuration: number|null}>}
  */
@@ -170,53 +317,31 @@ export async function getOsrmRoute(pointsArray) {
 
   const cacheKey = pointsArray.map((p) => `${p.lat},${p.lng}`).join('→')
   if (osrmCache.has(cacheKey)) {
-    _osrmDebug('Cache hit:', cacheKey.slice(0, 80) + '...')
+    _osrmDebug('Cache hit:', pointsArray.length, 'waypoints')
     return osrmCache.get(cacheKey)
   }
 
-  const waypoints = pointsArray.map((p) => `${p.lng},${p.lat}`).join(';')
-  const url = `https://router.project-osrm.org/route/v1/driving/${waypoints}?overview=full&geometries=geojson`
-  _osrmDebug('Route API:', pointsArray.length, 'waypoints, URL len=', url.length)
+  const useSegmented = pointsArray.length > MAX_OSRM_WAYPOINTS_PER_REQUEST
+  const result = useSegmented
+    ? await getOsrmRouteSegmented(pointsArray)
+    : await getOsrmRouteSingleSegment(pointsArray)
 
-  try {
-    const controller = new AbortController()
-    const timeoutId = setTimeout(() => controller.abort(), 15000)
-    const response = await fetch(url, { signal: controller.signal })
-    clearTimeout(timeoutId)
-
-    _osrmDebug('Response:', response.status, response.statusText)
-    if (!response.ok) throw new Error(`OSRM API error: ${response.status}`)
-    const data = await response.json()
-    if (!data.routes?.length) throw new Error('No route found')
-
-    const route = data.routes[0]
-    const coordinates = route.geometry.coordinates.map((c) => [c[1], c[0]])
-    const result = {
-      coordinates,
-      totalDistance: route.distance / 1000,
-      totalDuration: route.duration / 60,
-    }
-    osrmCache.set(cacheKey, result)
-    _osrmDebug('OK:', result.coordinates?.length, 'points,', result.totalDistance?.toFixed(2), 'km')
-    return result
-  } catch (err) {
-    if (err.name === 'AbortError') {
-      _osrmDebug('Timeout 15s - fallback lignes droites')
-    } else {
-      _osrmDebug('Erreur:', err?.message)
-    }
-    const coordinates = pointsArray.map((p) => [p.lat, p.lng])
-    return { coordinates, totalDistance: null, totalDuration: null }
-  }
+  osrmCache.set(cacheKey, result)
+  _osrmDebug('OK:', result.coordinates?.length, 'points,', result.totalDistance != null ? result.totalDistance.toFixed(2) + ' km' : 'n/a')
+  return result
 }
 
-export async function apiRoutesOptimiser(depot, points, dechetteries, camions, useOsm = false, zones = []) {
+export async function apiRoutesOptimiser(depot, points, dechetteries, camions, useOsm = false, zones = [], forceNoTimeLimit = false) {
   console.log('[API] apiRoutesOptimiser: preparing data, depot=', depot?.id, 'points=', points?.length, 'zones=', zones?.length, 'use_osrm=', useOsm)
   const data = prepareDataForApi(points, camions, depot, dechetteries, zones)
   if (!data) throw new Error('Données insuffisantes pour les routes')
   const pointsForRoutes = data.points.filter((p) => p.id !== 0).map((p) => {
     const orig = points.find((pt) => pt.id === p.id)
-    return { ...p, volume: orig?.volume || 1000 }
+    const pt = { ...p, volume: orig?.volume || 1000 }
+    if (orig?.zone_id != null) {
+      pt.zone_id = orig.zone_id
+    }
+    return pt
   })
   
   const payload = {
@@ -226,13 +351,22 @@ export async function apiRoutesOptimiser(depot, points, dechetteries, camions, u
     camions: data.camions,
     use_osrm: useOsm,
   }
+  if (!forceNoTimeLimit && pointsForRoutes.length > 200) {
+    payload.time_limit_seconds = Math.min(300, 60 + Math.ceil(pointsForRoutes.length / 50))
+  }
+  // Debug couverture : activer avec localStorage.setItem('debug_coverage','1') puis relancer l'optimisation
+  if (typeof localStorage !== 'undefined' && localStorage.getItem('debug_coverage')) {
+    payload.debug_coverage = true
+    console.log('[API] apiRoutesOptimiser: debug_coverage=TRUE (logs dans la console du backend)')
+  }
   const url = `${API_BASE}/routes/optimiser`
-  console.log('[API] apiRoutesOptimiser: sending POST', url, 'payload:', {
+  console.log('[API] apiRoutesOptimiser: sending POST', url, 'points=', pointsForRoutes.length, 'payload:', {
     depot: payload.depot?.id,
     points: payload.points?.length,
     dechetteries: payload.dechetteries?.length,
     camions: payload.camions?.length,
     use_osrm: payload.use_osrm,
+    time_limit: payload.time_limit_seconds || 'none',
   })
 
   const controller = new AbortController()
